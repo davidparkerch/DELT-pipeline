@@ -1,7 +1,10 @@
 nextflow.enable.types = true
 
+include { shellQuote } from '../../../common.nf'
+
 /*
- * Interactive plotly figures (PCA, correlation, distributions, importance) as JSON.
+ * Interactive plotly figures as JSON: the building-block cube of the top compounds and the
+ * validation of every score against measured KD.
  */
 process VISUALISE {
     tag id
@@ -10,11 +13,9 @@ process VISUALISE {
     input:
     record(
         id: String,
-        clean: Path,
-        embedding: Path,
-        stats: Path,
-        id_column: String,
-        target_column: String?
+        target: String,
+        top: Path,
+        validation: Path
     )
 
     output:
@@ -25,13 +26,11 @@ process VISUALISE {
     tuple('plotly', eval("python -c 'import plotly; print(plotly.__version__)'")) >> 'versions'
 
     script:
-    def target = target_column ? "--target-column '${target_column}'" : ''
     """
     delt_pipeline visualise \\
-        --input ${clean} \\
-        --id-column '${id_column}' ${target} \\
-        --embedding ${embedding} \\
-        --stats ${stats} \\
+        --top ${top} \\
+        --validation ${validation} \\
+        --screen ${shellQuote(target)} \\
         --output ${id}.figures.json
     """
 

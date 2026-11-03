@@ -1,28 +1,24 @@
 import json
+from pathlib import Path
 
-from delt_pipeline.analyse import analyse
-from delt_pipeline.io import FeatureTable
-from delt_pipeline.visualise import build_figures, figures_to_json
+import polars as pl
 
-
-def test_figures_with_target_and_model(table: FeatureTable) -> None:
-    result = analyse(table, n_components=2, n_clusters=2, cv_folds=3)
-    figures = build_figures(table, result.embedding, result.stats)
-    assert list(figures) == ["pca", "correlation", "distributions", "importance"]
-    assert {trace.name for trace in figures["pca"].data} == {"label=active", "label=inactive"}
+from delt_pipeline.visualise import build_figures, cube, figures_to_json, validation_bars
 
 
-def test_figures_without_target(unlabelled: FeatureTable) -> None:
-    result = analyse(unlabelled, n_components=1, n_clusters=2)
-    figures = build_figures(unlabelled, result.embedding, result.stats)
-    assert "importance" not in figures
-    assert figures["pca"].layout.yaxis.title.text == "PC2 (n/a)"
-    assert all(trace.name.startswith("cluster=") for trace in figures["pca"].data)
+def test_figures(pipeline_dir: Path) -> None:
+    top = pl.read_parquet(pipeline_dir / "mapk14.top.parquet")
+    validation = json.loads((pipeline_dir / "mapk14.validation.json").read_text())
+    figures = build_figures(top, validation, "MAPK14")
+    assert set(figures) == {"cube", "validation"}
+    assert len(figures["cube"].data[0].x) == top.height
+    assert len(validation_bars(validation, "MAPK14").data) == 4  # bars + published markers, on and off
+    assert set(build_figures(top, [], "BCA")) == {"cube"}
+    assert cube(top, "MAPK14").layout.scene.xaxis.title.text == "Building block A"
 
 
-def test_figures_json_is_deterministic(table: FeatureTable) -> None:
-    result = analyse(table, cv_folds=3)
-    first = figures_to_json(build_figures(table, result.embedding, result.stats))
-    second = figures_to_json(build_figures(table, result.embedding, result.stats))
-    assert first == second
-    assert list(json.loads(first)) == sorted(json.loads(first))
+def test_figures_json_is_stable(pipeline_dir: Path) -> None:
+    top = pl.read_parquet(pipeline_dir / "mapk14.top.parquet")
+    first = figures_to_json(build_figures(top, [], "MAPK14"))
+    assert first == figures_to_json(build_figures(top, [], "MAPK14"))
+    assert list(json.loads(first)) == ["cube"]

@@ -1,6 +1,7 @@
 # Nextflow
 work/
 results/
+results_*/
 .nextflow/
 .nextflow.log*
 .lineage/
@@ -20,3 +21,5 @@ coverage.xml
 .DS_Store
 .idea/
 *.swp
+# KinDEL data (CC BY-NC-SA 4.0, non-commercial): download with `just fetch-kindel`, never commit
+data/

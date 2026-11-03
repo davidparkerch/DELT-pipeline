@@ -1,47 +1,51 @@
-"""Shared fixtures: small, deterministic feature tables."""
+"""Shared fixtures: small deterministic feature tables and the simulated DEL library."""
+
+import json
+from pathlib import Path
 
 import numpy as np
 import polars as pl
 import pytest
 
+from delt_pipeline.analyse import score_table
 from delt_pipeline.io import FeatureTable
-from delt_pipeline.wrangle import wrangle
+from delt_pipeline.library import (
+    SimulatedLibrary,
+    read_building_blocks,
+    select_sublibrary,
+    simulate_library,
+    write_counts,
+)
 
 N_ROWS = 24
 
 
-@pytest.fixture
-def raw_frame() -> pl.DataFrame:
-    """A messy table: odd column names, a gap, a constant and a mostly-missing column."""
+def _features() -> pl.DataFrame:
     rng = np.random.default_rng(7)
     label = np.array(["active", "inactive"] * (N_ROWS // 2))
     signal = np.where(label == "active", 2.0, -2.0)
-    alpha = signal + rng.normal(0, 0.5, N_ROWS)
-    alpha[3] = np.nan
     return pl.DataFrame(
         {
-            "Sample ID": [f"s{index:02d}" for index in range(N_ROWS)],
+            "Sample_ID": [f"s{index:02d}" for index in range(N_ROWS)],
             "smiles": ["CCO"] * N_ROWS,
-            "feat alpha": alpha,
-            "feat-beta": rng.normal(10, 2, N_ROWS),
+            "feat_alpha": signal + rng.normal(0, 0.5, N_ROWS),
+            "feat_beta": rng.normal(10, 2, N_ROWS),
             "gamma": -signal + rng.normal(0, 1, N_ROWS),
-            "constant": [1.0] * N_ROWS,
-            "sparse": [1.0, 2.0] + [None] * (N_ROWS - 2),
             "label": label,
         }
     )
 
 
 @pytest.fixture
-def table(raw_frame: pl.DataFrame) -> FeatureTable:
-    """Cleaned binary-classification table."""
-    return wrangle(raw_frame, "Sample ID", "label").table
+def table() -> FeatureTable:
+    """Clean binary-classification table."""
+    return FeatureTable(_features(), "Sample_ID", "label")
 
 
 @pytest.fixture
-def unlabelled(raw_frame: pl.DataFrame) -> FeatureTable:
-    """Cleaned table without a target."""
-    return wrangle(raw_frame.drop("label"), "Sample ID").table
+def unlabelled() -> FeatureTable:
+    """Clean table without a target."""
+    return FeatureTable(_features().drop("label"), "Sample_ID")
 
 
 @pytest.fixture
@@ -59,3 +63,105 @@ def regression() -> FeatureTable:
         }
     )
     return FeatureTable(frame, "id", "y")
+
+
+@pytest.fixture(scope="session")
+def library() -> SimulatedLibrary:
+    """The simulated library (same seed as assets/example)."""
+    return simulate_library()
+
+
+@pytest.fixture(scope="session")
+def library_dir(tmp_path_factory: pytest.TempPathFactory, library: SimulatedLibrary) -> Path:
+    """The simulated library written in the KinDEL file layout."""
+    root = tmp_path_factory.mktemp("library")
+    (root / "heldout").mkdir()
+    (root / "synthons").mkdir()
+    for screen, frame in library.screens.items():
+        frame.write_parquet(root / f"{screen}.parquet")
+    for name, frame in library.heldout.items():
+        frame.write_csv(root / "heldout" / f"{name}.csv")
+    for position, frame in library.building_blocks.items():
+        frame.write_csv(root / "synthons" / f"reacted_{position}.csv")
+    return root
+
+
+@pytest.fixture(scope="session")
+def sublibrary(library: SimulatedLibrary, library_dir: Path) -> dict:
+    """Eight BB-As: every held-out one plus random ones."""
+    building_blocks = read_building_blocks(library_dir / "synthons")
+    return select_sublibrary(building_blocks, list(library.heldout.values()), n_bb_a=8, seed=42)
+
+
+@pytest.fixture(scope="session")
+def mapk14_counts(tmp_path_factory: pytest.TempPathFactory, library_dir: Path, sublibrary: dict) -> tuple[Path, dict]:
+    """The MAPK14 count table of the sub-library and its QC."""
+    output = tmp_path_factory.mktemp("counts") / "mapk14.counts.parquet"
+    qc = write_counts(
+        library_dir / "mapk14.parquet", read_building_blocks(library_dir / "synthons"), sublibrary, output
+    )
+    return output, json.loads(json.dumps(qc))
+
+
+@pytest.fixture(scope="session")
+def mapk14_scores(mapk14_counts: tuple[Path, dict], sublibrary: dict) -> tuple[pl.DataFrame, dict]:
+    """Scored MAPK14 sub-library and its QC."""
+    path, qc = mapk14_counts
+    return score_table(pl.read_parquet(path), qc, sublibrary)
+
+
+def run_cli(*args: str | Path) -> int:
+    """Run the CLI in-process with stringified arguments."""
+    from delt_pipeline.cli import main  # noqa: PLC0415 - keep the CLI import local to the helper
+
+    return main([str(arg) for arg in args])
+
+
+@pytest.fixture(scope="session")
+def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) -> Path:
+    """Every CLI step for two screens (MAPK14 with held-out KD, BCA without), like the pipeline runs them."""
+    out = tmp_path_factory.mktemp("pipeline")
+    synthons = library_dir / "synthons"
+    heldout = sorted((library_dir / "heldout").glob("*.csv"))
+    sub = out / "sublibrary.json"
+    assert (
+        run_cli("select-sublibrary", "--synthons", synthons, "--heldout", *heldout, "--n-bb-a", 8, "--output", sub) == 0
+    )
+    for screen, target in (("mapk14", "MAPK14"), ("bca", "BCA")):
+        counts, qc = out / f"{screen}.counts.parquet", out / f"{screen}.counts_qc.json"
+        assert run_cli("subset", "--input", library_dir / f"{screen}.parquet", "--synthons", synthons,
+                       "--sublibrary", sub, "--output", counts, "--qc", qc) == 0  # fmt: skip
+        scores, top, score_qc = (
+            out / f"{screen}.scores.parquet",
+            out / f"{screen}.top.parquet",
+            out / f"{screen}.score_qc.json",
+        )
+        assert run_cli("score", "--input", counts, "--counts-qc", qc, "--sublibrary", sub, "--top-n", 300,
+                       "--output", scores, "--top", top, "--qc", score_qc) == 0  # fmt: skip
+        validation = out / f"{screen}.validation.json"
+        assays = []
+        if screen == "mapk14":
+            assays = [
+                "--ondna",
+                library_dir / "heldout/mapk14_ondna.csv",
+                "--offdna",
+                library_dir / "heldout/mapk14_offdna.csv",
+            ]
+        assert run_cli("validate", "--scores", scores, "--score-qc", score_qc, "--target", target.lower(), *assays,
+                       "--output", validation) == 0  # fmt: skip
+        assert run_cli("visualise", "--top", top, "--validation", validation, "--screen", target,
+                       "--output", out / f"{screen}.figures.json") == 0  # fmt: skip
+        exports = out / "exports" / screen
+        assert run_cli("export", "--input", top, "--id-column", "molecule_hash", "--formats", "parquet,tsv",
+                       "--prefix", f"{screen}_hits", "--outdir", exports) == 0  # fmt: skip
+        assert run_cli("describe", "--input", top, "--id-column", "molecule_hash", "--id", screen,
+                       "--exports", *sorted(exports.iterdir()), "--exports-base", f"../exports/{screen}/",
+                       "--dictionary", Path(__file__).parents[2] / "assets/hits_dictionary.csv",
+                       "--license", "https://github.com/insitro/kindel/blob/main/LICENSE.md",
+                       "--source", "10.48550/arXiv.2410.08938", "--creator-name", "Ada",
+                       "--creator-orcid", "0000-0002-1825-0097",
+                       "--description", f"Simulated {target} screen", "--keywords", "DEL; kinase",
+                       "--pipeline", "demo", "--pipeline-version", "1.0", "--homepage", "https://example.org/demo",
+                       "--jsonld", out / f"{screen}.metadata.jsonld", "--datapackage", exports / "datapackage.json",
+                       "--identifier", out / f"{screen}.identifier.txt") == 0  # fmt: skip
+    return out

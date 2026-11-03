@@ -3,8 +3,8 @@ nextflow.enable.types = true
 include { Options } from '../../../common.nf'
 
 /*
- * Export the cleaned table for downstream tools: Parquet, Arrow, CSV, TSV, JSON Lines,
- * NumPy (npz) and svmlight, as chosen by options.export_formats.
+ * Export the top compounds (the published hit table) for downstream tools, in the formats
+ * chosen by options.export_formats (Parquet, Arrow, CSV, TSV, JSON Lines, NumPy, svmlight).
  */
 process EXPORT {
     tag id
@@ -13,31 +13,28 @@ process EXPORT {
     input:
     record(
         id: String,
-        clean: Path,
-        id_column: String,
-        target_column: String?
+        top: Path
     )
     options: Options
 
     output:
-    record(id: id, exports: files("${id}.*"))
+    record(id: id, exports: files("${id}_hits.*"))
 
     topic:
     tuple('delt_pipeline', eval('delt_pipeline --version')) >> 'versions'
     tuple('numpy', eval("python -c 'import numpy; print(numpy.__version__)'")) >> 'versions'
 
     script:
-    def target = target_column ? "--target-column '${target_column}'" : ''
     """
     delt_pipeline export \\
-        --input ${clean} \\
-        --id-column '${id_column}' ${target} \\
+        --input ${top} \\
+        --id-column molecule_hash \\
         --formats '${options.export_formats}' \\
-        --prefix ${id}
+        --prefix ${id}_hits
     """
 
     stub:
     """
-    touch ${id}.parquet
+    touch ${id}_hits.parquet
     """
 }

@@ -1,0 +1,45 @@
+nextflow_process {
+
+    name "Test SELECT_SUBLIBRARY"
+    script "../main.nf"
+    process "SELECT_SUBLIBRARY"
+    tag "modules"
+    tag "select_sublibrary"
+    topics "versions"
+
+    test("held-out plus random building blocks") {
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[1] = files("${projectDir}/assets/example/heldout/*.csv")
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
+                """
+            }
+        }
+        then {
+            assert process.success
+            def selection = path(process.out[0][0]).json
+            assert selection.heldout.size() + selection.random.size() == 8
+            assert selection.diversity == 6000
+            assert snapshot(process.out, Fixtures.versions(topics.versions, projectDir)).match()
+        }
+    }
+
+    test("stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[1] = []
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

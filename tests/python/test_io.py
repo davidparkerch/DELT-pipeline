@@ -109,3 +109,9 @@ def test_export_without_target(tmp_path: Path, unlabelled: FeatureTable) -> None
 def test_export_regression_npz(tmp_path: Path, regression: FeatureTable) -> None:
     export_table(regression, "ds", ["npz"], tmp_path)
     assert set(np.load(tmp_path / "ds.npz").files) == {"X", "ids", "feature_names", "y"}
+
+
+def test_svmlight_rejects_missing_values(tmp_path: Path) -> None:
+    table = FeatureTable(pl.DataFrame({"id": ["a", "b"], "x": [1.0, None]}), "id")
+    with pytest.raises(ValueError, match="svmlight cannot store missing values"):
+        export_table(table, "t", ["svmlight"], tmp_path)

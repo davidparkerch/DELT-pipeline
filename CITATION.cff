@@ -2,16 +2,16 @@ cff-version: 1.2.0
 message: If you use this pipeline, please cite it using these metadata.
 type: software
 title: "DELT-pipeline"
-abstract: "Process DNA-Encoded Library Technology data and exports FAIR, analysis-ready datasets."
+abstract: "Score DNA-encoded library (DEL) selections, validate the scores against measured affinities and publish FAIR hit tables."
 version: 0.1.0
 license: Apache-2.0
 repository-code: "https://github.com/davidparkerch/delt-pipeline"
 url: "https://github.com/davidparkerch/delt-pipeline"
 keywords:
   - nextflow
-  - bioinformatics
+  - dna-encoded-library
   - cheminformatics
-  - machine-learning
+  - hit-identification
   - fair
 authors:
   - given-names: "David"

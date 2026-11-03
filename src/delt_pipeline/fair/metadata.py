@@ -7,8 +7,7 @@ from typing import Any
 
 import polars as pl
 
-from ..io import FeatureTable
-from ..wrangle import normalise_name
+from ..io import FeatureTable, normalise_name
 from .identifiers import content_urn, sha256_file
 from .vocab import FORMATS, format_for, orcid_url, resolvable, spdx_url
 

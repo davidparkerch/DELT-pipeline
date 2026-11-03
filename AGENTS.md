@@ -4,12 +4,17 @@ Guidance for AI coding agents (and humans) working in this repository.
 
 ## What this is
 
-A Nextflow 26.10 pipeline that **only orchestrates**. The real work is done by:
+A Nextflow 26.10 pipeline that scores DNA-encoded library (DEL) selections from
+[KinDEL](https://github.com/insitro/kindel), validates the scores against measured KD and publishes FAIR
+hit tables. Nextflow **only orchestrates**. The real work is done by:
 
-- standard Linux tools (`gzip`, `tr`, `sha256sum`, …), and
+- standard Linux tools (`sha256sum`, …), and
 - the Python package `src/delt_pipeline/` (CLI: `delt_pipeline`), with these subpackages:
-  `wrangle/` (polars), `analyse/` (scipy, scikit-learn), `visualise/` (plotly),
-  `report/` (jinja2 HTML) and `fair/` (FAIR metadata).
+  `library/` (simulation, building blocks, streamed sub-library), `analyse/` (enrichment scores,
+  validation; scipy), `visualise/` (plotly), `report/` (jinja2 HTML) and `fair/` (FAIR metadata).
+
+The science is explained in `docs/methods.md`. Steps: `SELECT_SUBLIBRARY` → `SUBSET_LIBRARY` → `SCORE` →
+`VALIDATE` → `VISUALISE`, then `EXPORT` / `CHECKSUM` / `DESCRIBE` of each screen's top compounds, and one `REPORT`.
 
 Every process runs in the **runtime image** (Podman). The **dev image** is the same base plus
 Java, Nextflow, nf-test, just and dev dependencies, so inside the dev container processes run natively.
@@ -21,11 +26,12 @@ Java, Nextflow, nf-test, just and dev dependencies, so inside the dev container 
 | Format everything | `just fmt` |
 | Lint (ruff and `nextflow lint`, including static types) | `just lint` |
 | Python tests (100% coverage gate) | `just test-py` |
-| nf-test (CI mode, snapshots must match) | `just test-nf` (e.g. `just test-nf --tag wrangle`) |
+| nf-test (CI mode, snapshots must match) | `just test-nf` (e.g. `just test-nf --tag score`) |
 | Re-record snapshots after an intended change | `just snapshot-update` |
 | Every Nextflow file has a test | `just nf-coverage` |
 | Everything CI runs (lint, tests, coverage gates) | `just ci` |
-| Run on example data | `just run` |
+| Run on the synthetic example library | `just run` |
+| Download KinDEL (~21 GB) / run on it | `just fetch-kindel` / `just run-kindel` |
 | Validate FAIR outputs and repository metadata | `just validate-fair` |
 
 **Before finishing any change, run `just fmt && just ci` and make sure it passes.**
@@ -50,6 +56,15 @@ Outside the dev container, `just test-nf` and `just run` build the runtime image
 - **Never use `publishDir`.** Publish through the entry workflow's `publish:` section and the `output {}` block.
 - Every process has a `stub:` block.
 - Containers: **Podman only** (`conf/podman.config`, `Containerfile`). Never add files, profiles or images for any other container engine.
+
+## Data rules
+
+- KinDEL data is licensed **CC BY-NC-SA 4.0 (insitro terms), non-commercial**. Never commit it: it lives in
+  the gitignored `data/kindel/`. Outputs derived from it carry that license (samplesheet `license` column).
+- Test fixtures in `assets/example/` are **synthetic** (`delt_pipeline simulate`, seeded). If you change the
+  simulator, regenerate them and re-record snapshots.
+- Library-wide statistics (the depth used for normalisation) come from the **whole** screen, never from
+  the sub-library. Priors are fitted on random-BB-A compounds only.
 
 ## Python rules
 
@@ -77,7 +92,7 @@ Outside the dev container, `just test-nf` and `just run` build the runtime image
 1. `modules/local/<name>/main.nf`: typed process with `tag`, `label`, `input:`, `output:`, `topic:`, `script:` and `stub:`.
 2. If it runs Python, add a subcommand in `cli.py` plus library code and pytest tests.
 3. `modules/local/<name>/tests/main.nf.test`: real-data test, stub test and versions.
-4. Wire it into `workflows/profile_dataset/main.nf` (or a new typed workflow), and publish its outputs in `main.nf`.
+4. Wire it into `workflows/delt_selection/main.nf` (or a new typed workflow), and publish its outputs in `main.nf`.
 5. Describe every new output in the FAIR metadata (see below), then run `just snapshot-update` and `just ci`.
 
 ## FAIR rules

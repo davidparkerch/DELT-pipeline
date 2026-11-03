@@ -13,10 +13,14 @@ dev_image := "localhost/delt-pipeline-dev:latest"
 roc_validator := "roc-validator==0.13.1"
 cffconvert := "cffconvert==2.0.0"
 nf_core := "nf-core==4.2.1"
+plotly_version := `grep -A1 '^name = "plotly"' uv.lock | sed -n 's/^version = "\(.*\)"/\1/p'`
 
 # Nextflow sources checked by `nextflow lint` (results/ and work/ are never linted)
 nf_sources := "main.nf common.nf nextflow.config conf modules workflows"
 in_container := path_exists("/run/.containerenv")
+
+# Where `just fetch-kindel` stores the KinDEL data (gitignored; never commit it: non-commercial license)
+kindel_dir := "data/kindel"
 
 # List recipes
 default:
@@ -92,6 +96,35 @@ nf-coverage:
 run *args: _runtime
     {{ _nf_env }} nextflow run . -profile test{{ if in_container == "true" { "" } else { ",podman" } }} {{ args }}
 
+# Run on the KinDEL sub-library (needs `just fetch-kindel` first), e.g. `just run-kindel -resume`
+run-kindel *args: _runtime
+    NXF_OPTS="-Xms256m -Xmx2g" {{ _nf_env }} nextflow run . -profile local{{ if in_container == "true" { "" } else { ",podman" } }} \
+        --input assets/kindel/samplesheet.csv --synthons {{ kindel_dir }}/synthons {{ args }}
+
+# Download KinDEL (~21 GB, resumable) into data/kindel and verify checksums. License: CC BY-NC-SA 4.0 (insitro)
+fetch-kindel:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    base="https://kin-del-2024.s3.amazonaws.com/data"
+    files=(mapk14.parquet ddr1.parquet bca.parquet
+           heldout/mapk14_ondna.csv heldout/mapk14_offdna.csv heldout/ddr1_ondna.csv heldout/ddr1_offdna.csv
+           synthons/reacted_a.csv synthons/reacted_b.csv synthons/reacted_c.csv)
+    for file in "${files[@]}"; do
+        mkdir -p "{{ kindel_dir }}/$(dirname "$file")"
+        echo "→ $file"
+        curl -fL --retry 5 -C - -o "{{ kindel_dir }}/$file" "$base/$file"
+    done
+    (cd {{ kindel_dir }} && sha256sum -c "{{ justfile_directory() }}/assets/kindel/SHA256SUMS")
+
+# Render the figures of a run to PNG for the README (kaleido downloads Chrome on first use)
+readme-figures dir="results":
+    uvx --with kaleido==1.5.0 --with plotly=={{ plotly_version }} python -I scripts/render_figures.py {{ dir }} docs/img
+
+# Copy a KinDEL run's report to docs/site/ for GitHub Pages (derived data: CC BY-NC-SA 4.0)
+publish-report dir="results":
+    mkdir -p docs/site
+    cp {{ dir }}/report.html docs/site/index.html
+
 # Open the HTML report from the last run
 report dir="results":
     uv run python -m webbrowser "file://$(realpath {{ dir }}/report.html)"
@@ -108,7 +141,7 @@ validate-fair dir="results":
     done
     uv run python - "{{ dir }}" <<'PY'
     import hashlib, json, pathlib, sys
-    for path in sorted(pathlib.Path(sys.argv[1]).glob("datasets/*/*.metadata.jsonld")):
+    for path in sorted(pathlib.Path(sys.argv[1]).glob("screens/*/*.metadata.jsonld")):
         metadata = json.loads(path.read_text())
         clean = path.with_name(metadata["distribution"][0]["name"])
         expected = "urn:sha256:" + hashlib.sha256(clean.read_bytes()).hexdigest()

@@ -1,0 +1,45 @@
+{
+    "five scores, prior on random building blocks": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "mapk14",
+                        "score_qc": "mapk14.score_qc.json:md5,6be30803c68dacd7983b4db4fdd0d42c",
+                        "scores": "mapk14.scores.parquet:md5,2d57adcf20b01d8ab31d9449757ef9ab",
+                        "top": "mapk14.top.parquet:md5,789923eb4000296379f0f7cc32c6d838"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-03T18:37:27.545978565",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "x",
+                        "score_qc": "x.score_qc.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "scores": "x.scores.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "top": "x.top.parquet:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-03T18:37:34.694179939",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

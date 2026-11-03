@@ -4,24 +4,19 @@
             {
                 "title": "A &lt;tested&gt; report",
                 "datasets": [
-                    "compounds",
-                    "expression"
+                    "bca",
+                    "mapk14"
                 ],
                 "figures": [
-                    "fig-compounds-correlation",
-                    "fig-compounds-distributions",
-                    "fig-compounds-importance",
-                    "fig-compounds-pca",
-                    "fig-expression-correlation",
-                    "fig-expression-distributions",
-                    "fig-expression-importance",
-                    "fig-expression-pca"
+                    "fig-bca-cube",
+                    "fig-mapk14-cube",
+                    "fig-mapk14-validation"
                 ],
                 "offline": true,
                 "bytes_over_1mb": true
             }
         ],
-        "timestamp": "2026-11-02T23:25:13.892286065",
+        "timestamp": "2026-11-03T18:37:02.275514094",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -35,7 +30,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-02T23:25:25.887211042",
+        "timestamp": "2026-11-03T18:37:17.042250335",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

@@ -1,0 +1,4 @@
+id,table,target,role,heldout_ondna,heldout_offdna,description,source,license,keywords
+mapk14,data/kindel/mapk14.parquet,MAPK14,target,data/kindel/heldout/mapk14_ondna.csv,data/kindel/heldout/mapk14_offdna.csv,KinDEL selection against mitogen-activated protein kinase 14 (p38α),10.48550/arXiv.2410.08938,https://github.com/insitro/kindel/blob/main/LICENSE.md,DNA-encoded library;kinase;MAPK14;KinDEL
+ddr1,data/kindel/ddr1.parquet,DDR1,target,data/kindel/heldout/ddr1_ondna.csv,data/kindel/heldout/ddr1_offdna.csv,KinDEL selection against discoidin domain receptor tyrosine kinase 1,10.48550/arXiv.2410.08938,https://github.com/insitro/kindel/blob/main/LICENSE.md,DNA-encoded library;kinase;DDR1;KinDEL
+bca,data/kindel/bca.parquet,BCA,counter,,,KinDEL selection against bovine carbonic anhydrase (non-kinase counter-screen),10.48550/arXiv.2410.08938,https://github.com/insitro/kindel/blob/main/LICENSE.md,DNA-encoded library;counter-screen;carbonic anhydrase;KinDEL

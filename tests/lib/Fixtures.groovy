@@ -12,7 +12,7 @@ class Fixtures {
      * Files nf-prov copies into the output directory for the RO-Crate. Relative paths with these
      * names would resolve to the project's own files in snapshots, so they are listed separately.
      */
-    static final List<String> CRATE_COPIES = ['main.nf', 'nextflow.config', 'README.md', 'ro-crate-metadata.json']
+    static final List<String> CRATE_COPIES = ['main.nf', 'nextflow.config', 'README.md', 'ro-crate-metadata.json', 'assets', 'assets/hits_dictionary.csv']
 
     /**
      * Link the project's assets/ into an nf-test launch directory, so the samplesheet's

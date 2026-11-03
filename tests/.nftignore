@@ -1,10 +1,10 @@
 # Files whose content changes between runs (timestamps, absolute paths, pipeline version).
 # Their presence is still snapshotted; their content is checked with explicit assertions.
-datasets.json
+screens.json
 report.html
 ro-crate-metadata.json
 main.nf
 nextflow.config
 README.md
 pipeline_info/*
-datasets/*/*.metadata.jsonld
+screens/*/*.metadata.jsonld

@@ -1,92 +1,171 @@
 {
-    "example data": {
+    "stub": {
         "content": [
             [
-                "datasets",
-                "datasets.json",
-                "datasets/compounds",
-                "datasets/compounds/compounds.clean.parquet",
-                "datasets/compounds/compounds.embedding.parquet",
-                "datasets/compounds/compounds.figures.json",
-                "datasets/compounds/compounds.metadata.jsonld",
-                "datasets/compounds/compounds.qc.json",
-                "datasets/compounds/compounds.stats.json",
-                "datasets/expression",
-                "datasets/expression/expression.clean.parquet",
-                "datasets/expression/expression.embedding.parquet",
-                "datasets/expression/expression.figures.json",
-                "datasets/expression/expression.metadata.jsonld",
-                "datasets/expression/expression.qc.json",
-                "datasets/expression/expression.stats.json",
                 "exports",
-                "exports/compounds",
-                "exports/compounds/SHA256SUMS",
-                "exports/compounds/compounds.npz",
-                "exports/compounds/compounds.parquet",
-                "exports/compounds/compounds.tsv",
-                "exports/compounds/datapackage.json",
-                "exports/expression",
-                "exports/expression/SHA256SUMS",
-                "exports/expression/datapackage.json",
-                "exports/expression/expression.npz",
-                "exports/expression/expression.parquet",
-                "exports/expression/expression.tsv",
+                "exports/bca",
+                "exports/bca/SHA256SUMS",
+                "exports/bca/bca_hits.parquet",
+                "exports/bca/datapackage.json",
+                "exports/ddr1",
+                "exports/ddr1/SHA256SUMS",
+                "exports/ddr1/datapackage.json",
+                "exports/ddr1/ddr1_hits.parquet",
+                "exports/mapk14",
+                "exports/mapk14/SHA256SUMS",
+                "exports/mapk14/datapackage.json",
+                "exports/mapk14/mapk14_hits.parquet",
                 "pipeline_info",
                 "pipeline_info/bco.json",
                 "pipeline_info/dag.html",
                 "pipeline_info/execution_report.html",
                 "pipeline_info/timeline.html",
                 "pipeline_info/versions.yml",
-                "report.html"
+                "report.html",
+                "screens",
+                "screens.json",
+                "screens/bca",
+                "screens/bca/bca.counts_qc.json",
+                "screens/bca/bca.figures.json",
+                "screens/bca/bca.metadata.jsonld",
+                "screens/bca/bca.score_qc.json",
+                "screens/bca/bca.scores.parquet",
+                "screens/bca/bca.top.parquet",
+                "screens/bca/bca.validation.json",
+                "screens/ddr1",
+                "screens/ddr1/ddr1.counts_qc.json",
+                "screens/ddr1/ddr1.figures.json",
+                "screens/ddr1/ddr1.metadata.jsonld",
+                "screens/ddr1/ddr1.score_qc.json",
+                "screens/ddr1/ddr1.scores.parquet",
+                "screens/ddr1/ddr1.top.parquet",
+                "screens/ddr1/ddr1.validation.json",
+                "screens/mapk14",
+                "screens/mapk14/mapk14.counts_qc.json",
+                "screens/mapk14/mapk14.figures.json",
+                "screens/mapk14/mapk14.metadata.jsonld",
+                "screens/mapk14/mapk14.score_qc.json",
+                "screens/mapk14/mapk14.scores.parquet",
+                "screens/mapk14/mapk14.top.parquet",
+                "screens/mapk14/mapk14.validation.json",
+                "sublibrary.json"
+            ]
+        ],
+        "timestamp": "2026-11-03T18:39:52.753705302",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "synthetic library": {
+        "content": [
+            [
+                "exports",
+                "exports/bca",
+                "exports/bca/SHA256SUMS",
+                "exports/bca/bca_hits.parquet",
+                "exports/bca/bca_hits.tsv",
+                "exports/bca/datapackage.json",
+                "exports/ddr1",
+                "exports/ddr1/SHA256SUMS",
+                "exports/ddr1/datapackage.json",
+                "exports/ddr1/ddr1_hits.parquet",
+                "exports/ddr1/ddr1_hits.tsv",
+                "exports/mapk14",
+                "exports/mapk14/SHA256SUMS",
+                "exports/mapk14/datapackage.json",
+                "exports/mapk14/mapk14_hits.parquet",
+                "exports/mapk14/mapk14_hits.tsv",
+                "pipeline_info",
+                "pipeline_info/bco.json",
+                "pipeline_info/dag.html",
+                "pipeline_info/execution_report.html",
+                "pipeline_info/timeline.html",
+                "pipeline_info/versions.yml",
+                "report.html",
+                "screens",
+                "screens.json",
+                "screens/bca",
+                "screens/bca/bca.counts_qc.json",
+                "screens/bca/bca.figures.json",
+                "screens/bca/bca.metadata.jsonld",
+                "screens/bca/bca.score_qc.json",
+                "screens/bca/bca.scores.parquet",
+                "screens/bca/bca.top.parquet",
+                "screens/bca/bca.validation.json",
+                "screens/ddr1",
+                "screens/ddr1/ddr1.counts_qc.json",
+                "screens/ddr1/ddr1.figures.json",
+                "screens/ddr1/ddr1.metadata.jsonld",
+                "screens/ddr1/ddr1.score_qc.json",
+                "screens/ddr1/ddr1.scores.parquet",
+                "screens/ddr1/ddr1.top.parquet",
+                "screens/ddr1/ddr1.validation.json",
+                "screens/mapk14",
+                "screens/mapk14/mapk14.counts_qc.json",
+                "screens/mapk14/mapk14.figures.json",
+                "screens/mapk14/mapk14.metadata.jsonld",
+                "screens/mapk14/mapk14.score_qc.json",
+                "screens/mapk14/mapk14.scores.parquet",
+                "screens/mapk14/mapk14.top.parquet",
+                "screens/mapk14/mapk14.validation.json",
+                "sublibrary.json"
             ],
             [
-                "compounds.clean.parquet:md5,ba70b831676d74ba85dac09e84978d22",
-                "compounds.embedding.parquet:md5,de733966d9dc21b640048ce95a539c8c",
-                "compounds.figures.json:md5,7f340570175cab05e9b6f030466a67a6",
-                "compounds.qc.json:md5,2df8f7b854a99932c5bb871d79b6dac7",
-                "compounds.stats.json:md5,f9343478862c95822cff0e8cc6bda7b4",
-                "expression.clean.parquet:md5,03a498054fd0773e7e1c046e7f2de172",
-                "expression.embedding.parquet:md5,31ad50b975769a025133b21c7f803c75",
-                "expression.figures.json:md5,e6a3efe7338ca578cad3de204432ee65",
-                "expression.qc.json:md5,90f7acd0b6caeb076a9d53ac938cee76",
-                "expression.stats.json:md5,278dabe9519b5452ec6d9827e13396cf",
-                "SHA256SUMS:md5,38772a233e4ca580422ffc697593a09a",
-                "compounds.npz:md5,fc814d56b2a1f8530ca386976ed57c25",
-                "compounds.parquet:md5,ba70b831676d74ba85dac09e84978d22",
-                "compounds.tsv:md5,3baabe375f0a27ed799eb9e638e0985c",
-                "datapackage.json:md5,da42311fbd576728815a59aa5595d3f3",
-                "SHA256SUMS:md5,acbd676a257104608bc7021cc1ec6a4f",
-                "datapackage.json:md5,059dc4cf138a4fcdaecf9ff749885014",
-                "expression.npz:md5,bb006ea5b09f01dca720a6967740e64a",
-                "expression.parquet:md5,03a498054fd0773e7e1c046e7f2de172",
-                "expression.tsv:md5,5e0f22e6942048dab462251b6332cea7"
+                "hits_dictionary.csv:md5,adfc67749c92f7126fb153f2f928c469",
+                "SHA256SUMS:md5,193cd0290c2f8549469aca3d9f479ecb",
+                "bca_hits.parquet:md5,b99738961cdc0625ec6e478a64d40ecb",
+                "bca_hits.tsv:md5,f3571c038cea71a539e34159d1a3074f",
+                "datapackage.json:md5,0b33d9ddfb14513022f90fd560523810",
+                "SHA256SUMS:md5,71258a38b71150e04371fad254656eee",
+                "datapackage.json:md5,9c0252d84ecd86784b4a3e2bd6582d91",
+                "ddr1_hits.parquet:md5,fd3c803a13088e22d502b7f31f848e78",
+                "ddr1_hits.tsv:md5,cd50cfe22b9239f58a74f713db883614",
+                "SHA256SUMS:md5,f56ba656a974c816d2365ab07a31524d",
+                "datapackage.json:md5,1660b2a3dab53a63a450ffa16131cf7c",
+                "mapk14_hits.parquet:md5,789923eb4000296379f0f7cc32c6d838",
+                "mapk14_hits.tsv:md5,6a6d83469bca79d4a7adb3b3ec868f0f",
+                "bca.counts_qc.json:md5,4e48fa35100febd5e5653e53be724bdf",
+                "bca.figures.json:md5,03df3a70eb7f7052b90655fd0148a7fd",
+                "bca.score_qc.json:md5,8be5d9baa5a01cf2497c3e71a1e20f2e",
+                "bca.scores.parquet:md5,9d93ab1dc96eb408bd464219e04cd35e",
+                "bca.top.parquet:md5,b99738961cdc0625ec6e478a64d40ecb",
+                "bca.validation.json:md5,58e0494c51d30eb3494f7c9198986bb9",
+                "ddr1.counts_qc.json:md5,da1ff6325ca925097580e25a26221143",
+                "ddr1.figures.json:md5,d2f7e02cdc32ecb35cef4818d53b908c",
+                "ddr1.score_qc.json:md5,2bdb2c8f97ed15c449860d5d61f77a75",
+                "ddr1.scores.parquet:md5,23b628072392d1d7ae9321309bda8d7e",
+                "ddr1.top.parquet:md5,fd3c803a13088e22d502b7f31f848e78",
+                "ddr1.validation.json:md5,559c3195ddcfe454f536ee20a53355bf",
+                "mapk14.counts_qc.json:md5,775651dcaae707455f38c5dc53bd14c2",
+                "mapk14.figures.json:md5,7b2367f0af63fe62afb085769992e9f4",
+                "mapk14.score_qc.json:md5,6be30803c68dacd7983b4db4fdd0d42c",
+                "mapk14.scores.parquet:md5,2d57adcf20b01d8ab31d9449757ef9ab",
+                "mapk14.top.parquet:md5,789923eb4000296379f0f7cc32c6d838",
+                "mapk14.validation.json:md5,0f9b45784cd4669c16b0a4a54281f7e7",
+                "sublibrary.json:md5,69f7d8e51d8d00826420799bd497f3f4"
             ],
             {
                 "<pipeline package>": "<pipeline version>",
                 "coreutils": "9.7",
-                "gzip": "1.13",
                 "numpy": "2.5.4",
                 "plotly": "7.1.0",
                 "polars": "2.1.0",
-                "python": "3.14",
-                "scikit-learn": "1.9.1",
                 "scipy": "1.18.1"
             },
             {
                 "title": "Test report",
                 "datasets": [
-                    "compounds",
-                    "expression"
+                    "bca",
+                    "ddr1",
+                    "mapk14"
                 ],
                 "figures": [
-                    "fig-compounds-correlation",
-                    "fig-compounds-distributions",
-                    "fig-compounds-importance",
-                    "fig-compounds-pca",
-                    "fig-expression-correlation",
-                    "fig-expression-distributions",
-                    "fig-expression-importance",
-                    "fig-expression-pca"
+                    "fig-bca-cube",
+                    "fig-ddr1-cube",
+                    "fig-ddr1-validation",
+                    "fig-mapk14-cube",
+                    "fig-mapk14-validation"
                 ],
                 "offline": true,
                 "bytes_over_1mb": true
@@ -96,145 +175,212 @@
                     "@vocab": "https://schema.org/",
                     "prov": "http://www.w3.org/ns/prov#"
                 },
-                "@id": "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                "@id": "urn:sha256:3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                 "@type": "Dataset",
                 "creator": {
                     "@type": "Person",
                     "name": "Test Creator"
                 },
-                "description": "Synthetic compound descriptors with a binary activity label",
+                "description": "Synthetic DEL selection against MAPK14 with planted binders",
                 "distribution": [
                     {
                         "@type": "DataDownload",
-                        "contentSize": "4498 B",
-                        "contentUrl": "compounds.clean.parquet",
+                        "contentSize": "22265 B",
+                        "contentUrl": "mapk14.top.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "compounds.clean.parquet",
-                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "name": "mapk14.top.parquet",
+                        "sha256": "3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
                     },
                     {
                         "@type": "DataDownload",
-                        "contentSize": "1884 B",
-                        "contentUrl": "../../exports/compounds/compounds.npz",
-                        "encodingFormat": [
-                            "application/zip",
-                            "http://edamontology.org/format_4003"
-                        ],
-                        "name": "compounds.npz",
-                        "sha256": "8cb529b3b05568def11cdf3a32ed9c93dd45d0bb0ee7f388bba956772c5a92cd",
-                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
-                    },
-                    {
-                        "@type": "DataDownload",
-                        "contentSize": "4498 B",
-                        "contentUrl": "../../exports/compounds/compounds.parquet",
+                        "contentSize": "22265 B",
+                        "contentUrl": "../../exports/mapk14/mapk14_hits.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "compounds.parquet",
-                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "name": "mapk14_hits.parquet",
+                        "sha256": "3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
                     },
                     {
                         "@type": "DataDownload",
-                        "contentSize": "2142 B",
-                        "contentUrl": "../../exports/compounds/compounds.tsv",
+                        "contentSize": "43160 B",
+                        "contentUrl": "../../exports/mapk14/mapk14_hits.tsv",
                         "encodingFormat": [
                             "text/tab-separated-values",
                             "http://edamontology.org/format_3475"
                         ],
-                        "name": "compounds.tsv",
-                        "sha256": "0829b0cd387c9179a27e1ce10f225f12b20b4da0cf154f7d0d1642cee03d78fd",
+                        "name": "mapk14_hits.tsv",
+                        "sha256": "de2180189e92909a4666e8fe9236d340e19d3ab21481d8dca7d9634579ab1738",
                         "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
                     }
                 ],
                 "identifier": [
-                    "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                    "urn:sha256:3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                     {
                         "@type": "PropertyValue",
                         "propertyID": "dataset_id",
-                        "value": "compounds"
+                        "value": "mapk14"
                     }
                 ],
                 "keywords": [
-                    "cheminformatics",
-                    "drug discovery",
-                    "qsar"
+                    "DNA-encoded library",
+                    "kinase",
+                    "synthetic"
                 ],
                 "license": "https://spdx.org/licenses/CC0-1.0",
-                "name": "compounds",
+                "name": "mapk14",
                 "variableMeasured": [
                     {
                         "@type": "PropertyValue",
-                        "description": "Compound identifier",
-                        "name": "compound_id"
+                        "description": "SHA-256 hash of the compound SMILES (KinDEL identifier)",
+                        "name": "molecule_hash"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Chemical structure as a SMILES string",
+                        "description": "Compound structure (SMILES)",
                         "name": "smiles",
                         "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Average molecular weight",
-                        "maxValue": 455.27,
-                        "minValue": 253.83,
-                        "name": "MolWt",
-                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000221",
-                        "unitText": "Da"
+                        "description": "Building block at position A (row of synthons/reacted_a.csv)",
+                        "name": "bb_a"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Octanol-water partition coefficient (log10)",
-                        "maxValue": 5.028,
-                        "minValue": 0.783,
-                        "name": "LogP"
+                        "description": "Building block at position B (row of synthons/reacted_b.csv)",
+                        "name": "bb_b"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Topological polar surface area",
-                        "maxValue": 100.46,
-                        "minValue": 9.07,
-                        "name": "TPSA",
-                        "unitText": "\u00c5\u00b2"
+                        "description": "Building block at position C (row of synthons/reacted_c.csv)",
+                        "name": "bb_c"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Number of hydrogen bond donors",
-                        "maxValue": 4.0,
-                        "minValue": 0.0,
-                        "name": "HBD",
+                        "description": "Sequence count in target selection replicate 1 (distinct encodings)",
+                        "name": "target_1",
                         "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
                         "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Number of hydrogen bond acceptors",
-                        "maxValue": 8.0,
-                        "minValue": 1.0,
-                        "name": "HBA",
+                        "description": "Sequence count in target selection replicate 2 (distinct encodings)",
+                        "name": "target_2",
                         "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
                         "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Number of rotatable bonds",
-                        "maxValue": 9.0,
-                        "minValue": 0.0,
-                        "name": "RotB",
+                        "description": "Sequence count in target selection replicate 3 (distinct encodings)",
+                        "name": "target_3",
                         "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
                         "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Binary activity label from a (synthetic) screening assay",
-                        "name": "active"
+                        "description": "Sequence count in no-protein (matrix) control replicate 1",
+                        "name": "matrix_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 2",
+                        "name": "matrix_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 3",
+                        "name": "matrix_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in the pre-selection library (synthesis abundance)",
+                        "name": "load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled target count (three replicates)",
+                        "name": "target_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled control count (three replicates)",
+                        "name": "control_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of target replicates with at least one count (0-3)",
+                        "name": "target_support",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Whether the compound's BB-A was drawn at random (unbiased; used to fit the prior)",
+                        "name": "random_bb_a"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Mean target count minus mean control count (KinDEL Counts baseline)",
+                        "name": "count_diff",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Depth-normalised enrichment ratio with pseudocount",
+                        "name": "er",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Maximum-likelihood rate ratio target/control (null when the control count is 0)",
+                        "name": "poisson_ratio",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the exact confidence interval of the rate ratio (ranking score)",
+                        "name": "poisson_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Upper bound of the exact confidence interval of the rate ratio (null when unbounded)",
+                        "name": "poisson_upper",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Normalised z-score of the target fraction against a uniform library (Faver et al. 2019)",
+                        "name": "z_faver"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Empirical-Bayes shrunken log2 rate ratio (Beta-Binomial prior)",
+                        "name": "eb_log2_ratio"
                     }
                 ]
             },
@@ -243,224 +389,217 @@
                     "@vocab": "https://schema.org/",
                     "prov": "http://www.w3.org/ns/prov#"
                 },
-                "@id": "urn:sha256:8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                "@id": "urn:sha256:5f572f3a5985370dc3f2bfc4c7d5fb6462501c79b8fee2c1e7c61ddfaa7bfa3b",
                 "@type": "Dataset",
                 "creator": {
                     "@type": "Person",
                     "name": "Test Creator"
                 },
-                "description": "Synthetic log2 gene expression of treated and control samples",
+                "description": "Synthetic DEL selection against bovine carbonic anhydrase (counter-screen)",
                 "distribution": [
                     {
                         "@type": "DataDownload",
-                        "contentSize": "7597 B",
-                        "contentUrl": "expression.clean.parquet",
+                        "contentSize": "21569 B",
+                        "contentUrl": "bca.top.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "expression.clean.parquet",
-                        "sha256": "8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                        "name": "bca.top.parquet",
+                        "sha256": "5f572f3a5985370dc3f2bfc4c7d5fb6462501c79b8fee2c1e7c61ddfaa7bfa3b",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
                     },
                     {
                         "@type": "DataDownload",
-                        "contentSize": "2591 B",
-                        "contentUrl": "../../exports/expression/expression.npz",
-                        "encodingFormat": [
-                            "application/zip",
-                            "http://edamontology.org/format_4003"
-                        ],
-                        "name": "expression.npz",
-                        "sha256": "3938d562b71161fd131d8c06c2f59c5a2e550a15b35dd9b63bf4358cb43634af",
-                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
-                    },
-                    {
-                        "@type": "DataDownload",
-                        "contentSize": "7597 B",
-                        "contentUrl": "../../exports/expression/expression.parquet",
+                        "contentSize": "21569 B",
+                        "contentUrl": "../../exports/bca/bca_hits.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "expression.parquet",
-                        "sha256": "8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                        "name": "bca_hits.parquet",
+                        "sha256": "5f572f3a5985370dc3f2bfc4c7d5fb6462501c79b8fee2c1e7c61ddfaa7bfa3b",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
                     },
                     {
                         "@type": "DataDownload",
-                        "contentSize": "2682 B",
-                        "contentUrl": "../../exports/expression/expression.tsv",
+                        "contentSize": "42885 B",
+                        "contentUrl": "../../exports/bca/bca_hits.tsv",
                         "encodingFormat": [
                             "text/tab-separated-values",
                             "http://edamontology.org/format_3475"
                         ],
-                        "name": "expression.tsv",
-                        "sha256": "80b59e8fc328805bfe67e3cefb9745d5cdb384ed35a38924a3636c0360b2510f",
+                        "name": "bca_hits.tsv",
+                        "sha256": "b348cbd121b4d86719a5b9bfd72df17d852f4a764e91e26455d88134e0597b66",
                         "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
                     }
                 ],
                 "identifier": [
-                    "urn:sha256:8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                    "urn:sha256:5f572f3a5985370dc3f2bfc4c7d5fb6462501c79b8fee2c1e7c61ddfaa7bfa3b",
                     {
                         "@type": "PropertyValue",
                         "propertyID": "dataset_id",
-                        "value": "expression"
+                        "value": "bca"
                     }
                 ],
                 "keywords": [
-                    "bioinformatics",
-                    "transcriptomics"
+                    "DNA-encoded library",
+                    "counter-screen",
+                    "synthetic"
                 ],
-                "license": "https://spdx.org/licenses/CC-BY-4.0",
-                "name": "expression",
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "name": "bca",
                 "variableMeasured": [
                     {
                         "@type": "PropertyValue",
-                        "description": "Unique row identifier",
-                        "name": "sample_id"
+                        "description": "SHA-256 hash of the compound SMILES (KinDEL identifier)",
+                        "name": "molecule_hash"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Non-numeric annotation carried along with the data",
-                        "name": "batch"
+                        "description": "Compound structure (SMILES)",
+                        "name": "smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 8.842,
-                        "minValue": 6.941,
-                        "name": "TP53"
+                        "description": "Building block at position A (row of synthons/reacted_a.csv)",
+                        "name": "bb_a"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.207,
-                        "minValue": 6.618,
-                        "name": "MYC"
+                        "description": "Building block at position B (row of synthons/reacted_b.csv)",
+                        "name": "bb_b"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.276,
-                        "minValue": 6.133,
-                        "name": "EGFR"
+                        "description": "Building block at position C (row of synthons/reacted_c.csv)",
+                        "name": "bb_c"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.523,
-                        "minValue": 7.31,
-                        "name": "GAPDH"
+                        "description": "Sequence count in target selection replicate 1 (distinct encodings)",
+                        "name": "target_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.214,
-                        "minValue": 6.26,
-                        "name": "ACTB"
+                        "description": "Sequence count in target selection replicate 2 (distinct encodings)",
+                        "name": "target_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.016,
-                        "minValue": 6.748,
-                        "name": "VEGFA"
+                        "description": "Sequence count in target selection replicate 3 (distinct encodings)",
+                        "name": "target_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 10.974,
-                        "minValue": 6.871,
-                        "name": "IL6"
+                        "description": "Sequence count in no-protein (matrix) control replicate 1",
+                        "name": "matrix_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 10.835,
-                        "minValue": 6.891,
-                        "name": "TNF"
+                        "description": "Sequence count in no-protein (matrix) control replicate 2",
+                        "name": "matrix_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 10.514,
-                        "minValue": 6.7,
-                        "name": "CDKN1A"
+                        "description": "Sequence count in no-protein (matrix) control replicate 3",
+                        "name": "matrix_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.779,
-                        "minValue": 6.865,
-                        "name": "BRCA1"
+                        "description": "Sequence count in the pre-selection library (synthesis abundance)",
+                        "name": "load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.543,
-                        "minValue": 6.61,
-                        "name": "KRAS"
+                        "description": "Pooled target count (three replicates)",
+                        "name": "target_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.777,
-                        "minValue": 6.648,
-                        "name": "STAT3"
+                        "description": "Pooled control count (three replicates)",
+                        "name": "control_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Prediction target (label or response)",
-                        "name": "condition"
+                        "description": "Number of target replicates with at least one count (0-3)",
+                        "name": "target_support",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Whether the compound's BB-A was drawn at random (unbiased; used to fit the prior)",
+                        "name": "random_bb_a"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Mean target count minus mean control count (KinDEL Counts baseline)",
+                        "name": "count_diff",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Depth-normalised enrichment ratio with pseudocount",
+                        "name": "er",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Maximum-likelihood rate ratio target/control (null when the control count is 0)",
+                        "name": "poisson_ratio",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the exact confidence interval of the rate ratio (ranking score)",
+                        "name": "poisson_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Upper bound of the exact confidence interval of the rate ratio (null when unbounded)",
+                        "name": "poisson_upper",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Normalised z-score of the target fraction against a uniform library (Faver et al. 2019)",
+                        "name": "z_faver"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Empirical-Bayes shrunken log2 rate ratio (Beta-Binomial prior)",
+                        "name": "eb_log2_ratio"
                     }
                 ]
             }
         ],
-        "timestamp": "2026-11-02T23:26:20.768751463",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.10.5"
-        }
-    },
-    "stub": {
-        "content": [
-            [
-                "datasets",
-                "datasets.json",
-                "datasets/compounds",
-                "datasets/compounds/compounds.clean.parquet",
-                "datasets/compounds/compounds.embedding.parquet",
-                "datasets/compounds/compounds.figures.json",
-                "datasets/compounds/compounds.metadata.jsonld",
-                "datasets/compounds/compounds.qc.json",
-                "datasets/compounds/compounds.stats.json",
-                "datasets/expression",
-                "datasets/expression/expression.clean.parquet",
-                "datasets/expression/expression.embedding.parquet",
-                "datasets/expression/expression.figures.json",
-                "datasets/expression/expression.metadata.jsonld",
-                "datasets/expression/expression.qc.json",
-                "datasets/expression/expression.stats.json",
-                "exports",
-                "exports/compounds",
-                "exports/compounds/SHA256SUMS",
-                "exports/compounds/compounds.parquet",
-                "exports/compounds/datapackage.json",
-                "exports/expression",
-                "exports/expression/SHA256SUMS",
-                "exports/expression/datapackage.json",
-                "exports/expression/expression.parquet",
-                "pipeline_info",
-                "pipeline_info/bco.json",
-                "pipeline_info/dag.html",
-                "pipeline_info/execution_report.html",
-                "pipeline_info/timeline.html",
-                "pipeline_info/versions.yml",
-                "report.html"
-            ]
-        ],
-        "timestamp": "2026-11-02T23:26:33.657617363",
+        "timestamp": "2026-11-03T18:39:36.127976937",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

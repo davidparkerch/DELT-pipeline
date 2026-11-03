@@ -1,11 +1,11 @@
 {
-    "figures": {
+    "cube and validation": {
         "content": [
             {
                 "0": [
                     {
-                        "figures": "expression.figures.json:md5,e6a3efe7338ca578cad3de204432ee65",
-                        "id": "expression"
+                        "figures": "mapk14.figures.json:md5,09be8eb117ce3936eb8d824fd1bb7aab",
+                        "id": "mapk14"
                     }
                 ]
             },
@@ -13,12 +13,10 @@
                 "<pipeline package>": "<pipeline version>",
                 "plotly": "7.1.0",
                 "polars": "2.1.0",
-                "python": "3.14",
-                "scikit-learn": "1.9.1",
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-02T23:25:37.98793099",
+        "timestamp": "2026-11-03T18:38:50.721480258",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -35,7 +33,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-02T23:25:45.667455679",
+        "timestamp": "2026-11-03T18:39:01.26446017",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

@@ -9,16 +9,23 @@ from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescap
 from plotly.offline import get_plotlyjs
 
 METADATA_SUFFIX = ".metadata.jsonld"
-PARTS = {"qc": ".qc.json", "stats": ".stats.json", "figures": ".figures.json", "metadata": METADATA_SUFFIX}
+PARTS = {
+    "counts_qc": ".counts_qc.json",
+    "score_qc": ".score_qc.json",
+    "validation": ".validation.json",
+    "figures": ".figures.json",
+    "metadata": METADATA_SUFFIX,
+}
 
 
 @dataclass(frozen=True)
 class DatasetBundle:
-    """Everything the report shows for one dataset."""
+    """Everything the report shows for one screen."""
 
     id: str
-    qc: dict[str, Any]
-    stats: dict[str, Any]
+    counts_qc: dict[str, Any]
+    score_qc: dict[str, Any]
+    validation: list[dict[str, Any]]
     figures: dict[str, Any]
     metadata: dict[str, Any]
 
@@ -29,7 +36,7 @@ def discover_ids(directory: Path) -> list[str]:
 
 
 def load_bundle(directory: Path, dataset_id: str) -> DatasetBundle:
-    """Load ``<id>.qc.json``, ``<id>.stats.json``, ``<id>.figures.json`` and ``<id>.metadata.jsonld``."""
+    """Load the QC, score, validation, figure and metadata files of one screen (``<id>.<part>``)."""
     parts = {key: json.loads((directory / f"{dataset_id}{suffix}").read_text()) for key, suffix in PARTS.items()}
     return DatasetBundle(id=dataset_id, **parts)
 

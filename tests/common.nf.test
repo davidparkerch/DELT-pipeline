@@ -9,13 +9,13 @@ nextflow_function {
         when {
             function {
                 """
-                input[0] = 'Synthetic compound descriptors'
+                input[0] = 'Synthetic DEL screen'
                 """
             }
         }
         then {
             assert function.success
-            assert function.result == "'Synthetic compound descriptors'"
+            assert function.result == "'Synthetic DEL screen'"
         }
     }
 

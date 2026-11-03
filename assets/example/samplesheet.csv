@@ -1,3 +1,4 @@
-id,table,id_column,target_column,description,source,license,keywords,dictionary
-compounds,assets/example/compounds.csv.gz,compound_id,active,Synthetic compound descriptors with a binary activity label,,CC0-1.0,cheminformatics;drug discovery;qsar,assets/example/compounds_dictionary.csv
-expression,assets/example/expression.csv,sample_id,condition,Synthetic log2 gene expression of treated and control samples,,,bioinformatics;transcriptomics,
+id,table,target,role,heldout_ondna,heldout_offdna,description,source,license,keywords
+mapk14,assets/example/mapk14.parquet,MAPK14-sim,target,assets/example/heldout/mapk14_ondna.csv,assets/example/heldout/mapk14_offdna.csv,Synthetic DEL selection against MAPK14 with planted binders,,CC0-1.0,DNA-encoded library;kinase;synthetic
+ddr1,assets/example/ddr1.parquet,DDR1-sim,target,assets/example/heldout/ddr1_ondna.csv,assets/example/heldout/ddr1_offdna.csv,Synthetic DEL selection against DDR1 with planted binders,,CC0-1.0,DNA-encoded library;kinase;synthetic
+bca,assets/example/bca.parquet,BCA-sim,counter,,,Synthetic DEL selection against bovine carbonic anhydrase (counter-screen),,CC0-1.0,DNA-encoded library;counter-screen;synthetic

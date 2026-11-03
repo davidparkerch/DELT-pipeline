@@ -4,93 +4,77 @@ import runpy
 import sys
 from pathlib import Path
 
-import numpy as np
 import polars as pl
 import pytest
+from conftest import run_cli
 
 from delt_pipeline import __version__
 from delt_pipeline.cli import main
 
 
-@pytest.fixture
-def raw_csv(tmp_path: Path, raw_frame: pl.DataFrame) -> Path:
-    path = tmp_path / "raw.csv"
-    raw_frame.write_csv(path)
-    return path
+def test_simulate(tmp_path: Path) -> None:
+    assert run_cli("simulate", "--outdir", tmp_path, "--seed", 3) == 0
+    assert {path.name for path in tmp_path.glob("*.parquet")} == {"mapk14.parquet", "ddr1.parquet", "bca.parquet"}
+    assert len(list((tmp_path / "heldout").glob("*.csv"))) == 4
+    assert len(list((tmp_path / "synthons").glob("reacted_*.csv"))) == 3
 
 
-def run(*args: str | Path) -> int:
-    return main([str(arg) for arg in args])
+def test_pipeline_steps(pipeline_dir: Path) -> None:
+    sublibrary = json.loads((pipeline_dir / "sublibrary.json").read_text())
+    assert len(sublibrary["heldout"]) + len(sublibrary["random"]) == 8
+    top = pl.read_parquet(pipeline_dir / "mapk14.top.parquet")
+    assert top.height == 300
+    assert json.loads((pipeline_dir / "bca.validation.json").read_text()) == []
+    validation = json.loads((pipeline_dir / "mapk14.validation.json").read_text())
+    assert [result["condition"] for result in validation] == ["on", "off"]
+    assert set(json.loads((pipeline_dir / "mapk14.figures.json").read_text())) == {"cube", "validation"}
+    assert {path.name for path in (pipeline_dir / "exports/mapk14").iterdir()} == {
+        "mapk14_hits.parquet",
+        "mapk14_hits.tsv",
+        "datapackage.json",
+    }
+    metadata = json.loads((pipeline_dir / "mapk14.metadata.jsonld").read_text())
+    assert metadata["keywords"] == ["DEL", "kinase"]
+    assert metadata["license"] == "https://github.com/insitro/kindel/blob/main/LICENSE.md"
+    assert (pipeline_dir / "mapk14.identifier.txt").read_text().strip() == metadata["@id"]
+    variables = {variable["name"]: variable for variable in metadata["variableMeasured"]}
+    assert variables["poisson_lower"]["description"].startswith("Lower bound")
 
 
-def test_full_pipeline(tmp_path: Path, raw_csv: Path) -> None:
-    table = ["--id-column", "Sample ID", "--target-column", "label"]
-    clean, qc = tmp_path / "ds.clean.parquet", tmp_path / "ds.qc.json"
-    embedding, stats = tmp_path / "ds.embedding.parquet", tmp_path / "ds.stats.json"
-    figures, exports = tmp_path / "ds.figures.json", tmp_path / "exports"
+def test_validate_without_heldout_skips_reading_scores(tmp_path: Path) -> None:
+    output = tmp_path / "v.json"
+    missing = tmp_path / "missing"
+    assert run_cli("validate", "--scores", missing, "--score-qc", missing, "--target", "x", "--output", output) == 0
+    assert json.loads(output.read_text()) == []
 
-    assert run("wrangle", "--input", raw_csv, *table, "--output", clean, "--qc", qc) == 0
-    assert json.loads(qc.read_text())["rows_out"] == 24
-    assert run("analyse", "--input", clean, *table, "--cv-folds", "3", "--embedding", embedding, "--stats", stats) == 0
-    assert (
-        run("visualise", "--input", clean, *table, "--embedding", embedding, "--stats", stats, "--output", figures) == 0
-    )
-    assert "pca" in json.loads(figures.read_text())
-    assert run("export", "--input", clean, *table, "--formats", "csv,npz", "--prefix", "ds", "--outdir", exports) == 0
-    assert np.load(exports / "ds.npz")["X"].shape == (24, 3)
 
-    sums = tmp_path / "SHA256SUMS"
-    sums.write_text(f"{'0' * 64}  ds.csv\n")
-    dictionary = tmp_path / "dictionary.csv"
-    dictionary.write_text("column,description\nfeat alpha,Alpha\n")
-    jsonld, package, identifier = tmp_path / "ds.metadata.jsonld", tmp_path / "datapackage.json", tmp_path / "id.txt"
-    describe = ["describe", "--input", clean, *table, "--id", "ds", "--pipeline", "demo", "--pipeline-version", "1.0"]
-    describe += ["--exports", exports / "ds.csv", exports / "ds.npz", "--sha256sums", sums, "--stats", stats]
-    describe += ["--dictionary", dictionary, "--keywords", "chem; ml,", "--exports-base", "../exports/"]
-    describe += ["--jsonld", jsonld, "--datapackage", package, "--identifier", identifier]
-    assert run(*describe) == 0
-    metadata = json.loads(jsonld.read_text())
-    assert metadata["keywords"] == ["chem", "ml"]
-    assert identifier.read_text().strip() == metadata["@id"]
-    assert {item["contentUrl"] for item in metadata["distribution"]} >= {"../exports/ds.csv", "ds.clean.parquet"}
-    assert json.loads(package.read_text())["resources"][0]["hash"] == f"sha256:{'0' * 64}"
+def test_validate_one_assay_and_describe_without_identifier(
+    pipeline_dir: Path, library_dir: Path, tmp_path: Path
+) -> None:
+    output = tmp_path / "v.json"
+    scored = ["--scores", pipeline_dir / "mapk14.scores.parquet", "--score-qc", pipeline_dir / "mapk14.score_qc.json"]
+    offdna = library_dir / "heldout/mapk14_offdna.csv"
+    assert run_cli("validate", *scored, "--target", "mapk14", "--offdna", offdna, "--output", output) == 0
+    assert [result["condition"] for result in json.loads(output.read_text())] == ["off"]
+    jsonld, package = tmp_path / "m.jsonld", tmp_path / "m.json"
+    describe = ["describe", "--input", pipeline_dir / "mapk14.top.parquet", "--id-column", "molecule_hash", "--id", "m"]
+    describe += ["--pipeline", "demo", "--pipeline-version", "1", "--jsonld", jsonld, "--datapackage", package]
+    assert run_cli(*describe) == 0
+    assert json.loads(package.read_text())["resources"] == []
 
+
+def test_report(pipeline_dir: Path, tmp_path: Path) -> None:
     versions, report = tmp_path / "versions.yml", tmp_path / "report.html"
     versions.write_text("demo: 1.0\n")
-    assert (
-        run(
-            "report",
-            "--input-dir",
-            tmp_path,
-            "--versions",
-            versions,
-            "--title",
-            "T",
-            "--pipeline",
-            "demo",
-            "--pipeline-version",
-            "1.0",
-            "--output",
-            report,
-        )
-        == 0
-    )
+    args = ["report", "--input-dir", pipeline_dir, "--versions", versions, "--title", "T"]
+    assert run_cli(*args, "--pipeline", "demo", "--pipeline-version", "1.0", "--output", report) == 0
     assert "<title>T</title>" in report.read_text()
-
-
-def test_describe_minimal(tmp_path: Path, raw_csv: Path) -> None:
-    clean, qc = tmp_path / "u.clean.parquet", tmp_path / "u.qc.json"
-    run("wrangle", "--input", raw_csv, "--id-column", "Sample ID", "--output", clean, "--qc", qc)
-    jsonld, package = tmp_path / "u.jsonld", tmp_path / "u.json"
-    args = ["describe", "--input", clean, "--id-column", "Sample ID", "--id", "u", "--pipeline", "demo"]
-    assert run(*args, "--pipeline-version", "1", "--jsonld", jsonld, "--datapackage", package) == 0
-    assert json.loads(package.read_text())["resources"] == []
 
 
 @pytest.mark.parametrize(
     ("args", "message"),
     [
-        (["export", "--input", "{clean}", "--id-column", "Sample ID", "--formats", "xlsx", "--prefix", "x"], "xlsx"),
+        (["export", "--input", "{top}", "--id-column", "molecule_hash", "--formats", "xlsx", "--prefix", "x"], "xlsx"),
         (
             [
                 "report",
@@ -107,14 +91,54 @@ def test_describe_minimal(tmp_path: Path, raw_csv: Path) -> None:
             ],
             "no '\\*.metadata.jsonld'",
         ),
-        (["wrangle", "--input", "{missing}", "--id-column", "x", "--output", "o", "--qc", "q"], "missing"),
+        (
+            [
+                "score",
+                "--input",
+                "{counts}",
+                "--counts-qc",
+                "{counts_qc}",
+                "--sublibrary",
+                "{sub}",
+                "--top-n",
+                "0",
+                "--output",
+                "s",
+                "--top",
+                "t",
+                "--qc",
+                "q",
+            ],
+            "--top-n must be at least 1",
+        ),
+        (
+            [
+                "subset",
+                "--input",
+                "{missing}",
+                "--synthons",
+                "{missing}",
+                "--sublibrary",
+                "{sub}",
+                "--output",
+                "o",
+                "--qc",
+                "q",
+            ],
+            "missing",
+        ),
     ],
 )
-def test_errors_exit_nonzero(tmp_path: Path, raw_csv, args, message, capsys) -> None:
-    clean = tmp_path / "c.parquet"
-    run("wrangle", "--input", raw_csv, "--id-column", "Sample ID", "--output", clean, "--qc", tmp_path / "q.json")
+def test_errors_exit_nonzero(tmp_path: Path, pipeline_dir: Path, args, message, capsys) -> None:
     (tmp_path / "empty").mkdir()
-    paths = {"clean": clean, "empty": tmp_path / "empty", "missing": tmp_path / "missing.csv"}
+    paths = {
+        "top": pipeline_dir / "mapk14.top.parquet",
+        "counts": pipeline_dir / "mapk14.counts.parquet",
+        "counts_qc": pipeline_dir / "mapk14.counts_qc.json",
+        "sub": pipeline_dir / "sublibrary.json",
+        "empty": tmp_path / "empty",
+        "missing": tmp_path / "missing",
+    }
     assert main([arg.format(**paths) for arg in args]) == 1
     assert re.search(message, capsys.readouterr().err)
 

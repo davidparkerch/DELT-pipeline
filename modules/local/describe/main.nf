@@ -3,7 +3,7 @@ nextflow.enable.types = true
 include { RunInfo ; shellQuote } from '../../../common.nf'
 
 /*
- * FAIR metadata for one dataset: schema.org JSON-LD (identifier, license, provenance,
+ * FAIR metadata for one screen's hit table: schema.org JSON-LD (identifier, license, provenance,
  * variables, distribution) and a Frictionless data package for the exports.
  */
 process DESCRIBE {
@@ -13,18 +13,15 @@ process DESCRIBE {
     input:
     record(
         id: String,
-        clean: Path,
-        stats: Path,
+        top: Path,
         exports: Set<Path>,
         sha256sums: Path,
-        id_column: String,
-        target_column: String?,
         description: String?,
         source: String?,
         license: String?,
-        keywords: String?,
-        dictionary: Path?
+        keywords: String?
     )
+    dictionary: Path
     run: RunInfo
 
     output:
@@ -39,18 +36,16 @@ process DESCRIBE {
     tuple('delt_pipeline', eval('delt_pipeline --version')) >> 'versions'
 
     script:
-    def target = target_column ? "--target-column '${target_column}'" : ''
     def names = exports.collect { path -> path.name }.toSorted().join(' ')
-    def data_dictionary = dictionary ? "--dictionary ${dictionary}" : ''
     """
     delt_pipeline describe \\
-        --input ${clean} \\
-        --id-column '${id_column}' ${target} \\
+        --input ${top} \\
+        --id-column molecule_hash \\
         --id ${id} \\
         --exports ${names} \\
         --exports-base ../../exports/${id}/ \\
         --sha256sums ${sha256sums} \\
-        --stats ${stats} ${data_dictionary} \\
+        --dictionary ${dictionary} \\
         --description ${shellQuote(description)} \\
         --source ${shellQuote(source)} \\
         --keywords ${shellQuote(keywords)} \\

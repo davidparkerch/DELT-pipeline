@@ -1,6 +1,7 @@
 """Feature tables: reading, typing and exporting to downstream-ready formats."""
 
 import io
+import re
 import zipfile
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -17,6 +18,15 @@ MAX_CLASSES = 10
 
 # Zip entries get a fixed timestamp so exports are byte-for-byte reproducible.
 _ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)
+
+
+def normalise_name(name: str) -> str:
+    """Make a column name safe for every export format (letters, digits, underscores).
+
+    Case is preserved so descriptor names stay recognisable.
+    """
+    cleaned = re.sub(r"[^0-9A-Za-z_]+", "_", name.strip()).strip("_")
+    return cleaned or "column"
 
 
 def read_table(path: Path) -> pl.DataFrame:
@@ -156,10 +166,14 @@ def _write_npz(table: FeatureTable, path: Path) -> None:
 
 
 def _write_svmlight(table: FeatureTable, path: Path) -> None:
+    matrix = table.matrix()
+    if np.isnan(matrix).any():
+        msg = "svmlight cannot store missing values (e.g. undefined rate ratios); choose another format"
+        raise ValueError(msg)
     y, _ = table.encoded_target()
     if y is None:
         y = np.zeros(table.frame.height)
-    dump_svmlight_file(table.matrix(), y, str(path), zero_based=True)
+    dump_svmlight_file(matrix, y, str(path), zero_based=True)
 
 
 EXPORT_FORMATS: dict[str, ExportFormat] = {

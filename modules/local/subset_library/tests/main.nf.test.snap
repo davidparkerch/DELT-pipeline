@@ -1,0 +1,42 @@
+{
+    "count table with whole-library depth": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "counts": "mapk14.counts.parquet:md5,bdddb795938a4baa4083384da9871803",
+                        "counts_qc": "mapk14.counts_qc.json:md5,775651dcaae707455f38c5dc53bd14c2",
+                        "id": "mapk14"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0"
+            }
+        ],
+        "timestamp": "2026-11-03T18:37:54.430500113",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "counts": "mapk14.counts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "counts_qc": "mapk14.counts_qc.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "mapk14"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-03T18:37:59.937863143",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

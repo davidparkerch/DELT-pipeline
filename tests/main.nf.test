@@ -4,7 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
 
-    test("example data") {
+    test("synthetic library") {
         when {
             Fixtures.linkAssets(launchDir, projectDir)
             params {
@@ -19,9 +19,12 @@ nextflow_pipeline {
             assert report.title == 'Test report'
             def crate = path("$outputDir/ro-crate-metadata.json").json
             assert crate['@graph'].any { entity -> entity['@id'] == './' }
-            def index = path("$outputDir/datasets.json").json
-            assert index*.id.sort() == ['compounds', 'expression']
-            assert index.every { dataset -> dataset.identifier.startsWith('urn:sha256:') }
+            assert report.datasets == ['bca', 'ddr1', 'mapk14']
+            def index = path("$outputDir/screens.json").json
+            assert index*.id.sort() == ['bca', 'ddr1', 'mapk14']
+            assert index.every { screen -> screen.identifier.startsWith('urn:sha256:') }
+            def sublibrary = path("$outputDir/sublibrary.json").json
+            assert sublibrary.heldout.size() + sublibrary.random.size() == 8
 
             // stable_paths: every file and folder in the output directory
             def stable_paths = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: Fixtures.CRATE_COPIES)
@@ -33,8 +36,8 @@ nextflow_pipeline {
                     stable_content,
                     Fixtures.versions("$outputDir/pipeline_info/versions.yml", projectDir),
                     report,
-                    Fixtures.json("$outputDir/datasets/compounds/compounds.metadata.jsonld"),
-                    Fixtures.json("$outputDir/datasets/expression/expression.metadata.jsonld"),
+                    Fixtures.json("$outputDir/screens/mapk14/mapk14.metadata.jsonld"),
+                    Fixtures.json("$outputDir/screens/bca/bca.metadata.jsonld"),
                 ).match() }
             )
         }

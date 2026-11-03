@@ -1,11 +1,11 @@
 [project]
 name = "delt_pipeline"
 version = "0.1.0"
-description = "Process DNA-Encoded Library Technology data and exports FAIR, analysis-ready datasets."
+description = "Score DNA-encoded library (DEL) selections, validate the scores against measured affinities and publish FAIR hit tables."
 readme = "README.md"
 license = "Apache-2.0"
 authors = [{ name = "David Parker", email = "david.parker@bluewin.ch" }]
-keywords = ["nextflow", "bioinformatics", "cheminformatics", "machine-learning", "fair"]
+keywords = ["nextflow", "dna-encoded-library", "cheminformatics", "hit-identification", "fair"]
 requires-python = ">=3.14"
 dependencies = [
     "jinja2>=3.1",

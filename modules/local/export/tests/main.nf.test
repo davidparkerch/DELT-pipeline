@@ -8,35 +8,51 @@ nextflow_process {
     topics "versions"
 
     setup {
-        run("WRANGLE") {
-            script "../../wrangle/main.nf"
+        run("SELECT_SUBLIBRARY") {
+            script "../../select_sublibrary/main.nf"
             process {
                 """
-                input[0] = channel.of(record(
-                    id: 'expression',
-                    csv: file("${projectDir}/assets/example/expression.csv"),
-                    id_column: 'sample_id',
-                    target_column: 'condition'
-                ))
-                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[1] = files("${projectDir}/assets/example/heldout/*.csv")
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
+                """
+            }
+        }
+        run("SUBSET_LIBRARY") {
+            script "../../subset_library/main.nf"
+            process {
+                """
+                input[0] = channel.of(record(id: 'mapk14', table: file("${projectDir}/assets/example/mapk14.parquet")))
+                input[1] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[2] = SELECT_SUBLIBRARY.out
+                """
+            }
+        }
+        run("SCORE") {
+            script "../../score/main.nf"
+            process {
+                """
+                input[0] = SUBSET_LIBRARY.out
+                input[1] = SELECT_SUBLIBRARY.out
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
         }
     }
 
-    test("every format") {
+    test("every format that can hold missing values") {
         when {
             process {
                 """
-                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'sample_id', target_column: 'condition') }
-                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = SCORE.out
+                input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,arrow,csv,tsv,jsonl,npz')
                 """
             }
         }
         then {
             assert process.success
             def names = process.out[0][0].exports.collect { p -> file(p).name }.sort()
-            assert names == ['expression.arrow', 'expression.csv', 'expression.jsonl', 'expression.npz', 'expression.parquet', 'expression.svmlight', 'expression.tsv']
+            assert names == ['mapk14_hits.arrow', 'mapk14_hits.csv', 'mapk14_hits.jsonl', 'mapk14_hits.npz', 'mapk14_hits.parquet', 'mapk14_hits.tsv']
             assert snapshot(Fixtures.canonical(process.out), Fixtures.versions(topics.versions, projectDir)).match()
         }
     }
@@ -45,14 +61,13 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'sample_id', target_column: 'condition') }
-                input[1] = record(export_formats: 'xlsx', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = SCORE.out
+                input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,xlsx')
                 """
             }
         }
         then {
             assert process.failed
-            assert process.stdout.any { line -> line.contains("unknown export format(s) xlsx") } || process.errorReport.contains("unknown export format(s) xlsx")
         }
     }
 
@@ -61,14 +76,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of(record(id: 'x', clean: file("${projectDir}/assets/example/expression.csv"), id_column: 'sample_id', target_column: null))
-                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = channel.of(record(id: 'x', top: file("${projectDir}/assets/example/mapk14.parquet")))
+                input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
         }
         then {
             assert process.success
-            assert snapshot(Fixtures.canonical(process.out)).match()
+            assert snapshot(process.out).match()
         }
     }
 }

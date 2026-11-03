@@ -1,0 +1,41 @@
+{
+    "on- and off-DNA": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "mapk14",
+                        "validation": "mapk14.validation.json:md5,0f9b45784cd4669c16b0a4a54281f7e7"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-03T18:38:13.02782776",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "x",
+                        "validation": "x.validation.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-03T18:38:35.192234781",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

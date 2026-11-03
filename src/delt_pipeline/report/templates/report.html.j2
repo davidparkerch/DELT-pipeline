@@ -49,73 +49,77 @@ footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-
 <body>
 <header>
   <h1>{{ title }}</h1>
-  <p>{{ bundles | length }} dataset{{ "" if bundles | length == 1 else "s" }} profiled by
+  <p>{{ bundles | length }} DEL selection{{ "" if bundles | length == 1 else "s" }} scored by
     {% if pipeline.homepage %}<a href="{{ pipeline.homepage }}">{{ pipeline.name }}</a>{% else %}{{ pipeline.name }}{% endif %}
     v{{ pipeline.version }}</p>
+  <p>Data license{{ "s" if bundles | map(attribute="metadata.license") | unique | list | length > 1 }}:
+    {% for license in bundles | map(attribute="metadata.license") | unique | sort %}<a href="{{ license }}">{{ license }}</a>{{ ", " if not loop.last }}{% endfor %}.
+    Results derived from a dataset carry its license.</p>
 </header>
 <main>
-  <nav class="toc" aria-label="Datasets">
+  <nav class="toc" aria-label="Sections">
+    <a href="#validation">Validation</a>
     {% for bundle in bundles %}<a href="#ds-{{ bundle.id }}">{{ bundle.id }}</a>{% endfor %}
     <a href="#software">Software</a>
   </nav>
 
+  <section class="panel" id="validation">
+    <h2>Validation against measured binding affinity</h2>
+    <p class="muted">-Spearman correlation between each enrichment score and the KD of resynthesised compounds
+      (higher is better). "Published" is the KinDEL paper's baseline for the same score (Counts, Poisson).
+      Held-out compounds absent from a screen had no counts and get the score of an all-zero compound.</p>
+    {% set validated = bundles | selectattr("validation") | list %}
+    {% if validated %}
+    <div class="table-wrap"><table>
+      <tr><th>Screen</th><th>Assay</th><th>n</th>{% for row in validated[0].validation[0].scores %}<th>{{ row.label }}</th>{% endfor %}</tr>
+      {% for bundle in validated %}{% for result in bundle.validation %}
+      <tr><td>{{ bundle.id }}</td><td>{{ result.condition }}-DNA</td><td>{{ result.n_compounds }}</td>
+        {% for row in result.scores %}<td>{{ "%.3f" | format(row.spearman) if row.spearman is not none else "–" }}{% if row.published is not none %} <span class="muted">({{ "%.3f" | format(row.published) }})</span>{% endif %}</td>{% endfor %}</tr>
+      {% endfor %}{% endfor %}
+    </table></div>
+    {% else %}
+    <p><span class="badge warn">none</span> No screen has held-out KD data.</p>
+    {% endif %}
+  </section>
+
   {% for bundle in bundles %}
-  {% set stats = bundle.stats %}{% set qc = bundle.qc %}{% set meta = bundle.metadata %}
+  {% set counts = bundle.counts_qc %}{% set scored = bundle.score_qc %}{% set meta = bundle.metadata %}
   <section class="dataset" id="ds-{{ bundle.id }}">
     <h2>{{ bundle.id }}</h2>
     <p class="muted">{{ meta.description }}</p>
     <div class="cards">
-      <div class="card"><div class="label">Samples</div><div class="value">{{ stats.n_samples }}</div></div>
-      <div class="card"><div class="label">Features</div><div class="value">{{ stats.n_features }}</div></div>
-      <div class="card"><div class="label">Task</div><div class="value">{{ stats.task }}</div></div>
-      <div class="card"><div class="label">Rows removed</div><div class="value">{{ qc.rows_in - qc.rows_out }}</div></div>
-      <div class="card"><div class="label">Clusters</div><div class="value">{{ stats.embedding.n_clusters }}</div></div>
-      {% if stats.embedding.silhouette is not none %}
-      <div class="card"><div class="label">Silhouette</div><div class="value">{{ "%.3f" | format(stats.embedding.silhouette) }}</div></div>
-      {% endif %}
+      <div class="card"><div class="label">Library compounds observed</div><div class="value">{{ "{:,}".format(counts.library.n_compounds) }}</div></div>
+      <div class="card"><div class="label">Sub-library compounds</div><div class="value">{{ "{:,}".format(counts.sublibrary.n_compounds) }}</div></div>
+      <div class="card"><div class="label">BB-A in sub-library</div><div class="value">{{ counts.sublibrary.n_bb_a }}</div></div>
+      <div class="card"><div class="label">Target depth</div><div class="value">{{ "{:,.0f}".format(scored.exposure.target) }}</div></div>
+      <div class="card"><div class="label">Control depth</div><div class="value">{{ "{:,.0f}".format(scored.exposure.control) }}</div></div>
+      <div class="card"><div class="label">With target counts</div><div class="value">{{ "%.1f%%" | format(100 * scored.fraction_with_target_counts) }}</div></div>
     </div>
 
-    {% if stats.model %}
-    <h3>Supervised baseline</h3>
-    {% if stats.model.skipped is defined %}
-    <p><span class="badge warn">skipped</span> {{ stats.model.skipped }}</p>
-    {% else %}
-    <p class="muted">{{ stats.model.estimator }}, {{ stats.model.folds }}-fold cross-validation.</p>
+    <h3>Noise model</h3>
+    <p>Beta prior on the target fraction: a = {{ scored.prior.a }}, b = {{ scored.prior.b }}
+      (mean {{ scored.prior.mean }} vs. {{ scored.prior.null_fraction }} expected without enrichment), fitted on
+      {{ "{:,}".format(scored.prior.n_compounds) }} compounds ({{ scored.prior.fitted_on }}).
+</p>
+    <p>Replicate agreement (Pearson correlation of log counts between target replicates). Single compounds have
+      too few counts to agree; summed per disynthon, the same data agree closely.</p>
     <div class="table-wrap"><table>
-      <tr><th>Metric</th><th>Mean</th><th>Std</th></tr>
-      {% for name, value in stats.model.metrics.items() %}
-      <tr><td>{{ name }}</td><td>{{ "%.4f" | format(value.mean) }}</td><td>{{ "%.4f" | format(value.std) }}</td></tr>
-      {% endfor %}
+      <tr><th>Level</th>{% for pair in scored.replicate_correlation.compound %}<th>{{ pair }}</th>{% endfor %}</tr>
+      {% for level, pairs in scored.replicate_correlation.items() %}<tr><td>{{ level }}</td>{% for value in pairs.values() %}<td>{{ value if value is not none else "–" }}</td>{% endfor %}</tr>{% endfor %}
     </table></div>
-    {% endif %}
-    {% endif %}
+    <p>
+
+    <h3>Top compounds</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Molecule</th><th>A</th><th>B</th><th>C</th><th>Target</th><th>Control</th><th>Load</th><th>Poisson LB</th><th>ER</th><th>EB log2</th><th>z (Faver)</th></tr>
+      {% for row in scored.top %}<tr><td><code>{{ row.molecule_hash[:12] }}</code></td><td>{{ row.bb_a }}</td><td>{{ row.bb_b }}</td><td>{{ row.bb_c }}</td>
+        <td>{{ row.target_sum }}</td><td>{{ row.control_sum }}</td><td>{{ row.load }}</td><td>{{ row.poisson_lower }}</td><td>{{ row.er }}</td><td>{{ row.eb_log2_ratio }}</td><td>{{ row.z_faver }}</td></tr>{% endfor %}
+    </table></div>
 
     <h3>Figures</h3>
     <div class="figures">
       {% for name in bundle.figures | sort %}<div class="figure" id="fig-{{ bundle.id }}-{{ name }}" role="img" aria-label="{{ name }} plot for {{ bundle.id }}"></div>{% endfor %}
     </div>
-
-    <h3>Features</h3>
-    <div class="table-wrap"><table>
-      <tr><th>Feature</th><th>Mean</th><th>Std</th><th>Min</th><th>Median</th><th>Max</th><th>Shapiro p</th>{% if stats.association %}<th>Association p</th>{% endif %}</tr>
-      {% set assoc = {} %}{% for item in stats.association %}{% set _ = assoc.update({item.feature: item}) %}{% endfor %}
-      {% for f in stats.features %}
-      <tr><td>{{ f.feature }}</td><td>{{ f.mean }}</td><td>{{ f.std }}</td><td>{{ f.min }}</td><td>{{ f.median }}</td><td>{{ f.max }}</td>
-        <td>{{ f.shapiro_p if f.shapiro_p is not none else "–" }}</td>
-        {% if stats.association %}<td>{{ assoc[f.feature].p_value if assoc[f.feature].p_value is not none else "–" }} <span class="muted">({{ assoc[f.feature].test }})</span></td>{% endif %}</tr>
-      {% endfor %}
-    </table></div>
-
-    <h3>Quality control</h3>
-    <p>{{ qc.rows_in }} rows in, {{ qc.rows_out }} rows out; missing values imputed with <code>{{ qc.impute }}</code>.</p>
-    {% if qc.dropped_features %}
-    <div class="table-wrap"><table>
-      <tr><th>Dropped feature</th><th>Reason</th></tr>
-      {% for name, reason in qc.dropped_features.items() %}<tr><td>{{ name }}</td><td>{{ reason }}</td></tr>{% endfor %}
-    </table></div>
-    {% else %}
-    <p><span class="badge ok">ok</span> No features dropped.</p>
-    {% endif %}
 
     <h3>FAIR summary</h3>
     <div class="table-wrap"><table>

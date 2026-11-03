@@ -5,7 +5,7 @@
                 "0": [
                     {
                         "id": "example",
-                        "sha256sums": "SHA256SUMS:md5,125aa73cd5dec85b40a60d60d161fb89"
+                        "sha256sums": "SHA256SUMS:md5,053a9d4af19d7816f4ea5e78d053be22"
                     }
                 ]
             },
@@ -13,7 +13,7 @@
                 "coreutils": "9.7"
             }
         ],
-        "timestamp": "2026-11-02T23:23:37.046419844",
+        "timestamp": "2026-11-03T18:35:19.867897713",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -30,7 +30,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-02T23:23:41.864572958",
+        "timestamp": "2026-11-03T18:35:24.548045843",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

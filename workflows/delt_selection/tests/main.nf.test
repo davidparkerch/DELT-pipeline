@@ -1,0 +1,35 @@
+nextflow_workflow {
+
+    name "Test DELT_SELECTION"
+    script "../main.nf"
+    workflow "DELT_SELECTION"
+    tag "workflows"
+    tag "delt_selection"
+    topics "versions"
+
+    test("a target and a counter-screen") {
+        when {
+            workflow {
+                """
+                input[0] = channel.of(
+                    record(id: 'mapk14', table: file("${projectDir}/assets/example/mapk14.parquet"), target: 'MAPK14-sim', role: 'target', heldout_ondna: file("${projectDir}/assets/example/heldout/mapk14_ondna.csv"), heldout_offdna: file("${projectDir}/assets/example/heldout/mapk14_offdna.csv"), description: 'Synthetic MAPK14 screen', source: null, license: 'CC0-1.0', keywords: 'DEL;kinase'),
+                    record(id: 'bca', table: file("${projectDir}/assets/example/bca.parquet"), target: 'BCA-sim', role: 'counter', heldout_ondna: null, heldout_offdna: null, description: null, source: null, license: null, keywords: null)
+                )
+                input[1] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[2] = file("${projectDir}/assets/hits_dictionary.csv")
+                input[3] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
+                input[4] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                """
+            }
+        }
+        then {
+            assert workflow.success
+            def results = workflow.out.results.sort { r -> r.id }
+            assert results*.id == ['bca', 'mapk14']
+            assert results.every { r -> r.identifier.startsWith('urn:sha256:') }
+            assert path(results[0].validation).json == []
+            assert path(results[1].validation).json*.condition == ['on', 'off']
+            assert snapshot(Fixtures.canonical(results), workflow.out.sublibrary, Fixtures.versions(topics.versions, projectDir)).match()
+        }
+    }
+}

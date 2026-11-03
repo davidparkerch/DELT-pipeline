@@ -6,77 +6,65 @@
                     "@vocab": "https://schema.org/",
                     "prov": "http://www.w3.org/ns/prov#"
                 },
-                "@id": "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                "@id": "urn:sha256:3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                 "@type": "Dataset",
                 "creator": {
                     "@id": "https://orcid.org/0000-0002-1825-0097",
                     "@type": "Person",
                     "name": "O'Test"
                 },
-                "description": "Cleaned feature table 'compounds'",
+                "description": "Cleaned feature table 'mapk14'",
                 "distribution": [
                     {
                         "@type": "DataDownload",
-                        "contentSize": "4498 B",
-                        "contentUrl": "compounds.clean.parquet",
+                        "contentSize": "22265 B",
+                        "contentUrl": "mapk14.top.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "compounds.clean.parquet",
-                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "name": "mapk14.top.parquet",
+                        "sha256": "3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
                     },
                     {
                         "@type": "DataDownload",
-                        "contentSize": "2142 B",
-                        "contentUrl": "../../exports/compounds/compounds.csv",
-                        "encodingFormat": [
-                            "text/csv",
-                            "http://edamontology.org/format_3752"
-                        ],
-                        "name": "compounds.csv",
-                        "sha256": "cb90f5576c7e32e337b1f5efb5baddc9faee6562c9b919a4b6b18cec00e573b5",
-                        "usageInfo": "https://www.rfc-editor.org/rfc/rfc4180"
-                    },
-                    {
-                        "@type": "DataDownload",
-                        "contentSize": "1884 B",
-                        "contentUrl": "../../exports/compounds/compounds.npz",
-                        "encodingFormat": [
-                            "application/zip",
-                            "http://edamontology.org/format_4003"
-                        ],
-                        "name": "compounds.npz",
-                        "sha256": "8cb529b3b05568def11cdf3a32ed9c93dd45d0bb0ee7f388bba956772c5a92cd",
-                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
-                    },
-                    {
-                        "@type": "DataDownload",
-                        "contentSize": "4498 B",
-                        "contentUrl": "../../exports/compounds/compounds.parquet",
+                        "contentSize": "22265 B",
+                        "contentUrl": "../../exports/mapk14/mapk14_hits.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "compounds.parquet",
-                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "name": "mapk14_hits.parquet",
+                        "sha256": "3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "43160 B",
+                        "contentUrl": "../../exports/mapk14/mapk14_hits.tsv",
+                        "encodingFormat": [
+                            "text/tab-separated-values",
+                            "http://edamontology.org/format_3475"
+                        ],
+                        "name": "mapk14_hits.tsv",
+                        "sha256": "de2180189e92909a4666e8fe9236d340e19d3ab21481d8dca7d9634579ab1738",
+                        "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
                     }
                 ],
                 "identifier": [
-                    "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                    "urn:sha256:3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                     {
                         "@type": "PropertyValue",
                         "propertyID": "dataset_id",
-                        "value": "compounds"
+                        "value": "mapk14"
                     }
                 ],
                 "keywords": [
                     
                 ],
                 "license": "https://spdx.org/licenses/CC-BY-4.0",
-                "name": "compounds",
+                "name": "mapk14",
                 "prov:wasGeneratedBy": {
                     "@type": "SoftwareApplication",
                     "name": "test/pipeline",
@@ -86,65 +74,154 @@
                 "variableMeasured": [
                     {
                         "@type": "PropertyValue",
-                        "description": "Unique row identifier",
-                        "name": "compound_id"
+                        "description": "SHA-256 hash of the compound SMILES (KinDEL identifier)",
+                        "name": "molecule_hash"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Non-numeric annotation carried along with the data",
-                        "name": "smiles"
+                        "description": "Compound structure (SMILES)",
+                        "name": "smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 455.27,
-                        "minValue": 253.83,
-                        "name": "MolWt"
+                        "description": "Building block at position A (row of synthons/reacted_a.csv)",
+                        "name": "bb_a"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 5.028,
-                        "minValue": 0.783,
-                        "name": "LogP"
+                        "description": "Building block at position B (row of synthons/reacted_b.csv)",
+                        "name": "bb_b"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 100.46,
-                        "minValue": 9.07,
-                        "name": "TPSA"
+                        "description": "Building block at position C (row of synthons/reacted_c.csv)",
+                        "name": "bb_c"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 4.0,
-                        "minValue": 0.0,
-                        "name": "HBD"
+                        "description": "Sequence count in target selection replicate 1 (distinct encodings)",
+                        "name": "target_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 8.0,
-                        "minValue": 1.0,
-                        "name": "HBA"
+                        "description": "Sequence count in target selection replicate 2 (distinct encodings)",
+                        "name": "target_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "maxValue": 9.0,
-                        "minValue": 0.0,
-                        "name": "RotB"
+                        "description": "Sequence count in target selection replicate 3 (distinct encodings)",
+                        "name": "target_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Numeric feature",
-                        "name": "active"
+                        "description": "Sequence count in no-protein (matrix) control replicate 1",
+                        "name": "matrix_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 2",
+                        "name": "matrix_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 3",
+                        "name": "matrix_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in the pre-selection library (synthesis abundance)",
+                        "name": "load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled target count (three replicates)",
+                        "name": "target_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled control count (three replicates)",
+                        "name": "control_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of target replicates with at least one count (0-3)",
+                        "name": "target_support",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Whether the compound's BB-A was drawn at random (unbiased; used to fit the prior)",
+                        "name": "random_bb_a"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Mean target count minus mean control count (KinDEL Counts baseline)",
+                        "name": "count_diff",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Depth-normalised enrichment ratio with pseudocount",
+                        "name": "er",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Maximum-likelihood rate ratio target/control (null when the control count is 0)",
+                        "name": "poisson_ratio",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the exact confidence interval of the rate ratio (ranking score)",
+                        "name": "poisson_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Upper bound of the exact confidence interval of the rate ratio (null when unbounded)",
+                        "name": "poisson_upper",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Normalised z-score of the target fraction against a uniform library (Faver et al. 2019)",
+                        "name": "z_faver"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Empirical-Bayes shrunken log2 rate ratio (Beta-Binomial prior)",
+                        "name": "eb_log2_ratio"
                     }
                 ]
             }
         ],
-        "timestamp": "2026-11-02T23:24:08.037380854",
+        "timestamp": "2026-11-03T18:35:56.837066015",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -163,7 +240,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-02T23:24:17.59198235",
+        "timestamp": "2026-11-03T18:36:08.736877182",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -171,85 +248,73 @@
     },
     "rich metadata": {
         "content": [
-            "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+            "urn:sha256:3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
             {
                 "@context": {
                     "@vocab": "https://schema.org/",
                     "prov": "http://www.w3.org/ns/prov#"
                 },
-                "@id": "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                "@id": "urn:sha256:3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                 "@type": "Dataset",
                 "creator": {
                     "@id": "https://orcid.org/0000-0002-1825-0097",
                     "@type": "Person",
                     "name": "O'Test"
                 },
-                "description": "Compounds' test set",
+                "description": "MAPK14's synthetic screen",
                 "distribution": [
                     {
                         "@type": "DataDownload",
-                        "contentSize": "4498 B",
-                        "contentUrl": "compounds.clean.parquet",
+                        "contentSize": "22265 B",
+                        "contentUrl": "mapk14.top.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "compounds.clean.parquet",
-                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "name": "mapk14.top.parquet",
+                        "sha256": "3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
                     },
                     {
                         "@type": "DataDownload",
-                        "contentSize": "2142 B",
-                        "contentUrl": "../../exports/compounds/compounds.csv",
-                        "encodingFormat": [
-                            "text/csv",
-                            "http://edamontology.org/format_3752"
-                        ],
-                        "name": "compounds.csv",
-                        "sha256": "cb90f5576c7e32e337b1f5efb5baddc9faee6562c9b919a4b6b18cec00e573b5",
-                        "usageInfo": "https://www.rfc-editor.org/rfc/rfc4180"
-                    },
-                    {
-                        "@type": "DataDownload",
-                        "contentSize": "1884 B",
-                        "contentUrl": "../../exports/compounds/compounds.npz",
-                        "encodingFormat": [
-                            "application/zip",
-                            "http://edamontology.org/format_4003"
-                        ],
-                        "name": "compounds.npz",
-                        "sha256": "8cb529b3b05568def11cdf3a32ed9c93dd45d0bb0ee7f388bba956772c5a92cd",
-                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
-                    },
-                    {
-                        "@type": "DataDownload",
-                        "contentSize": "4498 B",
-                        "contentUrl": "../../exports/compounds/compounds.parquet",
+                        "contentSize": "22265 B",
+                        "contentUrl": "../../exports/mapk14/mapk14_hits.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
                         ],
-                        "name": "compounds.parquet",
-                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "name": "mapk14_hits.parquet",
+                        "sha256": "3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                         "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "43160 B",
+                        "contentUrl": "../../exports/mapk14/mapk14_hits.tsv",
+                        "encodingFormat": [
+                            "text/tab-separated-values",
+                            "http://edamontology.org/format_3475"
+                        ],
+                        "name": "mapk14_hits.tsv",
+                        "sha256": "de2180189e92909a4666e8fe9236d340e19d3ab21481d8dca7d9634579ab1738",
+                        "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
                     }
                 ],
                 "identifier": [
-                    "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                    "urn:sha256:3a3746e74ba288da052afc5be6e9f8359e726730fa14ebcad40399752c43da5c",
                     {
                         "@type": "PropertyValue",
                         "propertyID": "dataset_id",
-                        "value": "compounds"
+                        "value": "mapk14"
                     }
                 ],
-                "isBasedOn": "https://doi.org/10.5281/zenodo.0000000",
+                "isBasedOn": "https://doi.org/10.48550/arXiv.2410.08938",
                 "keywords": [
-                    "chemistry",
-                    "qsar"
+                    "DEL",
+                    "kinase"
                 ],
-                "license": "https://spdx.org/licenses/CC0-1.0",
-                "name": "compounds",
+                "license": "https://github.com/insitro/kindel/blob/main/LICENSE.md",
+                "name": "mapk14",
                 "prov:wasGeneratedBy": {
                     "@type": "SoftwareApplication",
                     "name": "test/pipeline",
@@ -259,86 +324,162 @@
                 "variableMeasured": [
                     {
                         "@type": "PropertyValue",
-                        "description": "Compound identifier",
-                        "name": "compound_id"
+                        "description": "SHA-256 hash of the compound SMILES (KinDEL identifier)",
+                        "name": "molecule_hash"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Chemical structure as a SMILES string",
+                        "description": "Compound structure (SMILES)",
                         "name": "smiles",
                         "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Average molecular weight",
-                        "maxValue": 455.27,
-                        "minValue": 253.83,
-                        "name": "MolWt",
-                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000221",
-                        "unitText": "Da"
+                        "description": "Building block at position A (row of synthons/reacted_a.csv)",
+                        "name": "bb_a"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Octanol-water partition coefficient (log10)",
-                        "maxValue": 5.028,
-                        "minValue": 0.783,
-                        "name": "LogP"
+                        "description": "Building block at position B (row of synthons/reacted_b.csv)",
+                        "name": "bb_b"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Topological polar surface area",
-                        "maxValue": 100.46,
-                        "minValue": 9.07,
-                        "name": "TPSA",
-                        "unitText": "\u00c5\u00b2"
+                        "description": "Building block at position C (row of synthons/reacted_c.csv)",
+                        "name": "bb_c"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Number of hydrogen bond donors",
-                        "maxValue": 4.0,
-                        "minValue": 0.0,
-                        "name": "HBD",
+                        "description": "Sequence count in target selection replicate 1 (distinct encodings)",
+                        "name": "target_1",
                         "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
                         "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Number of hydrogen bond acceptors",
-                        "maxValue": 8.0,
-                        "minValue": 1.0,
-                        "name": "HBA",
+                        "description": "Sequence count in target selection replicate 2 (distinct encodings)",
+                        "name": "target_2",
                         "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
                         "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Number of rotatable bonds",
-                        "maxValue": 9.0,
-                        "minValue": 0.0,
-                        "name": "RotB",
+                        "description": "Sequence count in target selection replicate 3 (distinct encodings)",
+                        "name": "target_3",
                         "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
                         "unitText": "count"
                     },
                     {
                         "@type": "PropertyValue",
-                        "description": "Binary activity label from a (synthetic) screening assay",
-                        "name": "active"
+                        "description": "Sequence count in no-protein (matrix) control replicate 1",
+                        "name": "matrix_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 2",
+                        "name": "matrix_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 3",
+                        "name": "matrix_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in the pre-selection library (synthesis abundance)",
+                        "name": "load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled target count (three replicates)",
+                        "name": "target_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled control count (three replicates)",
+                        "name": "control_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of target replicates with at least one count (0-3)",
+                        "name": "target_support",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Whether the compound's BB-A was drawn at random (unbiased; used to fit the prior)",
+                        "name": "random_bb_a"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Mean target count minus mean control count (KinDEL Counts baseline)",
+                        "name": "count_diff",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Depth-normalised enrichment ratio with pseudocount",
+                        "name": "er",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Maximum-likelihood rate ratio target/control (null when the control count is 0)",
+                        "name": "poisson_ratio",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the exact confidence interval of the rate ratio (ranking score)",
+                        "name": "poisson_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Upper bound of the exact confidence interval of the rate ratio (null when unbounded)",
+                        "name": "poisson_upper",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Normalised z-score of the target fraction against a uniform library (Faver et al. 2019)",
+                        "name": "z_faver"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Empirical-Bayes shrunken log2 rate ratio (Beta-Binomial prior)",
+                        "name": "eb_log2_ratio"
                     }
                 ]
             },
-            "datapackage.json:md5,90b862a9e31ce9c4a04ea3a2422d1b15",
+            "datapackage.json:md5,6d8214f7e308ea6de1a576b20e12a885",
             {
                 "<pipeline package>": "<pipeline version>",
                 "coreutils": "9.7",
-                "gzip": "1.13",
                 "numpy": "2.5.4",
                 "polars": "2.1.0",
-                "python": "3.14",
-                "scikit-learn": "1.9.1",
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-02T23:23:54.956874329",
+        "timestamp": "2026-11-03T18:35:40.687474705",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

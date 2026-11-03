@@ -8,29 +8,33 @@ nextflow_process {
     topics "versions"
 
     setup {
-        run("PREPARE_TABLE") {
-            script "../../prepare_table/main.nf"
+        run("SELECT_SUBLIBRARY") {
+            script "../../select_sublibrary/main.nf"
             process {
                 """
-                input[0] = channel.of(record(id: 'compounds', table: file("${projectDir}/assets/example/compounds.csv.gz")))
+                input[0] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[1] = files("${projectDir}/assets/example/heldout/*.csv")
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
         }
-        run("WRANGLE") {
-            script "../../wrangle/main.nf"
+        run("SUBSET_LIBRARY") {
+            script "../../subset_library/main.nf"
             process {
                 """
-                input[0] = PREPARE_TABLE.out.map { r -> r + record(id_column: 'compound_id', target_column: 'active') }
-                input[1] = record(export_formats: 'parquet,csv,npz', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = channel.of(record(id: 'mapk14', table: file("${projectDir}/assets/example/mapk14.parquet")))
+                input[1] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[2] = SELECT_SUBLIBRARY.out
                 """
             }
         }
-        run("ANALYSE") {
-            script "../../analyse/main.nf"
+        run("SCORE") {
+            script "../../score/main.nf"
             process {
                 """
-                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'compound_id', target_column: 'active') }
-                input[1] = record(export_formats: 'parquet,csv,npz', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = SUBSET_LIBRARY.out
+                input[1] = SELECT_SUBLIBRARY.out
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
         }
@@ -38,8 +42,8 @@ nextflow_process {
             script "../../export/main.nf"
             process {
                 """
-                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'compound_id', target_column: 'active') }
-                input[1] = record(export_formats: 'parquet,csv,npz', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = SCORE.out
+                input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
         }
@@ -57,20 +61,17 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = WRANGLE.out
-                    .join(ANALYSE.out, by: 'id')
+                input[0] = SCORE.out
                     .join(EXPORT.out, by: 'id')
                     .join(CHECKSUM.out, by: 'id')
                     .map { r -> r + record(
-                        id_column: 'compound_id',
-                        target_column: 'active',
-                        description: "Compounds' test set",
-                        source: 'doi:10.5281/zenodo.0000000',
-                        license: 'CC0-1.0',
-                        keywords: 'chemistry;qsar',
-                        dictionary: file("${projectDir}/assets/example/compounds_dictionary.csv")
+                        description: "MAPK14's synthetic screen",
+                        source: 'doi:10.48550/arXiv.2410.08938',
+                        license: 'https://github.com/insitro/kindel/blob/main/LICENSE.md',
+                        keywords: 'DEL;kinase'
                     ) }
-                input[1] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                input[1] = file("${projectDir}/assets/hits_dictionary.csv")
+                input[2] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
                 """
             }
         }
@@ -79,11 +80,11 @@ nextflow_process {
             def result = process.out[0][0]
             def metadata = path(result.metadata).json
             assert result.identifier == metadata['@id']
-            assert metadata.description == "Compounds' test set"
+            assert metadata.description == "MAPK14's synthetic screen"
             assert metadata.creator.name == "O'Test"
-            assert metadata.isBasedOn == 'https://doi.org/10.5281/zenodo.0000000'
-            assert metadata.variableMeasured.find { v -> v.name == 'MolWt' }.unitText == 'Da'
-            assert path(result.datapackage).json.licenses[0].name == 'CC0-1.0'
+            assert metadata.isBasedOn == 'https://doi.org/10.48550/arXiv.2410.08938'
+            assert metadata.license == 'https://github.com/insitro/kindel/blob/main/LICENSE.md'
+            assert metadata.variableMeasured.find { v -> v.name == 'target_1' }.unitText == 'count'
             assert snapshot(result.identifier, metadata, result.datapackage, Fixtures.versions(topics.versions, projectDir)).match()
         }
     }
@@ -92,20 +93,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = WRANGLE.out
-                    .join(ANALYSE.out, by: 'id')
+                input[0] = SCORE.out
                     .join(EXPORT.out, by: 'id')
                     .join(CHECKSUM.out, by: 'id')
-                    .map { r -> r + record(
-                        id_column: 'compound_id',
-                        target_column: null,
-                        description: null,
-                        source: null,
-                        license: null,
-                        keywords: null,
-                        dictionary: null
-                    ) }
-                input[1] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                    .map { r -> r + record(description: null, source: null, license: null, keywords: null) }
+                input[1] = file("${projectDir}/assets/hits_dictionary.csv")
+                input[2] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
                 """
             }
         }
@@ -123,12 +116,13 @@ nextflow_process {
         when {
             process {
                 """
-                def any = file("${projectDir}/assets/example/expression.csv")
+                def any = file("${projectDir}/assets/example/samplesheet.csv")
                 input[0] = channel.of(record(
-                    id: 'x', clean: any, stats: any, exports: [any].toSet(), sha256sums: any, id_column: 'sample_id',
-                    target_column: null, description: null, source: null, license: null, keywords: null, dictionary: null
+                    id: 'x', top: any, exports: [any].toSet(), sha256sums: any,
+                    description: null, source: null, license: null, keywords: null
                 ))
-                input[1] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                input[1] = file("${projectDir}/assets/hits_dictionary.csv")
+                input[2] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
                 """
             }
         }

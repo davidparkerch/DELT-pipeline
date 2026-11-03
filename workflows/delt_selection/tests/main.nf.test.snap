@@ -1,0 +1,58 @@
+{
+    "a target and a counter-screen": {
+        "content": [
+            [
+                {
+                    "counts_qc": "bca.counts_qc.json:md5,bef96c6f2606ef64c2366e4c85683d69",
+                    "datapackage": "datapackage.json:md5,14ae05bd2c42d2da33767cdf4edfc515",
+                    "exports": [
+                        "bca_hits.parquet:md5,5232168913f18182e99d72b7a6f193a3",
+                        "bca_hits.tsv:md5,bf2cc6b5159f18ad7590351f2d91b4d2"
+                    ],
+                    "figures": "bca.figures.json:md5,600f894cfafe01972875d313a109fca0",
+                    "id": "bca",
+                    "identifier": "urn:sha256:453fa10e30785b843ebfbd55e1da77fce2a2674ae86ca808f7d238c69b8fd9c6",
+                    "metadata": "bca.metadata.jsonld:md5,84adc33593c0573c8bad35975d7e48d8",
+                    "score_qc": "bca.score_qc.json:md5,ff50fc0bbfceb7353427064f5bd5c564",
+                    "scores": "bca.scores.parquet:md5,053ec6a8506409b0a247de5b29f82af8",
+                    "sha256sums": "SHA256SUMS:md5,7219777713bfdb1d8c4d4cb1a0f85267",
+                    "top": "bca.top.parquet:md5,5232168913f18182e99d72b7a6f193a3",
+                    "validation": "bca.validation.json:md5,58e0494c51d30eb3494f7c9198986bb9"
+                },
+                {
+                    "counts_qc": "mapk14.counts_qc.json:md5,285541e6dd10d7db4b352b681741799a",
+                    "datapackage": "datapackage.json:md5,531884f5b02b031313a33ab8f88dea06",
+                    "exports": [
+                        "mapk14_hits.parquet:md5,cdcb2b282b15d480df68f9f8c90ca3eb",
+                        "mapk14_hits.tsv:md5,317872b50f6e70ef8112d0382de0fbf0"
+                    ],
+                    "figures": "mapk14.figures.json:md5,1705f24a9707ee2dc8847bcd4589a7d6",
+                    "id": "mapk14",
+                    "identifier": "urn:sha256:a9710fdc11bf5c178a894c6dd271995515bbf001085179e7b6d12f78d4991600",
+                    "metadata": "mapk14.metadata.jsonld:md5,7a69f34388f5080450d70911025727b7",
+                    "score_qc": "mapk14.score_qc.json:md5,28297f12e7c76e3bae3669fee8672ac3",
+                    "scores": "mapk14.scores.parquet:md5,d0b4f70de10c90a5b4e98f2602bcd6be",
+                    "sha256sums": "SHA256SUMS:md5,1e0df5d51340b705f91455d7b69b7ee8",
+                    "top": "mapk14.top.parquet:md5,cdcb2b282b15d480df68f9f8c90ca3eb",
+                    "validation": "mapk14.validation.json:md5,2380e31ce187c67234f1e1e39875fe21"
+                }
+            ],
+            [
+                "sublibrary.json:md5,14ed3ff73ca82ef2ebc674df2c302182"
+            ],
+            {
+                "<pipeline package>": "<pipeline version>",
+                "coreutils": "9.7",
+                "numpy": "2.5.4",
+                "plotly": "7.1.0",
+                "polars": "2.1.0",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-03T18:40:26.142451824",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

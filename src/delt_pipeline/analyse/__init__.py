@@ -1,46 +1,32 @@
-"""Data analysis with scipy and scikit-learn."""
+"""Enrichment scoring, validation against measured affinities."""
 
-from dataclasses import dataclass
-from typing import Any
+from .enrichment import (
+    BetaPrior,
+    Exposure,
+    count_difference,
+    enrichment_ratio,
+    faver_z,
+    fit_beta_prior,
+    poisson_ratio,
+    shrunk_log2_ratio,
+)
+from .score import SCORE_LABELS, SCORES, absent_scores, score_table
+from .validate import PUBLISHED, read_heldout, validate_scores
 
-import polars as pl
-
-from ..io import FeatureTable
-from .embed import embed
-from .model import evaluate_model
-from .stats import association, correlation, describe_features
-
-
-@dataclass(frozen=True)
-class AnalysisResult:
-    """Per-sample embedding table and JSON-serialisable statistics."""
-
-    embedding: pl.DataFrame
-    stats: dict[str, Any]
-
-
-def analyse(
-    table: FeatureTable,
-    *,
-    n_components: int = 2,
-    n_clusters: int = 3,
-    cv_folds: int = 5,
-    seed: int = 42,
-    threads: int = 1,
-) -> AnalysisResult:
-    """Run descriptive statistics, the PCA/k-means embedding and the supervised baseline."""
-    embedding, embedding_summary = embed(table, n_components, n_clusters, seed)
-    stats = {
-        "n_samples": table.frame.height,
-        "n_features": len(table.features),
-        "task": table.task,
-        "features": describe_features(table),
-        "correlation": correlation(table),
-        "association": association(table),
-        "embedding": embedding_summary,
-        "model": evaluate_model(table, cv_folds, seed, threads),
-    }
-    return AnalysisResult(embedding, stats)
-
-
-__all__ = ["AnalysisResult", "analyse", "association", "correlation", "describe_features", "embed", "evaluate_model"]
+__all__ = [
+    "PUBLISHED",
+    "SCORES",
+    "SCORE_LABELS",
+    "BetaPrior",
+    "Exposure",
+    "absent_scores",
+    "count_difference",
+    "enrichment_ratio",
+    "faver_z",
+    "fit_beta_prior",
+    "poisson_ratio",
+    "read_heldout",
+    "score_table",
+    "shrunk_log2_ratio",
+    "validate_scores",
+]

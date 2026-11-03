@@ -11,14 +11,14 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of(record(id: 'example', exports: files("${projectDir}/assets/example/*.csv").toSet()))
+                input[0] = channel.of(record(id: 'example', exports: files("${projectDir}/assets/example/heldout/*.csv").toSet()))
                 """
             }
         }
         then {
             assert process.success
             def lines = path(process.out[0][0].sha256sums).readLines()
-            assert lines*.split('  ')*.getAt(1) == ['compounds_dictionary.csv', 'expression.csv', 'samplesheet.csv']
+            assert lines*.split('  ')*.getAt(1) == ['ddr1_offdna.csv', 'ddr1_ondna.csv', 'mapk14_offdna.csv', 'mapk14_ondna.csv']
             assert snapshot(process.out, Fixtures.versions(topics.versions, projectDir)).match()
         }
     }
@@ -28,7 +28,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of(record(id: 'example', exports: files("${projectDir}/assets/example/*.csv").toSet()))
+                input[0] = channel.of(record(id: 'example', exports: files("${projectDir}/assets/example/heldout/*.csv").toSet()))
                 """
             }
         }

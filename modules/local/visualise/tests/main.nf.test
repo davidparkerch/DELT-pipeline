@@ -8,45 +8,59 @@ nextflow_process {
     topics "versions"
 
     setup {
-        run("WRANGLE") {
-            script "../../wrangle/main.nf"
+        run("SELECT_SUBLIBRARY") {
+            script "../../select_sublibrary/main.nf"
             process {
                 """
-                input[0] = channel.of(record(
-                    id: 'expression',
-                    csv: file("${projectDir}/assets/example/expression.csv"),
-                    id_column: 'sample_id',
-                    target_column: 'condition'
-                ))
-                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[1] = files("${projectDir}/assets/example/heldout/*.csv")
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
         }
-        run("ANALYSE") {
-            script "../../analyse/main.nf"
+        run("SUBSET_LIBRARY") {
+            script "../../subset_library/main.nf"
             process {
                 """
-                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'sample_id', target_column: 'condition') }
-                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[0] = channel.of(record(id: 'mapk14', table: file("${projectDir}/assets/example/mapk14.parquet")))
+                input[1] = file("${projectDir}/assets/example/synthons", type: 'dir')
+                input[2] = SELECT_SUBLIBRARY.out
+                """
+            }
+        }
+        run("SCORE") {
+            script "../../score/main.nf"
+            process {
+                """
+                input[0] = SUBSET_LIBRARY.out
+                input[1] = SELECT_SUBLIBRARY.out
+                input[2] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
+                """
+            }
+        }
+        run("VALIDATE") {
+            script "../../validate/main.nf"
+            process {
+                """
+                input[0] = SCORE.out.map { r -> r + record(target: 'MAPK14-sim', heldout_ondna: file("${projectDir}/assets/example/heldout/mapk14_ondna.csv"), heldout_offdna: null) }
                 """
             }
         }
     }
 
-    test("figures") {
+    test("cube and validation") {
         when {
             process {
                 """
-                input[0] = WRANGLE.out
-                    .join(ANALYSE.out, by: 'id')
-                    .map { r -> r + record(id_column: 'sample_id', target_column: 'condition') }
+                input[0] = SCORE.out.join(VALIDATE.out, by: 'id').map { r -> r + record(target: "MAPK14 'sim'") }
                 """
             }
         }
         then {
             assert process.success
             def figures = path(process.out[0][0].figures).json
-            assert figures.keySet() == ['correlation', 'distributions', 'importance', 'pca'] as Set
+            assert figures.keySet() == ['cube', 'validation'] as Set
+            assert figures.cube.layout.title.text.startsWith("MAPK14 'sim'")
             assert snapshot(process.out, Fixtures.versions(topics.versions, projectDir)).match()
         }
     }
@@ -56,8 +70,7 @@ nextflow_process {
         when {
             process {
                 """
-                def any = file("${projectDir}/assets/example/expression.csv")
-                input[0] = channel.of(record(id: 'x', clean: any, embedding: any, stats: any, id_column: 'sample_id', target_column: null))
+                input[0] = channel.of(record(id: 'x', target: 'X', top: file("${projectDir}/assets/example/mapk14.parquet"), validation: file("${projectDir}/assets/example/samplesheet.csv")))
                 """
             }
         }

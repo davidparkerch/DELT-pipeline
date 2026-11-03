@@ -8,7 +8,7 @@ FROM ghcr.io/astral-sh/uv:0.13.6-python3.14-trixie-slim AS base
 ARG VERSION=0.1.0
 ARG REVISION=unknown
 LABEL org.opencontainers.image.title="delt-pipeline" \
-      org.opencontainers.image.description="Process DNA-Encoded Library Technology data and exports FAIR, analysis-ready datasets." \
+      org.opencontainers.image.description="Score DNA-encoded library (DEL) selections, validate the scores against measured affinities and publish FAIR hit tables." \
       org.opencontainers.image.source="https://github.com/davidparkerch/delt-pipeline" \
       org.opencontainers.image.url="https://github.com/davidparkerch/delt-pipeline" \
       org.opencontainers.image.licenses="Apache-2.0" \

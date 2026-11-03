@@ -7,5 +7,7 @@
 .ruff_cache
 work
 results
+results_*
 coverage.xml
 **/__pycache__
+data/

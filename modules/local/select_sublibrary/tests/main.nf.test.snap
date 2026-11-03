@@ -1,0 +1,34 @@
+{
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    "sublibrary.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            }
+        ],
+        "timestamp": "2026-11-03T18:37:46.021646718",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "held-out plus random building blocks": {
+        "content": [
+            {
+                "0": [
+                    "sublibrary.json:md5,69f7d8e51d8d00826420799bd497f3f4"
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0"
+            }
+        ],
+        "timestamp": "2026-11-03T18:37:40.683898159",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

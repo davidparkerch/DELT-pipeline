@@ -4,28 +4,28 @@ nextflow.enable.types = true
  * Shared record types and helper functions, included by main.nf, workflows and modules.
  */
 
-// One row of the input samplesheet: a feature table plus its descriptive metadata.
-record Dataset {
+// One row of the input samplesheet: a DEL selection screen (KinDEL layout) plus its metadata.
+record Screen {
     id: String
     table: Path
-    id_column: String
-    target_column: String?
+    target: String
+    role: String
+    heldout_ondna: Path?
+    heldout_offdna: Path?
     description: String?
     source: String?
     license: String?
     keywords: String?
-    dictionary: Path?
 }
 
-// Analysis settings shared by every dataset (built from params in main.nf).
+// Analysis settings shared by every screen (built from params in main.nf).
 record Options {
-    export_formats: String
-    impute: String
-    max_missing: Float
-    n_components: Integer
-    n_clusters: Integer
-    cv_folds: Integer
+    n_bb_a: Integer
+    alpha: Float
+    ci_level: Float
+    top_n: Integer
     seed: Integer
+    export_formats: String
 }
 
 // Who and what produced the outputs, recorded in the FAIR metadata.
@@ -38,14 +38,15 @@ record RunInfo {
     creator_orcid: String
 }
 
-// Everything produced for one dataset.
-record AnalysedDataset {
+// Everything produced for one screen.
+record ScreenResult {
     id: String
     identifier: String
-    clean: Path
-    qc: Path
-    embedding: Path
-    stats: Path
+    counts_qc: Path
+    scores: Path
+    top: Path
+    score_qc: Path
+    validation: Path
     figures: Path
     exports: Set<Path>
     sha256sums: Path
