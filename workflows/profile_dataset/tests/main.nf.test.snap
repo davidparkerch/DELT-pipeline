@@ -1,0 +1,58 @@
+{
+    "two datasets": {
+        "content": [
+            [
+                {
+                    "clean": "compounds.clean.parquet:md5,ba70b831676d74ba85dac09e84978d22",
+                    "datapackage": "datapackage.json:md5,df212b3357d6a1f885d6e58ede4da8a8",
+                    "embedding": "compounds.embedding.parquet:md5,de733966d9dc21b640048ce95a539c8c",
+                    "exports": [
+                        "compounds.csv:md5,95cbafb226057ea6779ab2f2dfd66d78",
+                        "compounds.npz:md5,fc814d56b2a1f8530ca386976ed57c25",
+                        "compounds.parquet:md5,ba70b831676d74ba85dac09e84978d22"
+                    ],
+                    "figures": "compounds.figures.json:md5,7f340570175cab05e9b6f030466a67a6",
+                    "id": "compounds",
+                    "identifier": "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                    "metadata": "compounds.metadata.jsonld:md5,f3ce9d16ec143ebb5ff61360db92fb50",
+                    "qc": "compounds.qc.json:md5,2df8f7b854a99932c5bb871d79b6dac7",
+                    "sha256sums": "SHA256SUMS:md5,b45b89d03bf0c27ea42a1d1469e7e626",
+                    "stats": "compounds.stats.json:md5,f9343478862c95822cff0e8cc6bda7b4"
+                },
+                {
+                    "clean": "expression.clean.parquet:md5,03a498054fd0773e7e1c046e7f2de172",
+                    "datapackage": "datapackage.json:md5,bee0cc9ef6f9a08e5f2d607169800aeb",
+                    "embedding": "expression.embedding.parquet:md5,31ad50b975769a025133b21c7f803c75",
+                    "exports": [
+                        "expression.csv:md5,b583c9b1c564c4e1fe13ac7396fe32a0",
+                        "expression.npz:md5,bb006ea5b09f01dca720a6967740e64a",
+                        "expression.parquet:md5,03a498054fd0773e7e1c046e7f2de172"
+                    ],
+                    "figures": "expression.figures.json:md5,e6a3efe7338ca578cad3de204432ee65",
+                    "id": "expression",
+                    "identifier": "urn:sha256:8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                    "metadata": "expression.metadata.jsonld:md5,d5884a1fa36ac28a4329c53c4719c6f0",
+                    "qc": "expression.qc.json:md5,90f7acd0b6caeb076a9d53ac938cee76",
+                    "sha256sums": "SHA256SUMS:md5,ff3a6869eb0587a18e6ede23b823732e",
+                    "stats": "expression.stats.json:md5,278dabe9519b5452ec6d9827e13396cf"
+                }
+            ],
+            {
+                "<pipeline package>": "<pipeline version>",
+                "coreutils": "9.7",
+                "gzip": "1.13",
+                "numpy": "2.5.4",
+                "plotly": "7.1.0",
+                "polars": "2.1.0",
+                "python": "3.14",
+                "scikit-learn": "1.9.1",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-02T23:26:59.648037746",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

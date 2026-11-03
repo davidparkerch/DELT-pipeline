@@ -1,0 +1,95 @@
+# Lint and test on every push and pull request. All logic lives in the justfile.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NXF_ANSI_LOG: false
+  NXF_VER: "26.10.5"
+  FORCE_COLOR: 1
+
+jobs:
+  lint:
+    name: Lint (ruff, nextflow lint)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.13.6"
+          enable-cache: true
+      - uses: nf-core/setup-nextflow@v3
+        with:
+          version: "26.10.5"
+          java-version: "21"
+      - uses: extractions/setup-just@v4
+      - run: just lint
+
+  test-python:
+    name: pytest (100% coverage)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.13.6"
+          enable-cache: true
+      - uses: extractions/setup-just@v4
+      - run: just test-py
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage
+          path: coverage.xml
+
+  test-nextflow:
+    name: nf-test (runtime image, Podman)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.13.6"
+          enable-cache: true
+      - uses: nf-core/setup-nextflow@v3
+        with:
+          version: "26.10.5"
+          java-version: "21"
+      - uses: nf-core/setup-nf-test@v2
+        with:
+          version: "0.9.5"
+      - uses: extractions/setup-just@v4
+      - name: nf-test (builds the runtime image with Podman, then runs every test in it)
+        run: just test-nf --junitxml=nf-test.xml
+      - name: Every Nextflow file is tested
+        run: just nf-coverage
+      - name: Example run and FAIR validation
+        run: just run && just validate-fair
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: nf-test-results
+          path: |
+            nf-test.xml
+            results/report.html
+            results/pipeline_info/
+          if-no-files-found: ignore
+
+  build-dev:
+    name: Build dev image
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: extractions/setup-just@v4
+      - run: just build-dev

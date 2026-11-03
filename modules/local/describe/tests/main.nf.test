@@ -1,0 +1,140 @@
+nextflow_process {
+
+    name "Test DESCRIBE"
+    script "../main.nf"
+    process "DESCRIBE"
+    tag "modules"
+    tag "describe"
+    topics "versions"
+
+    setup {
+        run("PREPARE_TABLE") {
+            script "../../prepare_table/main.nf"
+            process {
+                """
+                input[0] = channel.of(record(id: 'compounds', table: file("${projectDir}/assets/example/compounds.csv.gz")))
+                """
+            }
+        }
+        run("WRANGLE") {
+            script "../../wrangle/main.nf"
+            process {
+                """
+                input[0] = PREPARE_TABLE.out.map { r -> r + record(id_column: 'compound_id', target_column: 'active') }
+                input[1] = record(export_formats: 'parquet,csv,npz', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+        run("ANALYSE") {
+            script "../../analyse/main.nf"
+            process {
+                """
+                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'compound_id', target_column: 'active') }
+                input[1] = record(export_formats: 'parquet,csv,npz', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+        run("EXPORT") {
+            script "../../export/main.nf"
+            process {
+                """
+                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'compound_id', target_column: 'active') }
+                input[1] = record(export_formats: 'parquet,csv,npz', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+        run("CHECKSUM") {
+            script "../../checksum/main.nf"
+            process {
+                """
+                input[0] = EXPORT.out
+                """
+            }
+        }
+    }
+
+    test("rich metadata") {
+        when {
+            process {
+                """
+                input[0] = WRANGLE.out
+                    .join(ANALYSE.out, by: 'id')
+                    .join(EXPORT.out, by: 'id')
+                    .join(CHECKSUM.out, by: 'id')
+                    .map { r -> r + record(
+                        id_column: 'compound_id',
+                        target_column: 'active',
+                        description: "Compounds' test set",
+                        source: 'doi:10.5281/zenodo.0000000',
+                        license: 'CC0-1.0',
+                        keywords: 'chemistry;qsar',
+                        dictionary: file("${projectDir}/assets/example/compounds_dictionary.csv")
+                    ) }
+                input[1] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                """
+            }
+        }
+        then {
+            assert process.success
+            def result = process.out[0][0]
+            def metadata = path(result.metadata).json
+            assert result.identifier == metadata['@id']
+            assert metadata.description == "Compounds' test set"
+            assert metadata.creator.name == "O'Test"
+            assert metadata.isBasedOn == 'https://doi.org/10.5281/zenodo.0000000'
+            assert metadata.variableMeasured.find { v -> v.name == 'MolWt' }.unitText == 'Da'
+            assert path(result.datapackage).json.licenses[0].name == 'CC0-1.0'
+            assert snapshot(result.identifier, metadata, result.datapackage, Fixtures.versions(topics.versions, projectDir)).match()
+        }
+    }
+
+    test("defaults") {
+        when {
+            process {
+                """
+                input[0] = WRANGLE.out
+                    .join(ANALYSE.out, by: 'id')
+                    .join(EXPORT.out, by: 'id')
+                    .join(CHECKSUM.out, by: 'id')
+                    .map { r -> r + record(
+                        id_column: 'compound_id',
+                        target_column: null,
+                        description: null,
+                        source: null,
+                        license: null,
+                        keywords: null,
+                        dictionary: null
+                    ) }
+                input[1] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                """
+            }
+        }
+        then {
+            assert process.success
+            def metadata = path(process.out[0][0].metadata).json
+            assert metadata.license == 'https://spdx.org/licenses/CC-BY-4.0'
+            assert !metadata.containsKey('isBasedOn')
+            assert snapshot(metadata).match()
+        }
+    }
+
+    test("stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                def any = file("${projectDir}/assets/example/expression.csv")
+                input[0] = channel.of(record(
+                    id: 'x', clean: any, stats: any, exports: [any].toSet(), sha256sums: any, id_column: 'sample_id',
+                    target_column: null, description: null, source: null, license: null, keywords: null, dictionary: null
+                ))
+                input[1] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

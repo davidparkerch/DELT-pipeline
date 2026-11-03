@@ -1,0 +1,2 @@
+assets/example/** -text
+*.snap -diff linguist-generated

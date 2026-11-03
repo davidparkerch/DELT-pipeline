@@ -1,0 +1,25 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: 969f714
+_src_path: templates/nxfline/
+author_email: david.parker@bluewin.ch
+author_name: David Parker
+author_orcid: 0009-0009-2897-5030
+container_registry: ghcr.io
+data_license: CC-BY-4.0
+description: Process DNA-Encoded Library Technology data and exports FAIR, analysis-ready
+    datasets.
+github_owner: davidparkerch
+initial_version: 0.1.0
+keywords:
+- nextflow
+- bioinformatics
+- cheminformatics
+- machine-learning
+- fair
+license: Apache-2.0
+organization_name: ''
+organization_ror: ''
+package_name: delt_pipeline
+pipeline_name: delt-pipeline
+project_name: DELT-pipeline
+python_version: '3.14'

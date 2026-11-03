@@ -1,0 +1,347 @@
+{
+    "defaults": {
+        "content": [
+            {
+                "@context": {
+                    "@vocab": "https://schema.org/",
+                    "prov": "http://www.w3.org/ns/prov#"
+                },
+                "@id": "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                "@type": "Dataset",
+                "creator": {
+                    "@id": "https://orcid.org/0000-0002-1825-0097",
+                    "@type": "Person",
+                    "name": "O'Test"
+                },
+                "description": "Cleaned feature table 'compounds'",
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "4498 B",
+                        "contentUrl": "compounds.clean.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "compounds.clean.parquet",
+                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "2142 B",
+                        "contentUrl": "../../exports/compounds/compounds.csv",
+                        "encodingFormat": [
+                            "text/csv",
+                            "http://edamontology.org/format_3752"
+                        ],
+                        "name": "compounds.csv",
+                        "sha256": "cb90f5576c7e32e337b1f5efb5baddc9faee6562c9b919a4b6b18cec00e573b5",
+                        "usageInfo": "https://www.rfc-editor.org/rfc/rfc4180"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "1884 B",
+                        "contentUrl": "../../exports/compounds/compounds.npz",
+                        "encodingFormat": [
+                            "application/zip",
+                            "http://edamontology.org/format_4003"
+                        ],
+                        "name": "compounds.npz",
+                        "sha256": "8cb529b3b05568def11cdf3a32ed9c93dd45d0bb0ee7f388bba956772c5a92cd",
+                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "4498 B",
+                        "contentUrl": "../../exports/compounds/compounds.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "compounds.parquet",
+                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    }
+                ],
+                "identifier": [
+                    "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                    {
+                        "@type": "PropertyValue",
+                        "propertyID": "dataset_id",
+                        "value": "compounds"
+                    }
+                ],
+                "keywords": [
+                    
+                ],
+                "license": "https://spdx.org/licenses/CC-BY-4.0",
+                "name": "compounds",
+                "prov:wasGeneratedBy": {
+                    "@type": "SoftwareApplication",
+                    "name": "test/pipeline",
+                    "softwareVersion": "0.0.0",
+                    "url": "https://example.org/pipeline"
+                },
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Unique row identifier",
+                        "name": "compound_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Non-numeric annotation carried along with the data",
+                        "name": "smiles"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 455.27,
+                        "minValue": 253.83,
+                        "name": "MolWt"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 5.028,
+                        "minValue": 0.783,
+                        "name": "LogP"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 100.46,
+                        "minValue": 9.07,
+                        "name": "TPSA"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 4.0,
+                        "minValue": 0.0,
+                        "name": "HBD"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 8.0,
+                        "minValue": 1.0,
+                        "name": "HBA"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.0,
+                        "minValue": 0.0,
+                        "name": "RotB"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "name": "active"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-02T23:24:08.037380854",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "datapackage": "datapackage.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "x",
+                        "identifier": "urn:sha256:stub",
+                        "metadata": "x.metadata.jsonld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-02T23:24:17.59198235",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "rich metadata": {
+        "content": [
+            "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+            {
+                "@context": {
+                    "@vocab": "https://schema.org/",
+                    "prov": "http://www.w3.org/ns/prov#"
+                },
+                "@id": "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                "@type": "Dataset",
+                "creator": {
+                    "@id": "https://orcid.org/0000-0002-1825-0097",
+                    "@type": "Person",
+                    "name": "O'Test"
+                },
+                "description": "Compounds' test set",
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "4498 B",
+                        "contentUrl": "compounds.clean.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "compounds.clean.parquet",
+                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "2142 B",
+                        "contentUrl": "../../exports/compounds/compounds.csv",
+                        "encodingFormat": [
+                            "text/csv",
+                            "http://edamontology.org/format_3752"
+                        ],
+                        "name": "compounds.csv",
+                        "sha256": "cb90f5576c7e32e337b1f5efb5baddc9faee6562c9b919a4b6b18cec00e573b5",
+                        "usageInfo": "https://www.rfc-editor.org/rfc/rfc4180"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "1884 B",
+                        "contentUrl": "../../exports/compounds/compounds.npz",
+                        "encodingFormat": [
+                            "application/zip",
+                            "http://edamontology.org/format_4003"
+                        ],
+                        "name": "compounds.npz",
+                        "sha256": "8cb529b3b05568def11cdf3a32ed9c93dd45d0bb0ee7f388bba956772c5a92cd",
+                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "4498 B",
+                        "contentUrl": "../../exports/compounds/compounds.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "compounds.parquet",
+                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    }
+                ],
+                "identifier": [
+                    "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                    {
+                        "@type": "PropertyValue",
+                        "propertyID": "dataset_id",
+                        "value": "compounds"
+                    }
+                ],
+                "isBasedOn": "https://doi.org/10.5281/zenodo.0000000",
+                "keywords": [
+                    "chemistry",
+                    "qsar"
+                ],
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "name": "compounds",
+                "prov:wasGeneratedBy": {
+                    "@type": "SoftwareApplication",
+                    "name": "test/pipeline",
+                    "softwareVersion": "0.0.0",
+                    "url": "https://example.org/pipeline"
+                },
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Compound identifier",
+                        "name": "compound_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Chemical structure as a SMILES string",
+                        "name": "smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Average molecular weight",
+                        "maxValue": 455.27,
+                        "minValue": 253.83,
+                        "name": "MolWt",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000221",
+                        "unitText": "Da"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Octanol-water partition coefficient (log10)",
+                        "maxValue": 5.028,
+                        "minValue": 0.783,
+                        "name": "LogP"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Topological polar surface area",
+                        "maxValue": 100.46,
+                        "minValue": 9.07,
+                        "name": "TPSA",
+                        "unitText": "\u00c5\u00b2"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of hydrogen bond donors",
+                        "maxValue": 4.0,
+                        "minValue": 0.0,
+                        "name": "HBD",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of hydrogen bond acceptors",
+                        "maxValue": 8.0,
+                        "minValue": 1.0,
+                        "name": "HBA",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of rotatable bonds",
+                        "maxValue": 9.0,
+                        "minValue": 0.0,
+                        "name": "RotB",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Binary activity label from a (synthetic) screening assay",
+                        "name": "active"
+                    }
+                ]
+            },
+            "datapackage.json:md5,90b862a9e31ce9c4a04ea3a2422d1b15",
+            {
+                "<pipeline package>": "<pipeline version>",
+                "coreutils": "9.7",
+                "gzip": "1.13",
+                "numpy": "2.5.4",
+                "polars": "2.1.0",
+                "python": "3.14",
+                "scikit-learn": "1.9.1",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-02T23:23:54.956874329",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

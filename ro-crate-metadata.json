@@ -1,0 +1,66 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.1/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {"@id": "https://w3id.org/ro/crate/1.1"},
+      "about": {"@id": "./"}
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "conformsTo": {"@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"},
+      "name": "DELT-pipeline",
+      "description": "Process DNA-Encoded Library Technology data and exports FAIR, analysis-ready datasets.",
+      "version": "0.1.0",
+      "datePublished": "2026-11-03",
+      "url": "https://github.com/davidparkerch/delt-pipeline",
+      "keywords": ["nextflow", "bioinformatics", "cheminformatics", "machine-learning", "fair"],
+      "license": {"@id": "https://spdx.org/licenses/Apache-2.0"},
+      "author": [{"@id": "https://orcid.org/0009-0009-2897-5030"}],
+      "mainEntity": {"@id": "main.nf"},
+      "hasPart": [
+        {"@id": "main.nf"},
+        {"@id": "nextflow.config"},
+        {"@id": "README.md"},
+        {"@id": "LICENSE"},
+        {"@id": "CITATION.cff"}
+      ]
+    },
+    {
+      "@id": "main.nf",
+      "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
+      "name": "DELT-pipeline",
+      "description": "Process DNA-Encoded Library Technology data and exports FAIR, analysis-ready datasets.",
+      "version": "0.1.0",
+      "programmingLanguage": {"@id": "#nextflow"},
+      "creator": [{"@id": "https://orcid.org/0009-0009-2897-5030"}],
+      "license": {"@id": "https://spdx.org/licenses/Apache-2.0"},
+      "url": "https://github.com/davidparkerch/delt-pipeline/blob/main/main.nf"
+    },
+    {
+      "@id": "#nextflow",
+      "@type": "ComputerLanguage",
+      "name": "Nextflow",
+      "identifier": {"@id": "https://www.nextflow.io/"},
+      "url": {"@id": "https://www.nextflow.io/"},
+      "version": "26.10.5"
+    },
+    {
+      "@id": "https://orcid.org/0009-0009-2897-5030",
+      "@type": "Person",
+      "name": "David Parker"
+    },
+    {
+      "@id": "https://spdx.org/licenses/Apache-2.0",
+      "@type": "CreativeWork",
+      "name": "Apache-2.0",
+      "identifier": "Apache-2.0"
+    },
+    {"@id": "nextflow.config", "@type": "File", "name": "Nextflow configuration"},
+    {"@id": "README.md", "@type": "File", "name": "README", "encodingFormat": "text/markdown"},
+    {"@id": "LICENSE", "@type": "File", "name": "License"},
+    {"@id": "CITATION.cff", "@type": "File", "name": "Citation metadata", "encodingFormat": "application/x-yaml"}
+  ]
+}

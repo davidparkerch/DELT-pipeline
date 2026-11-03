@@ -1,0 +1,22 @@
+# Nextflow
+work/
+results/
+.nextflow/
+.nextflow.log*
+.lineage/
+lineage.html
+# nf-test
+.nf-test/
+.nf-test.log
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+# Editors / OS
+.DS_Store
+.idea/
+*.swp

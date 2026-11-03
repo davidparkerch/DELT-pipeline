@@ -1,0 +1,40 @@
+nextflow_process {
+
+    name "Test CHECKSUM"
+    script "../main.nf"
+    process "CHECKSUM"
+    tag "modules"
+    tag "checksum"
+    topics "versions"
+
+    test("checksums") {
+        when {
+            process {
+                """
+                input[0] = channel.of(record(id: 'example', exports: files("${projectDir}/assets/example/*.csv").toSet()))
+                """
+            }
+        }
+        then {
+            assert process.success
+            def lines = path(process.out[0][0].sha256sums).readLines()
+            assert lines*.split('  ')*.getAt(1) == ['compounds_dictionary.csv', 'expression.csv', 'samplesheet.csv']
+            assert snapshot(process.out, Fixtures.versions(topics.versions, projectDir)).match()
+        }
+    }
+
+    test("stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = channel.of(record(id: 'example', exports: files("${projectDir}/assets/example/*.csv").toSet()))
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

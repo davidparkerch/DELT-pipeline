@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="{{ pipeline.name }} {{ pipeline.version }}">
+<title>{{ title }}</title>
+<style>
+:root {
+  --bg: #f7f8fa; --surface: #ffffff; --text: #1d2330; --muted: #5c6577; --border: #dde1e8;
+  --accent: #2f6fde; --ok: #1f8a4c; --warn: #b26a00; --code: #eef1f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151b; --surface: #1a1e26; --text: #e6e9ef; --muted: #9aa3b5; --border: #2c3240;
+    --accent: #6b9cff; --ok: #4cc38a; --warn: #f0a640; --code: #232836;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 24px 16px; }
+header h1 { margin: 0 0 4px; font-size: 1.6rem; }
+header p { margin: 0; color: var(--muted); }
+main { max-width: 1180px; margin: 0 auto; padding: 16px; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 16px; }
+nav.toc a { color: var(--accent); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 2px 12px; text-decoration: none; }
+section.dataset, section.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+h2 { margin-top: 0; font-size: 1.3rem; }
+h3 { font-size: 1.05rem; margin: 20px 0 8px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.card { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.card .label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.card .value { font-size: 1.3rem; font-weight: 600; }
+.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }
+.figure { min-height: 380px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th { color: var(--muted); font-weight: 600; }
+code { background: var(--code); border-radius: 4px; padding: 1px 5px; font-size: 0.85em; word-break: break-all; white-space: normal; }
+.muted { color: var(--muted); }
+.badge { display: inline-block; border-radius: 4px; padding: 0 6px; font-size: 0.8rem; border: 1px solid var(--border); }
+.badge.ok { color: var(--ok); border-color: var(--ok); }
+.badge.warn { color: var(--warn); border-color: var(--warn); }
+footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-size: 0.85rem; }
+@media (max-width: 520px) { .figures { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ title }}</h1>
+  <p>{{ bundles | length }} dataset{{ "" if bundles | length == 1 else "s" }} profiled by
+    {% if pipeline.homepage %}<a href="{{ pipeline.homepage }}">{{ pipeline.name }}</a>{% else %}{{ pipeline.name }}{% endif %}
+    v{{ pipeline.version }}</p>
+</header>
+<main>
+  <nav class="toc" aria-label="Datasets">
+    {% for bundle in bundles %}<a href="#ds-{{ bundle.id }}">{{ bundle.id }}</a>{% endfor %}
+    <a href="#software">Software</a>
+  </nav>
+
+  {% for bundle in bundles %}
+  {% set stats = bundle.stats %}{% set qc = bundle.qc %}{% set meta = bundle.metadata %}
+  <section class="dataset" id="ds-{{ bundle.id }}">
+    <h2>{{ bundle.id }}</h2>
+    <p class="muted">{{ meta.description }}</p>
+    <div class="cards">
+      <div class="card"><div class="label">Samples</div><div class="value">{{ stats.n_samples }}</div></div>
+      <div class="card"><div class="label">Features</div><div class="value">{{ stats.n_features }}</div></div>
+      <div class="card"><div class="label">Task</div><div class="value">{{ stats.task }}</div></div>
+      <div class="card"><div class="label">Rows removed</div><div class="value">{{ qc.rows_in - qc.rows_out }}</div></div>
+      <div class="card"><div class="label">Clusters</div><div class="value">{{ stats.embedding.n_clusters }}</div></div>
+      {% if stats.embedding.silhouette is not none %}
+      <div class="card"><div class="label">Silhouette</div><div class="value">{{ "%.3f" | format(stats.embedding.silhouette) }}</div></div>
+      {% endif %}
+    </div>
+
+    {% if stats.model %}
+    <h3>Supervised baseline</h3>
+    {% if stats.model.skipped is defined %}
+    <p><span class="badge warn">skipped</span> {{ stats.model.skipped }}</p>
+    {% else %}
+    <p class="muted">{{ stats.model.estimator }}, {{ stats.model.folds }}-fold cross-validation.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Metric</th><th>Mean</th><th>Std</th></tr>
+      {% for name, value in stats.model.metrics.items() %}
+      <tr><td>{{ name }}</td><td>{{ "%.4f" | format(value.mean) }}</td><td>{{ "%.4f" | format(value.std) }}</td></tr>
+      {% endfor %}
+    </table></div>
+    {% endif %}
+    {% endif %}
+
+    <h3>Figures</h3>
+    <div class="figures">
+      {% for name in bundle.figures | sort %}<div class="figure" id="fig-{{ bundle.id }}-{{ name }}" role="img" aria-label="{{ name }} plot for {{ bundle.id }}"></div>{% endfor %}
+    </div>
+
+    <h3>Features</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Feature</th><th>Mean</th><th>Std</th><th>Min</th><th>Median</th><th>Max</th><th>Shapiro p</th>{% if stats.association %}<th>Association p</th>{% endif %}</tr>
+      {% set assoc = {} %}{% for item in stats.association %}{% set _ = assoc.update({item.feature: item}) %}{% endfor %}
+      {% for f in stats.features %}
+      <tr><td>{{ f.feature }}</td><td>{{ f.mean }}</td><td>{{ f.std }}</td><td>{{ f.min }}</td><td>{{ f.median }}</td><td>{{ f.max }}</td>
+        <td>{{ f.shapiro_p if f.shapiro_p is not none else "–" }}</td>
+        {% if stats.association %}<td>{{ assoc[f.feature].p_value if assoc[f.feature].p_value is not none else "–" }} <span class="muted">({{ assoc[f.feature].test }})</span></td>{% endif %}</tr>
+      {% endfor %}
+    </table></div>
+
+    <h3>Quality control</h3>
+    <p>{{ qc.rows_in }} rows in, {{ qc.rows_out }} rows out; missing values imputed with <code>{{ qc.impute }}</code>.</p>
+    {% if qc.dropped_features %}
+    <div class="table-wrap"><table>
+      <tr><th>Dropped feature</th><th>Reason</th></tr>
+      {% for name, reason in qc.dropped_features.items() %}<tr><td>{{ name }}</td><td>{{ reason }}</td></tr>{% endfor %}
+    </table></div>
+    {% else %}
+    <p><span class="badge ok">ok</span> No features dropped.</p>
+    {% endif %}
+
+    <h3>FAIR summary</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Identifier</th><td><code>{{ meta["@id"] }}</code></td></tr>
+      <tr><th>License</th><td><a href="{{ meta.license }}">{{ meta.license }}</a></td></tr>
+      {% if meta.isBasedOn is defined %}<tr><th>Source</th><td><a href="{{ meta.isBasedOn }}">{{ meta.isBasedOn }}</a></td></tr>{% endif %}
+      {% if meta.creator is defined %}<tr><th>Creator</th><td>{{ meta.creator.name }}{% if meta.creator["@id"] is defined %} (<a href="{{ meta.creator['@id'] }}">ORCID</a>){% endif %}</td></tr>{% endif %}
+      <tr><th>Variables</th><td>{{ meta.variableMeasured | length }} described</td></tr>
+    </table></div>
+    <div class="table-wrap"><table>
+      <tr><th>File</th><th>Format</th><th>Size</th><th>SHA-256</th></tr>
+      {% for d in meta.distribution %}<tr><td>{{ d.name }}</td><td>{{ d.encodingFormat[0] }}</td><td>{{ d.contentSize }}</td><td><code>{{ d.sha256 }}</code></td></tr>{% endfor %}
+    </table></div>
+  </section>
+  {% endfor %}
+
+  <section class="panel" id="software">
+    <h2>Software</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Tool</th><th>Version</th></tr>
+      {% for tool, version in versions %}<tr><td>{{ tool }}</td><td>{{ version }}</td></tr>{% endfor %}
+    </table></div>
+    <p class="muted">Run provenance: <code>ro-crate-metadata.json</code> (Workflow Run RO-Crate),
+      <code>pipeline_info/bco.json</code> (BioCompute Object) and <code>nextflow lineage</code>.</p>
+  </section>
+</main>
+<footer>Generated by {{ pipeline.name }} v{{ pipeline.version }}. Self-contained report: no network access needed.</footer>
+<script>{{ plotly_js | safe }}</script>
+<script>
+const FIGURES = {{ figures | tojson }};
+const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+for (const [id, figure] of Object.entries(FIGURES)) {
+  const layout = Object.assign({}, figure.layout, {autosize: true});
+  if (dark) {
+    Object.assign(layout, {paper_bgcolor: "#1a1e26", plot_bgcolor: "#1a1e26", font: {color: "#e6e9ef"}});
+  }
+  Plotly.newPlot(id, figure.data, layout, {responsive: true, displaylogo: false});
+}
+</script>
+</body>
+</html>

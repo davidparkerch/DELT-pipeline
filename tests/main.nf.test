@@ -1,0 +1,71 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+
+    test("example data") {
+        when {
+            Fixtures.linkAssets(launchDir, projectDir)
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assert workflow.success
+
+            // Content checks for files that are excluded from md5 snapshots (see tests/.nftignore)
+            def report = Fixtures.report("$outputDir/report.html")
+            assert report.title == 'Test report'
+            def crate = path("$outputDir/ro-crate-metadata.json").json
+            assert crate['@graph'].any { entity -> entity['@id'] == './' }
+            def index = path("$outputDir/datasets.json").json
+            assert index*.id.sort() == ['compounds', 'expression']
+            assert index.every { dataset -> dataset.identifier.startsWith('urn:sha256:') }
+
+            // stable_paths: every file and folder in the output directory
+            def stable_paths = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: Fixtures.CRATE_COPIES)
+            // stable_content: md5 of every file with reproducible content
+            def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert snapshot(
+                    stable_paths,
+                    stable_content,
+                    Fixtures.versions("$outputDir/pipeline_info/versions.yml", projectDir),
+                    report,
+                    Fixtures.json("$outputDir/datasets/compounds/compounds.metadata.jsonld"),
+                    Fixtures.json("$outputDir/datasets/expression/expression.metadata.jsonld"),
+                ).match() }
+            )
+        }
+    }
+
+    test("stub") {
+        options "-stub"
+        when {
+            Fixtures.linkAssets(launchDir, projectDir)
+            params {
+                outdir = "$outputDir"
+            }
+        }
+        then {
+            assert workflow.success
+            assert snapshot(getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: Fixtures.CRATE_COPIES)).match()
+        }
+    }
+
+    test("invalid export format fails") {
+        when {
+            Fixtures.linkAssets(launchDir, projectDir)
+            params {
+                outdir = "$outputDir"
+                export_formats = 'parquet,xlsx'
+            }
+        }
+        then {
+            assert workflow.failed
+            assert workflow.trace.failed().size() > 0
+            assert workflow.trace.failed().every { task -> task.name.contains('EXPORT') }
+        }
+    }
+}

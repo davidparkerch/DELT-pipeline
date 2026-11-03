@@ -1,0 +1,81 @@
+"""Standalone HTML report rendered with jinja2."""
+
+import json
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape
+from plotly.offline import get_plotlyjs
+
+METADATA_SUFFIX = ".metadata.jsonld"
+PARTS = {"qc": ".qc.json", "stats": ".stats.json", "figures": ".figures.json", "metadata": METADATA_SUFFIX}
+
+
+@dataclass(frozen=True)
+class DatasetBundle:
+    """Everything the report shows for one dataset."""
+
+    id: str
+    qc: dict[str, Any]
+    stats: dict[str, Any]
+    figures: dict[str, Any]
+    metadata: dict[str, Any]
+
+
+def discover_ids(directory: Path) -> list[str]:
+    """Dataset ids in ``directory``, found from their ``<id>.metadata.jsonld`` files."""
+    return sorted(path.name.removesuffix(METADATA_SUFFIX) for path in directory.glob(f"*{METADATA_SUFFIX}"))
+
+
+def load_bundle(directory: Path, dataset_id: str) -> DatasetBundle:
+    """Load ``<id>.qc.json``, ``<id>.stats.json``, ``<id>.figures.json`` and ``<id>.metadata.jsonld``."""
+    parts = {key: json.loads((directory / f"{dataset_id}{suffix}").read_text()) for key, suffix in PARTS.items()}
+    return DatasetBundle(id=dataset_id, **parts)
+
+
+def parse_versions(path: Path) -> list[tuple[str, str]]:
+    """Parse ``tool: version`` lines (the pipeline's ``versions.yml``), sorted by tool."""
+    versions = []
+    for line in path.read_text().splitlines():
+        tool, separator, version = line.partition(":")
+        if separator and tool.strip() and not line.startswith((" ", "#")):
+            versions.append((tool.strip(), version.strip().strip("'\"")))
+    return sorted(versions)
+
+
+def render_report(
+    title: str,
+    bundles: list[DatasetBundle],
+    versions: list[tuple[str, str]],
+    pipeline: dict[str, str],
+) -> str:
+    """Render the self-contained report (plotly.js, CSS and data are all inline).
+
+    Args:
+        title: Report title.
+        bundles: One bundle per dataset.
+        versions: ``(tool, version)`` pairs.
+        pipeline: ``name``, ``version`` and optional ``homepage`` of the generating pipeline.
+
+    Returns:
+        The HTML document.
+    """
+    environment = Environment(
+        loader=PackageLoader(__package__, "templates"),
+        autoescape=select_autoescape(default=True),
+        undefined=StrictUndefined,
+        keep_trailing_newline=True,
+    )
+    figures = {
+        f"fig-{bundle.id}-{name}": figure for bundle in bundles for name, figure in sorted(bundle.figures.items())
+    }
+    template = environment.get_template("report.html.j2")
+    return template.render(
+        title=title,
+        bundles=bundles,
+        versions=versions,
+        pipeline=pipeline,
+        figures=figures,
+        plotly_js=get_plotlyjs(),
+    )

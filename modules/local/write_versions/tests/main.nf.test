@@ -1,0 +1,23 @@
+nextflow_process {
+
+    name "Test WRITE_VERSIONS"
+    script "../main.nf"
+    process "WRITE_VERSIONS"
+    tag "modules"
+    tag "write_versions"
+
+    test("sorted and unique") {
+        when {
+            process {
+                """
+                input[0] = [tuple('gzip', '1.13'), tuple('coreutils', '9.7 '), tuple('gzip', '1.13')]
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert path(process.out[0][0]).readLines() == ["coreutils: '9.7'", "gzip: '1.13'"]
+            assert snapshot(process.out).match()
+        }
+    }
+}

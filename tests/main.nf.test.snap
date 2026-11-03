@@ -1,0 +1,469 @@
+{
+    "example data": {
+        "content": [
+            [
+                "datasets",
+                "datasets.json",
+                "datasets/compounds",
+                "datasets/compounds/compounds.clean.parquet",
+                "datasets/compounds/compounds.embedding.parquet",
+                "datasets/compounds/compounds.figures.json",
+                "datasets/compounds/compounds.metadata.jsonld",
+                "datasets/compounds/compounds.qc.json",
+                "datasets/compounds/compounds.stats.json",
+                "datasets/expression",
+                "datasets/expression/expression.clean.parquet",
+                "datasets/expression/expression.embedding.parquet",
+                "datasets/expression/expression.figures.json",
+                "datasets/expression/expression.metadata.jsonld",
+                "datasets/expression/expression.qc.json",
+                "datasets/expression/expression.stats.json",
+                "exports",
+                "exports/compounds",
+                "exports/compounds/SHA256SUMS",
+                "exports/compounds/compounds.npz",
+                "exports/compounds/compounds.parquet",
+                "exports/compounds/compounds.tsv",
+                "exports/compounds/datapackage.json",
+                "exports/expression",
+                "exports/expression/SHA256SUMS",
+                "exports/expression/datapackage.json",
+                "exports/expression/expression.npz",
+                "exports/expression/expression.parquet",
+                "exports/expression/expression.tsv",
+                "pipeline_info",
+                "pipeline_info/bco.json",
+                "pipeline_info/dag.html",
+                "pipeline_info/execution_report.html",
+                "pipeline_info/timeline.html",
+                "pipeline_info/versions.yml",
+                "report.html"
+            ],
+            [
+                "compounds.clean.parquet:md5,ba70b831676d74ba85dac09e84978d22",
+                "compounds.embedding.parquet:md5,de733966d9dc21b640048ce95a539c8c",
+                "compounds.figures.json:md5,7f340570175cab05e9b6f030466a67a6",
+                "compounds.qc.json:md5,2df8f7b854a99932c5bb871d79b6dac7",
+                "compounds.stats.json:md5,f9343478862c95822cff0e8cc6bda7b4",
+                "expression.clean.parquet:md5,03a498054fd0773e7e1c046e7f2de172",
+                "expression.embedding.parquet:md5,31ad50b975769a025133b21c7f803c75",
+                "expression.figures.json:md5,e6a3efe7338ca578cad3de204432ee65",
+                "expression.qc.json:md5,90f7acd0b6caeb076a9d53ac938cee76",
+                "expression.stats.json:md5,278dabe9519b5452ec6d9827e13396cf",
+                "SHA256SUMS:md5,38772a233e4ca580422ffc697593a09a",
+                "compounds.npz:md5,fc814d56b2a1f8530ca386976ed57c25",
+                "compounds.parquet:md5,ba70b831676d74ba85dac09e84978d22",
+                "compounds.tsv:md5,3baabe375f0a27ed799eb9e638e0985c",
+                "datapackage.json:md5,da42311fbd576728815a59aa5595d3f3",
+                "SHA256SUMS:md5,acbd676a257104608bc7021cc1ec6a4f",
+                "datapackage.json:md5,059dc4cf138a4fcdaecf9ff749885014",
+                "expression.npz:md5,bb006ea5b09f01dca720a6967740e64a",
+                "expression.parquet:md5,03a498054fd0773e7e1c046e7f2de172",
+                "expression.tsv:md5,5e0f22e6942048dab462251b6332cea7"
+            ],
+            {
+                "<pipeline package>": "<pipeline version>",
+                "coreutils": "9.7",
+                "gzip": "1.13",
+                "numpy": "2.5.4",
+                "plotly": "7.1.0",
+                "polars": "2.1.0",
+                "python": "3.14",
+                "scikit-learn": "1.9.1",
+                "scipy": "1.18.1"
+            },
+            {
+                "title": "Test report",
+                "datasets": [
+                    "compounds",
+                    "expression"
+                ],
+                "figures": [
+                    "fig-compounds-correlation",
+                    "fig-compounds-distributions",
+                    "fig-compounds-importance",
+                    "fig-compounds-pca",
+                    "fig-expression-correlation",
+                    "fig-expression-distributions",
+                    "fig-expression-importance",
+                    "fig-expression-pca"
+                ],
+                "offline": true,
+                "bytes_over_1mb": true
+            },
+            {
+                "@context": {
+                    "@vocab": "https://schema.org/",
+                    "prov": "http://www.w3.org/ns/prov#"
+                },
+                "@id": "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                "@type": "Dataset",
+                "creator": {
+                    "@type": "Person",
+                    "name": "Test Creator"
+                },
+                "description": "Synthetic compound descriptors with a binary activity label",
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "4498 B",
+                        "contentUrl": "compounds.clean.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "compounds.clean.parquet",
+                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "1884 B",
+                        "contentUrl": "../../exports/compounds/compounds.npz",
+                        "encodingFormat": [
+                            "application/zip",
+                            "http://edamontology.org/format_4003"
+                        ],
+                        "name": "compounds.npz",
+                        "sha256": "8cb529b3b05568def11cdf3a32ed9c93dd45d0bb0ee7f388bba956772c5a92cd",
+                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "4498 B",
+                        "contentUrl": "../../exports/compounds/compounds.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "compounds.parquet",
+                        "sha256": "6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "2142 B",
+                        "contentUrl": "../../exports/compounds/compounds.tsv",
+                        "encodingFormat": [
+                            "text/tab-separated-values",
+                            "http://edamontology.org/format_3475"
+                        ],
+                        "name": "compounds.tsv",
+                        "sha256": "0829b0cd387c9179a27e1ce10f225f12b20b4da0cf154f7d0d1642cee03d78fd",
+                        "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
+                    }
+                ],
+                "identifier": [
+                    "urn:sha256:6a8f856a2c3bcda5cec0f877ece863280857476656392caf4f125edcf1492857",
+                    {
+                        "@type": "PropertyValue",
+                        "propertyID": "dataset_id",
+                        "value": "compounds"
+                    }
+                ],
+                "keywords": [
+                    "cheminformatics",
+                    "drug discovery",
+                    "qsar"
+                ],
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "name": "compounds",
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Compound identifier",
+                        "name": "compound_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Chemical structure as a SMILES string",
+                        "name": "smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Average molecular weight",
+                        "maxValue": 455.27,
+                        "minValue": 253.83,
+                        "name": "MolWt",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000221",
+                        "unitText": "Da"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Octanol-water partition coefficient (log10)",
+                        "maxValue": 5.028,
+                        "minValue": 0.783,
+                        "name": "LogP"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Topological polar surface area",
+                        "maxValue": 100.46,
+                        "minValue": 9.07,
+                        "name": "TPSA",
+                        "unitText": "\u00c5\u00b2"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of hydrogen bond donors",
+                        "maxValue": 4.0,
+                        "minValue": 0.0,
+                        "name": "HBD",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of hydrogen bond acceptors",
+                        "maxValue": 8.0,
+                        "minValue": 1.0,
+                        "name": "HBA",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of rotatable bonds",
+                        "maxValue": 9.0,
+                        "minValue": 0.0,
+                        "name": "RotB",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Binary activity label from a (synthetic) screening assay",
+                        "name": "active"
+                    }
+                ]
+            },
+            {
+                "@context": {
+                    "@vocab": "https://schema.org/",
+                    "prov": "http://www.w3.org/ns/prov#"
+                },
+                "@id": "urn:sha256:8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                "@type": "Dataset",
+                "creator": {
+                    "@type": "Person",
+                    "name": "Test Creator"
+                },
+                "description": "Synthetic log2 gene expression of treated and control samples",
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "7597 B",
+                        "contentUrl": "expression.clean.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "expression.clean.parquet",
+                        "sha256": "8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "2591 B",
+                        "contentUrl": "../../exports/expression/expression.npz",
+                        "encodingFormat": [
+                            "application/zip",
+                            "http://edamontology.org/format_4003"
+                        ],
+                        "name": "expression.npz",
+                        "sha256": "3938d562b71161fd131d8c06c2f59c5a2e550a15b35dd9b63bf4358cb43634af",
+                        "usageInfo": "https://numpy.org/doc/stable/reference/generated/numpy.savez.html"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "7597 B",
+                        "contentUrl": "../../exports/expression/expression.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "expression.parquet",
+                        "sha256": "8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "2682 B",
+                        "contentUrl": "../../exports/expression/expression.tsv",
+                        "encodingFormat": [
+                            "text/tab-separated-values",
+                            "http://edamontology.org/format_3475"
+                        ],
+                        "name": "expression.tsv",
+                        "sha256": "80b59e8fc328805bfe67e3cefb9745d5cdb384ed35a38924a3636c0360b2510f",
+                        "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
+                    }
+                ],
+                "identifier": [
+                    "urn:sha256:8b64d93b1dd69c2a9bebc68fd7bd365820f3341ce0a25b52ee0a5031dbb7390c",
+                    {
+                        "@type": "PropertyValue",
+                        "propertyID": "dataset_id",
+                        "value": "expression"
+                    }
+                ],
+                "keywords": [
+                    "bioinformatics",
+                    "transcriptomics"
+                ],
+                "license": "https://spdx.org/licenses/CC-BY-4.0",
+                "name": "expression",
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Unique row identifier",
+                        "name": "sample_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Non-numeric annotation carried along with the data",
+                        "name": "batch"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 8.842,
+                        "minValue": 6.941,
+                        "name": "TP53"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.207,
+                        "minValue": 6.618,
+                        "name": "MYC"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.276,
+                        "minValue": 6.133,
+                        "name": "EGFR"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.523,
+                        "minValue": 7.31,
+                        "name": "GAPDH"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.214,
+                        "minValue": 6.26,
+                        "name": "ACTB"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.016,
+                        "minValue": 6.748,
+                        "name": "VEGFA"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 10.974,
+                        "minValue": 6.871,
+                        "name": "IL6"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 10.835,
+                        "minValue": 6.891,
+                        "name": "TNF"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 10.514,
+                        "minValue": 6.7,
+                        "name": "CDKN1A"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.779,
+                        "minValue": 6.865,
+                        "name": "BRCA1"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.543,
+                        "minValue": 6.61,
+                        "name": "KRAS"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Numeric feature",
+                        "maxValue": 9.777,
+                        "minValue": 6.648,
+                        "name": "STAT3"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Prediction target (label or response)",
+                        "name": "condition"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-02T23:26:20.768751463",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            [
+                "datasets",
+                "datasets.json",
+                "datasets/compounds",
+                "datasets/compounds/compounds.clean.parquet",
+                "datasets/compounds/compounds.embedding.parquet",
+                "datasets/compounds/compounds.figures.json",
+                "datasets/compounds/compounds.metadata.jsonld",
+                "datasets/compounds/compounds.qc.json",
+                "datasets/compounds/compounds.stats.json",
+                "datasets/expression",
+                "datasets/expression/expression.clean.parquet",
+                "datasets/expression/expression.embedding.parquet",
+                "datasets/expression/expression.figures.json",
+                "datasets/expression/expression.metadata.jsonld",
+                "datasets/expression/expression.qc.json",
+                "datasets/expression/expression.stats.json",
+                "exports",
+                "exports/compounds",
+                "exports/compounds/SHA256SUMS",
+                "exports/compounds/compounds.parquet",
+                "exports/compounds/datapackage.json",
+                "exports/expression",
+                "exports/expression/SHA256SUMS",
+                "exports/expression/datapackage.json",
+                "exports/expression/expression.parquet",
+                "pipeline_info",
+                "pipeline_info/bco.json",
+                "pipeline_info/dag.html",
+                "pipeline_info/execution_report.html",
+                "pipeline_info/timeline.html",
+                "pipeline_info/versions.yml",
+                "report.html"
+            ]
+        ],
+        "timestamp": "2026-11-02T23:26:33.657617363",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

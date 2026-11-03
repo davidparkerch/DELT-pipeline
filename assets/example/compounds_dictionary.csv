@@ -1,0 +1,10 @@
+column,description,unit,unit_iri,term_iri
+compound_id,Compound identifier,,,
+smiles,Chemical structure as a SMILES string,,,http://semanticscience.org/resource/CHEMINF_000018
+MolWt,Average molecular weight,Da,http://purl.obolibrary.org/obo/UO_0000221,
+LogP,Octanol-water partition coefficient (log10),,,
+TPSA,Topological polar surface area,Å²,,
+HBD,Number of hydrogen bond donors,count,http://purl.obolibrary.org/obo/UO_0000189,
+HBA,Number of hydrogen bond acceptors,count,http://purl.obolibrary.org/obo/UO_0000189,
+RotB,Number of rotatable bonds,count,http://purl.obolibrary.org/obo/UO_0000189,
+active,Binary activity label from a (synthetic) screening assay,,,

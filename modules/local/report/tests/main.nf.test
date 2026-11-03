@@ -1,0 +1,86 @@
+nextflow_process {
+
+    name "Test REPORT"
+    script "../main.nf"
+    process "REPORT"
+    tag "modules"
+    tag "report"
+
+    setup {
+        run("PROFILE_DATASET") {
+            script "../../../../workflows/profile_dataset/main.nf"
+            workflow {
+                """
+                input[0] = channel.of(
+                    record(
+                        id: 'compounds',
+                        table: file("${projectDir}/assets/example/compounds.csv.gz"),
+                        id_column: 'compound_id',
+                        target_column: 'active',
+                        description: 'Compounds',
+                        source: null,
+                        license: 'CC0-1.0',
+                        keywords: 'qsar',
+                        dictionary: file("${projectDir}/assets/example/compounds_dictionary.csv")
+                    ),
+                    record(
+                        id: 'expression',
+                        table: file("${projectDir}/assets/example/expression.csv"),
+                        id_column: 'sample_id',
+                        target_column: 'condition',
+                        description: null,
+                        source: null,
+                        license: null,
+                        keywords: null,
+                        dictionary: null
+                    )
+                )
+                input[1] = record(export_formats: 'parquet,csv,npz', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                input[2] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                """
+            }
+        }
+    }
+
+    test("standalone html") {
+        when {
+            process {
+                """
+                input[0] = PROFILE_DATASET.out.results
+                    .flatMap { d -> [d.qc, d.stats, d.figures, d.metadata] }
+                    .collect()
+                input[1] = file("${projectDir}/tests/data/versions.yml")
+                input[2] = "A <tested> report"
+                input[3] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                """
+            }
+        }
+        then {
+            assert process.success
+            def summary = Fixtures.report(process.out[0][0])
+            assert summary.title == 'A &lt;tested&gt; report'
+            assert summary.offline
+            assert path(process.out[0][0]).text.contains('<td>coreutils</td><td>9.7</td>')
+            // The HTML embeds plotly.js, so a structural summary is snapshotted instead of its md5.
+            assert snapshot(summary).match()
+        }
+    }
+
+    test("stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [file("${projectDir}/tests/data/versions.yml")]
+                input[1] = file("${projectDir}/tests/data/versions.yml")
+                input[2] = 'Stub'
+                input[3] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+}

@@ -1,0 +1,34 @@
+{
+  // Podman dev container for DELT-pipeline.
+  // The image is built locally by `just build-dev` (initializeCommand) from the Containerfile `dev` target.
+  // Point the Dev Containers extension at Podman: set its container CLI path to `podman`.
+  "name": "DELT-pipeline",
+  "image": "localhost/delt-pipeline-dev:latest",
+  "initializeCommand": "just build-dev",
+  "runArgs": ["--userns=keep-id:uid=1000,gid=1000", "--security-opt=label=disable"],
+  "containerUser": "dev",
+  "updateRemoteUserUID": false,
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "uv sync",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python",
+        "nextflow.java.home": "/usr/lib/jvm/java-21-openjdk-amd64",
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true
+        }
+      },
+      "extensions": [
+        "nextflow.nextflow",
+        "charliermarsh.ruff",
+        "ms-python.python",
+        "nefrob.vscode-just-syntax",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  }
+}

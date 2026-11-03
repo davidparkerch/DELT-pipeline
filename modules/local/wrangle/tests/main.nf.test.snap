@@ -1,0 +1,25 @@
+{
+    "labelled table": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "clean": "expression.clean.parquet:md5,03a498054fd0773e7e1c046e7f2de172",
+                        "id": "expression",
+                        "qc": "expression.qc.json:md5,90f7acd0b6caeb076a9d53ac938cee76"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "python": "3.14"
+            }
+        ],
+        "timestamp": "2026-11-02T23:25:51.608308518",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

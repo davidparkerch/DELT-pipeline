@@ -1,0 +1,52 @@
+{
+    "every format": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "exports": [
+                            "expression.arrow:md5,088ea7268f4742dcaa69cb2a08b3482b",
+                            "expression.csv:md5,b583c9b1c564c4e1fe13ac7396fe32a0",
+                            "expression.jsonl:md5,7af1ba5625042078a8ef41df0e647389",
+                            "expression.npz:md5,bb006ea5b09f01dca720a6967740e64a",
+                            "expression.parquet:md5,03a498054fd0773e7e1c046e7f2de172",
+                            "expression.svmlight:md5,85cbe94e8356fc737509c0f697721065",
+                            "expression.tsv:md5,5e0f22e6942048dab462251b6332cea7"
+                        ],
+                        "id": "expression"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "numpy": "2.5.4",
+                "polars": "2.1.0",
+                "python": "3.14"
+            }
+        ],
+        "timestamp": "2026-11-02T23:24:26.247198828",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "exports": [
+                            "x.parquet:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ],
+                        "id": "x"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-02T23:24:39.188511979",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

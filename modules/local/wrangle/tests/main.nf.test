@@ -1,0 +1,31 @@
+nextflow_process {
+
+    name "Test WRANGLE"
+    script "../main.nf"
+    process "WRANGLE"
+    tag "modules"
+    topics "versions"
+    tag "wrangle"
+
+    test("labelled table") {
+        when {
+            process {
+                """
+                input[0] = channel.of(record(
+                    id: 'expression',
+                    csv: file("${projectDir}/assets/example/expression.csv"),
+                    id_column: 'sample_id',
+                    target_column: 'condition'
+                ))
+                input[1] = record(export_formats: 'parquet', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+        then {
+            assert process.success
+            def qc = path(process.out[0][0].qc).json
+            assert qc.dropped_features == [LINC00473: 'too_many_missing', spike_in: 'constant']
+            assert snapshot(process.out, Fixtures.versions(topics.versions, projectDir)).match()
+        }
+    }
+}

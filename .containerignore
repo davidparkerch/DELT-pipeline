@@ -1,0 +1,11 @@
+.git
+.venv
+.nextflow*
+.nf-test
+.lineage
+.pytest_cache
+.ruff_cache
+work
+results
+coverage.xml
+**/__pycache__

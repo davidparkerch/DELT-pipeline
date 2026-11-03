@@ -1,0 +1,74 @@
+nextflow_process {
+
+    name "Test EXPORT"
+    script "../main.nf"
+    process "EXPORT"
+    tag "modules"
+    tag "export"
+    topics "versions"
+
+    setup {
+        run("WRANGLE") {
+            script "../../wrangle/main.nf"
+            process {
+                """
+                input[0] = channel.of(record(
+                    id: 'expression',
+                    csv: file("${projectDir}/assets/example/expression.csv"),
+                    id_column: 'sample_id',
+                    target_column: 'condition'
+                ))
+                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+    }
+
+    test("every format") {
+        when {
+            process {
+                """
+                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'sample_id', target_column: 'condition') }
+                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+        then {
+            assert process.success
+            def names = process.out[0][0].exports.collect { p -> file(p).name }.sort()
+            assert names == ['expression.arrow', 'expression.csv', 'expression.jsonl', 'expression.npz', 'expression.parquet', 'expression.svmlight', 'expression.tsv']
+            assert snapshot(Fixtures.canonical(process.out), Fixtures.versions(topics.versions, projectDir)).match()
+        }
+    }
+
+    test("unknown format fails") {
+        when {
+            process {
+                """
+                input[0] = WRANGLE.out.map { r -> r + record(id_column: 'sample_id', target_column: 'condition') }
+                input[1] = record(export_formats: 'xlsx', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+        then {
+            assert process.failed
+            assert process.stdout.any { line -> line.contains("unknown export format(s) xlsx") } || process.errorReport.contains("unknown export format(s) xlsx")
+        }
+    }
+
+    test("stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = channel.of(record(id: 'x', clean: file("${projectDir}/assets/example/expression.csv"), id_column: 'sample_id', target_column: null))
+                input[1] = record(export_formats: 'parquet,arrow,csv,tsv,jsonl,npz,svmlight', impute: 'median', max_missing: 0.5, n_components: 2, n_clusters: 3, cv_folds: 3, seed: 42)
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert snapshot(Fixtures.canonical(process.out)).match()
+        }
+    }
+}

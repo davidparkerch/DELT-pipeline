@@ -1,0 +1,16 @@
+{
+    "sorted and unique": {
+        "content": [
+            {
+                "0": [
+                    "versions.yml:md5,044c434e510f6342008dcc2614c92c4d"
+                ]
+            }
+        ],
+        "timestamp": "2026-11-02T23:25:55.191961149",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

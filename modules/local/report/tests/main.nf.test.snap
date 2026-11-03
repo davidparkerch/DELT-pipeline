@@ -1,0 +1,44 @@
+{
+    "standalone html": {
+        "content": [
+            {
+                "title": "A &lt;tested&gt; report",
+                "datasets": [
+                    "compounds",
+                    "expression"
+                ],
+                "figures": [
+                    "fig-compounds-correlation",
+                    "fig-compounds-distributions",
+                    "fig-compounds-importance",
+                    "fig-compounds-pca",
+                    "fig-expression-correlation",
+                    "fig-expression-distributions",
+                    "fig-expression-importance",
+                    "fig-expression-pca"
+                ],
+                "offline": true,
+                "bytes_over_1mb": true
+            }
+        ],
+        "timestamp": "2026-11-02T23:25:13.892286065",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    "report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            }
+        ],
+        "timestamp": "2026-11-02T23:25:25.887211042",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

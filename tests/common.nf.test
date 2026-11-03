@@ -1,0 +1,50 @@
+nextflow_function {
+
+    name "Test common.nf functions"
+    script "../common.nf"
+    function "shellQuote"
+    tag "common"
+
+    test("plain text") {
+        when {
+            function {
+                """
+                input[0] = 'Synthetic compound descriptors'
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result == "'Synthetic compound descriptors'"
+        }
+    }
+
+    test("embedded single quote") {
+        when {
+            function {
+                """
+                input[0] = "O'Test"
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result == "'O'\"'\"'Test'"
+            assert snapshot(function.result).match()
+        }
+    }
+
+    test("null becomes empty") {
+        when {
+            function {
+                """
+                input[0] = null
+                """
+            }
+        }
+        then {
+            assert function.success
+            assert function.result == "''"
+        }
+    }
+}

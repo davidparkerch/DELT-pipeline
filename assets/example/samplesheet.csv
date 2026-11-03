@@ -1,0 +1,3 @@
+id,table,id_column,target_column,description,source,license,keywords,dictionary
+compounds,assets/example/compounds.csv.gz,compound_id,active,Synthetic compound descriptors with a binary activity label,,CC0-1.0,cheminformatics;drug discovery;qsar,assets/example/compounds_dictionary.csv
+expression,assets/example/expression.csv,sample_id,condition,Synthetic log2 gene expression of treated and control samples,,,bioinformatics;transcriptomics,

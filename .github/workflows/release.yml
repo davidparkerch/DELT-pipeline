@@ -1,0 +1,58 @@
+# Publish a release when a version tag (v1.2.3) is pushed:
+# verify versions and FAIR metadata, push the runtime image, create the GitHub release.
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  IMAGE: ghcr.io/davidparkerch/delt-pipeline
+  REGISTRY: ghcr.io
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.13.6"
+          enable-cache: true
+      - uses: extractions/setup-just@v4
+
+      - name: Versions match the tag
+        run: just release-check "${{ github.ref_name }}"
+
+      - name: Citation and workflow RO-Crate are valid
+        run: just validate-repo
+
+      - name: Build runtime image
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          podman build --target runtime \
+            --build-arg VERSION="$version" --build-arg REVISION="$GITHUB_SHA" \
+            -t "$IMAGE:$version" -t "$IMAGE:latest" .
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Push runtime image
+        env:
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$REGISTRY_PASSWORD" | podman login "$REGISTRY" -u "$REGISTRY_USER" --password-stdin
+          podman push --digestfile digest.txt "$IMAGE:$VERSION"
+          podman push "$IMAGE:latest"
+          echo "DIGEST=$(cat digest.txt)" >> "$GITHUB_ENV"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --generate-notes --verify-tag \
+            --notes "Runtime image: \`$IMAGE:$VERSION\` (digest \`$DIGEST\`)"
+
