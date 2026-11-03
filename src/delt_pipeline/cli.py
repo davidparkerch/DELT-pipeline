@@ -13,12 +13,15 @@ import polars as pl
 
 from . import __version__
 from .analyse import SCORES, absent_scores, read_heldout, score_table, validate_scores
+from .analyse.score import exposure_from_qc
+from .analyse.synthons import aggregate_synthons, synthon_qc
+from .analyse.triage import ScreenInput, tiers_by_score, triage, triage_qc
 from .fair import DatasetInfo, Provenance, describe_dataset, parse_sha256sums, read_dictionary
 from .io import EXPORT_FORMATS, FeatureTable, export_table, normalise_name, parse_formats, read_table
 from .library import read_building_blocks, select_sublibrary, simulate_library, write_counts
-from .library.schema import ID
+from .library.schema import ID, TARGET
 from .report import discover_ids, load_bundle, parse_versions, render_report
-from .visualise import build_figures, figures_to_json
+from .visualise import build_figures, figures_to_json, sample_rows
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -82,6 +85,39 @@ def cmd_score(args: argparse.Namespace) -> None:
     _write_json(args.qc, qc)
 
 
+def cmd_synthons(args: argparse.Namespace) -> None:
+    """Pool counts per monosynthon and disynthon and score every synthon."""
+    synthons = aggregate_synthons(
+        pl.scan_parquet(args.scores), exposure_from_qc(_read_json(args.counts_qc)), alpha=args.alpha, level=args.level
+    )
+    synthons.write_parquet(args.output)
+    _write_json(args.qc, synthon_qc(synthons))
+
+
+def cmd_triage(args: argparse.Namespace) -> None:
+    """Tier and flag every target screen's top compounds, using all screens (counter-screens included)."""
+    screens = []
+    for screen_id, role in args.screen:
+        if role not in {"target", "counter"}:
+            msg = f"role of screen {screen_id!r} must be 'target' or 'counter', got {role!r}"
+            raise ValueError(msg)
+        path = args.input_dir / screen_id
+        screens.append(
+            ScreenInput(
+                id=screen_id,
+                role=role,
+                top=pl.read_parquet(path.with_name(f"{screen_id}.top.parquet")),
+                scores=pl.scan_parquet(path.with_name(f"{screen_id}.scores.parquet")),
+                synthons=pl.read_parquet(path.with_name(f"{screen_id}.synthons.parquet")),
+                counts_qc=_read_json(path.with_name(f"{screen_id}.counts_qc.json")),
+            )
+        )
+    hits = triage(screens, level=args.level)
+    hits.write_parquet(args.output)
+    by_score = tiers_by_score(screens, args.compare_top_n, level=args.level) if args.compare_top_n else None
+    _write_json(args.qc, triage_qc(hits, level=args.level, by_score=by_score))
+
+
 def cmd_validate(args: argparse.Namespace) -> None:
     """Correlate every score with measured KD (on- and off-DNA)."""
     assays = [("on", args.ondna), ("off", args.offdna)]
@@ -98,7 +134,22 @@ def cmd_validate(args: argparse.Namespace) -> None:
 
 def cmd_visualise(args: argparse.Namespace) -> None:
     """Build plotly figures as JSON."""
-    figures = build_figures(pl.read_parquet(args.top), _read_json(args.validation), args.screen)
+    compounds = synthons = tiers = None
+    if args.scores:
+        observed = pl.scan_parquet(args.scores).filter(pl.col("target_sum") + pl.col("control_sum") > 0)
+        compounds = sample_rows(observed.select(*TARGET, "target_sum", "control_sum", "er").collect())
+    if args.synthons:
+        synthons = pl.read_parquet(args.synthons)
+    if args.hits:
+        tiers = pl.read_parquet(args.hits, columns=["screen", ID, "tier"]).filter(pl.col("screen") == args.id)
+    figures = build_figures(
+        pl.read_parquet(args.top),
+        _read_json(args.validation),
+        args.screen,
+        compounds=compounds,
+        synthons=synthons,
+        tiers=tiers,
+    )
     args.output.write_text(figures_to_json(figures))
 
 
@@ -144,7 +195,9 @@ def cmd_report(args: argparse.Namespace) -> None:
         raise ValueError(msg)
     bundles = [load_bundle(args.input_dir, dataset_id) for dataset_id in ids]
     pipeline = {"name": args.pipeline, "version": args.pipeline_version, "homepage": args.homepage}
-    html = render_report(args.title, bundles, parse_versions(args.versions), pipeline)
+    triage_path = args.input_dir / "triage_qc.json"
+    triage_summary = _read_json(triage_path) if triage_path.exists() else None
+    html = render_report(args.title, bundles, parse_versions(args.versions), pipeline, triage_summary)
     args.output.write_text(html)
 
 
@@ -200,6 +253,24 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915 - one block per 
     sub.add_argument("--top", type=Path, required=True, help="top compounds (Parquet)")
     sub.add_argument("--qc", type=Path, required=True, help="score QC JSON")
 
+    sub = command("synthons", cmd_synthons)
+    sub.add_argument("--scores", type=Path, required=True, help="scored compounds (Parquet)")
+    sub.add_argument("--counts-qc", type=Path, required=True, help="count QC JSON (whole-library depth)")
+    sub.add_argument("--alpha", type=float, default=0.5, help="pseudocount of the enrichment ratio")
+    sub.add_argument("--level", type=float, default=0.95, help="confidence level of the rate-ratio interval")
+    sub.add_argument("--output", type=Path, required=True, help="synthons (Parquet)")
+    sub.add_argument("--qc", type=Path, required=True, help="synthon QC JSON")
+
+    sub = command("triage", cmd_triage)
+    sub.add_argument("--screen", nargs=2, action="append", required=True, metavar=("ID", "ROLE"),
+                     help="screen id and role (target or counter); repeat for every screen")  # fmt: skip
+    sub.add_argument("--input-dir", type=Path, default=Path(), help="folder with <id>.{top,scores,synthons}.parquet "
+                     "and <id>.counts_qc.json")  # fmt: skip
+    sub.add_argument("--level", type=float, default=0.95, help="confidence level of the rate-ratio bounds")
+    sub.add_argument("--compare-top-n", type=int, default=0, help="also triage the top N by every score (0: skip)")
+    sub.add_argument("--output", type=Path, required=True, help="hits table (Parquet)")
+    sub.add_argument("--qc", type=Path, required=True, help="triage QC JSON")
+
     sub = command("validate", cmd_validate)
     sub.add_argument("--scores", type=Path, required=True)
     sub.add_argument("--score-qc", type=Path, required=True)
@@ -211,7 +282,11 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915 - one block per 
     sub = command("visualise", cmd_visualise)
     sub.add_argument("--top", type=Path, required=True, help="top compounds (Parquet)")
     sub.add_argument("--validation", type=Path, required=True)
-    sub.add_argument("--screen", required=True)
+    sub.add_argument("--screen", required=True, help="name shown in titles")
+    sub.add_argument("--scores", type=Path, help="all scored compounds: replicate and MA plots from a sample")
+    sub.add_argument("--synthons", type=Path, help="synthon table: disynthon replicate agreement")
+    sub.add_argument("--hits", type=Path, help="triaged hits: colour the cube by tier")
+    sub.add_argument("--id", default="", help="screen id in the hits table")
     sub.add_argument("--output", type=Path, required=True, help="figures JSON")
 
     sub = command("export", cmd_export)

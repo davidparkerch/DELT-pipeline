@@ -44,6 +44,14 @@ def exposure_from_qc(counts_qc: dict[str, Any]) -> Exposure:
     )
 
 
+def finite_series(values: np.ndarray) -> pl.Series:
+    """Rounded score column; undefined (0/0) and infinite (no control counts) values become null.
+
+    Not every export format can represent NaN or infinity.
+    """
+    return pl.Series(np.where(np.isfinite(values), values, np.nan)).fill_nan(None).round_sig_figs(SIGNIFICANT)
+
+
 def _pooled(counts: pl.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     c_t = counts.select(pl.sum_horizontal(TARGET)).to_series().to_numpy()
     c_c = counts.select(pl.sum_horizontal(CONTROL)).to_series().to_numpy()
@@ -133,12 +141,7 @@ def score_table(
         control_sum=pl.Series(c_c, dtype=pl.Int32),
         target_support=pl.sum_horizontal(pl.col(name) > 0 for name in TARGET).cast(pl.Int8),
         random_bb_a=pl.Series(random_bb_a),
-        # Undefined (0/0) and infinite (no control counts) ratios are stored as null:
-        # not every export format can represent NaN or infinity.
-        **{
-            name: pl.Series(np.where(np.isfinite(values), values, np.nan)).fill_nan(None).round_sig_figs(SIGNIFICANT)
-            for name, values in scores.items()
-        },
+        **{name: finite_series(values) for name, values in scores.items()},
     )
     frame = frame.sort(["poisson_lower", "target_sum", ID], descending=[True, True, False], nulls_last=True)
     top = frame.head(TOP_COMPOUNDS).select(ID, *BB_COLUMNS, "target_sum", "control_sum", LOAD, *SCORES)

@@ -29,7 +29,17 @@ nextflow_workflow {
             assert results.every { r -> r.identifier.startsWith('urn:sha256:') }
             assert path(results[0].validation).json == []
             assert path(results[1].validation).json*.condition == ['on', 'off']
-            assert snapshot(Fixtures.canonical(results), workflow.out.sublibrary, Fixtures.versions(topics.versions, projectDir)).match()
+            def triage = workflow.out.triage
+            assert triage*.id == ['triage']
+            assert triage[0].identifier.startsWith('urn:sha256:')
+            def triageQc = path(triage[0].triage_qc).json
+            assert triageQc.screens.keySet() == ['mapk14'] as Set
+            def metadata = path(triage[0].metadata).json
+            assert metadata.description == 'Triaged top compounds of the target screens mapk14 (counter-screens: bca)'
+            // Screens disagree on the license (one has none), so the run's default applies.
+            assert metadata.license == 'https://spdx.org/licenses/CC-BY-4.0'
+            assert metadata.distribution.findAll { d -> d.name.contains('_hits.') }*.contentUrl == ['../exports/triage/triage_hits.parquet', '../exports/triage/triage_hits.tsv']
+            assert snapshot(Fixtures.canonical(results), Fixtures.canonical(triage), workflow.out.sublibrary, Fixtures.versions(topics.versions, projectDir)).match()
         }
     }
 }

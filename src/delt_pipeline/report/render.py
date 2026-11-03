@@ -8,10 +8,13 @@ from typing import Any
 from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape
 from plotly.offline import get_plotlyjs
 
+from ..analyse.score import SCORE_LABELS
+
 METADATA_SUFFIX = ".metadata.jsonld"
 PARTS = {
     "counts_qc": ".counts_qc.json",
     "score_qc": ".score_qc.json",
+    "synthon_qc": ".synthon_qc.json",
     "validation": ".validation.json",
     "figures": ".figures.json",
     "metadata": METADATA_SUFFIX,
@@ -25,6 +28,7 @@ class DatasetBundle:
     id: str
     counts_qc: dict[str, Any]
     score_qc: dict[str, Any]
+    synthon_qc: dict[str, Any]
     validation: list[dict[str, Any]]
     figures: dict[str, Any]
     metadata: dict[str, Any]
@@ -56,6 +60,7 @@ def render_report(
     bundles: list[DatasetBundle],
     versions: list[tuple[str, str]],
     pipeline: dict[str, str],
+    triage: dict[str, Any] | None = None,
 ) -> str:
     """Render the self-contained report (plotly.js, CSS and data are all inline).
 
@@ -64,6 +69,7 @@ def render_report(
         bundles: One bundle per dataset.
         versions: ``(tool, version)`` pairs.
         pipeline: ``name``, ``version`` and optional ``homepage`` of the generating pipeline.
+        triage: The triage summary (``analyse.triage.triage_qc``), if the run triaged hits.
 
     Returns:
         The HTML document.
@@ -84,5 +90,7 @@ def render_report(
         versions=versions,
         pipeline=pipeline,
         figures=figures,
+        triage=triage,
+        score_labels=SCORE_LABELS,
         plotly_js=get_plotlyjs(),
     )

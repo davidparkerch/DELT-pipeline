@@ -77,6 +77,7 @@ class Fixtures {
         def html = Path.of(path.toString()).text
         return [
             title: (html =~ /<title>(.*?)<\/title>/)[0][1],
+            panels: (html =~ /<section class="panel" id="([^"]+)"/).collect { match -> match[1] },
             datasets: (html =~ /<section class="dataset" id="ds-([^"]+)"/).collect { match -> match[1] },
             figures: (html =~ /<div class="figure" id="(fig-[^"]+)"/).collect { match -> match[1] },
             offline: !html.contains('<script src'),

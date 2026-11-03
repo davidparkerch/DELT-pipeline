@@ -138,6 +138,9 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
         )
         assert run_cli("score", "--input", counts, "--counts-qc", qc, "--sublibrary", sub, "--top-n", 300,
                        "--output", scores, "--top", top, "--qc", score_qc) == 0  # fmt: skip
+        pooled, synthon_qc = out / f"{screen}.synthons.parquet", out / f"{screen}.synthon_qc.json"
+        assert run_cli("synthons", "--scores", scores, "--counts-qc", qc, "--output", pooled,
+                       "--qc", synthon_qc) == 0  # fmt: skip
         validation = out / f"{screen}.validation.json"
         assays = []
         if screen == "mapk14":
@@ -149,8 +152,6 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
             ]
         assert run_cli("validate", "--scores", scores, "--score-qc", score_qc, "--target", target.lower(), *assays,
                        "--output", validation) == 0  # fmt: skip
-        assert run_cli("visualise", "--top", top, "--validation", validation, "--screen", target,
-                       "--output", out / f"{screen}.figures.json") == 0  # fmt: skip
         exports = out / "exports" / screen
         assert run_cli("export", "--input", top, "--id-column", "molecule_hash", "--formats", "parquet,tsv",
                        "--prefix", f"{screen}_hits", "--outdir", exports) == 0  # fmt: skip
@@ -164,4 +165,36 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
                        "--pipeline", "demo", "--pipeline-version", "1.0", "--homepage", "https://example.org/demo",
                        "--jsonld", out / f"{screen}.metadata.jsonld", "--datapackage", exports / "datapackage.json",
                        "--identifier", out / f"{screen}.identifier.txt") == 0  # fmt: skip
+    roles = ["--screen", "mapk14", "target", "--screen", "bca", "counter"]
+    assert run_cli("triage", *roles, "--input-dir", out, "--compare-top-n", 50,
+                   "--output", out / "hits.parquet", "--qc", out / "triage_qc.json") == 0  # fmt: skip
+    for screen, target in (("mapk14", "MAPK14"), ("bca", "BCA")):
+        assert run_cli("visualise", "--top", out / f"{screen}.top.parquet", "--validation",
+                       out / f"{screen}.validation.json", "--screen", target,
+                       "--scores", out / f"{screen}.scores.parquet", "--synthons", out / f"{screen}.synthons.parquet",
+                       "--hits", out / "hits.parquet", "--id", screen,
+                       "--output", out / f"{screen}.figures.json") == 0  # fmt: skip
     return out
+
+
+@pytest.fixture(scope="session")
+def screen_inputs(tmp_path_factory: pytest.TempPathFactory, library: SimulatedLibrary, library_dir: Path) -> dict:
+    """Every simulated screen on the whole library (15 BB-As), scored and aggregated, ready for triage."""
+    from delt_pipeline.analyse.score import exposure_from_qc  # noqa: PLC0415
+    from delt_pipeline.analyse.synthons import aggregate_synthons  # noqa: PLC0415
+    from delt_pipeline.analyse.triage import ScreenInput  # noqa: PLC0415
+
+    building_blocks = read_building_blocks(library_dir / "synthons")
+    whole = select_sublibrary(building_blocks, list(library.heldout.values()), n_bb_a=15, seed=42)
+    out = tmp_path_factory.mktemp("triage")
+    inputs = {}
+    for screen, role in (("mapk14", "target"), ("ddr1", "target"), ("bca", "counter")):
+        counts_qc = json.loads(
+            json.dumps(
+                write_counts(library_dir / f"{screen}.parquet", building_blocks, whole, out / f"{screen}.parquet")
+            )
+        )
+        scores, _ = score_table(pl.read_parquet(out / f"{screen}.parquet"), counts_qc, whole)
+        synthons = aggregate_synthons(scores.lazy(), exposure_from_qc(counts_qc))
+        inputs[screen] = ScreenInput(screen, role, scores.head(300), scores.lazy(), synthons, counts_qc)
+    return inputs

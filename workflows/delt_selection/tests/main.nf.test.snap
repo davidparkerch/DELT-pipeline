@@ -9,13 +9,15 @@
                         "bca_hits.parquet:md5,5232168913f18182e99d72b7a6f193a3",
                         "bca_hits.tsv:md5,bf2cc6b5159f18ad7590351f2d91b4d2"
                     ],
-                    "figures": "bca.figures.json:md5,600f894cfafe01972875d313a109fca0",
+                    "figures": "bca.figures.json:md5,d184614939f2a2d8689b14ebc7c2ac4b",
                     "id": "bca",
                     "identifier": "urn:sha256:453fa10e30785b843ebfbd55e1da77fce2a2674ae86ca808f7d238c69b8fd9c6",
                     "metadata": "bca.metadata.jsonld:md5,84adc33593c0573c8bad35975d7e48d8",
                     "score_qc": "bca.score_qc.json:md5,ff50fc0bbfceb7353427064f5bd5c564",
                     "scores": "bca.scores.parquet:md5,053ec6a8506409b0a247de5b29f82af8",
                     "sha256sums": "SHA256SUMS:md5,7219777713bfdb1d8c4d4cb1a0f85267",
+                    "synthon_qc": "bca.synthon_qc.json:md5,dabc057dd61a4360c93b6a3f5e797112",
+                    "synthons": "bca.synthons.parquet:md5,823244412f9ee4414192ae473a327f19",
                     "top": "bca.top.parquet:md5,5232168913f18182e99d72b7a6f193a3",
                     "validation": "bca.validation.json:md5,58e0494c51d30eb3494f7c9198986bb9"
                 },
@@ -26,15 +28,32 @@
                         "mapk14_hits.parquet:md5,cdcb2b282b15d480df68f9f8c90ca3eb",
                         "mapk14_hits.tsv:md5,317872b50f6e70ef8112d0382de0fbf0"
                     ],
-                    "figures": "mapk14.figures.json:md5,1705f24a9707ee2dc8847bcd4589a7d6",
+                    "figures": "mapk14.figures.json:md5,2f0f2563defeadb85ce0a535e7755c25",
                     "id": "mapk14",
                     "identifier": "urn:sha256:a9710fdc11bf5c178a894c6dd271995515bbf001085179e7b6d12f78d4991600",
                     "metadata": "mapk14.metadata.jsonld:md5,7a69f34388f5080450d70911025727b7",
                     "score_qc": "mapk14.score_qc.json:md5,28297f12e7c76e3bae3669fee8672ac3",
                     "scores": "mapk14.scores.parquet:md5,d0b4f70de10c90a5b4e98f2602bcd6be",
                     "sha256sums": "SHA256SUMS:md5,1e0df5d51340b705f91455d7b69b7ee8",
+                    "synthon_qc": "mapk14.synthon_qc.json:md5,85dbbc8db49cfbd0d337dcc6eee82d7a",
+                    "synthons": "mapk14.synthons.parquet:md5,56d9472c9cd9e34f3a3d814c3e47f901",
                     "top": "mapk14.top.parquet:md5,cdcb2b282b15d480df68f9f8c90ca3eb",
                     "validation": "mapk14.validation.json:md5,2380e31ce187c67234f1e1e39875fe21"
+                }
+            ],
+            [
+                {
+                    "datapackage": "datapackage.json:md5,90cfde95536ff40fc793c15912cd1199",
+                    "exports": [
+                        "triage_hits.parquet:md5,e4acf497530c5da1e233c6da6b38dc7a",
+                        "triage_hits.tsv:md5,a5d75d170a40b30777762a4aec58bd0f"
+                    ],
+                    "hits": "hits.parquet:md5,e4acf497530c5da1e233c6da6b38dc7a",
+                    "id": "triage",
+                    "identifier": "urn:sha256:c5af5d1dffb48db1fa4ce215371a578183b130dae3800ddb07e9dfcaf83cbdd9",
+                    "metadata": "triage.metadata.jsonld:md5,2497dc48b6839a74564dcff3b0a6037c",
+                    "sha256sums": "SHA256SUMS:md5,047fb8c81114cd303d3efcedc5c1a1bf",
+                    "triage_qc": "triage_qc.json:md5,c9999e36112d09f56a6d3bbcf82fbeae"
                 }
             ],
             [
@@ -49,7 +68,7 @@
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-03T18:40:26.142451824",
+        "timestamp": "2026-11-03T22:40:13.562294265",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

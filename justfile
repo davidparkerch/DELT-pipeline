@@ -141,7 +141,8 @@ validate-fair dir="results":
     done
     uv run python - "{{ dir }}" <<'PY'
     import hashlib, json, pathlib, sys
-    for path in sorted(pathlib.Path(sys.argv[1]).glob("screens/*/*.metadata.jsonld")):
+    root = pathlib.Path(sys.argv[1])
+    for path in sorted([*root.glob("screens/*/*.metadata.jsonld"), *root.glob("triage/*.metadata.jsonld")]):
         metadata = json.loads(path.read_text())
         clean = path.with_name(metadata["distribution"][0]["name"])
         expected = "urn:sha256:" + hashlib.sha256(clean.read_bytes()).hexdigest()

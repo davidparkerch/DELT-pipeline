@@ -1,0 +1,43 @@
+{
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "x",
+                        "synthon_qc": "x.synthon_qc.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "synthons": "x.synthons.parquet:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-03T22:02:06.290963255",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "mono- and disynthons": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "mapk14",
+                        "synthon_qc": "mapk14.synthon_qc.json:md5,42ff202fd6b1c503f37af088fbf57207",
+                        "synthons": "mapk14.synthons.parquet:md5,2bbcc012295b39268d8d2a5d8888de43"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-03T22:01:57.088082148",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

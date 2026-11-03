@@ -30,7 +30,7 @@
                     {
                         "@type": "DataDownload",
                         "contentSize": "22265 B",
-                        "contentUrl": "../../exports/mapk14/mapk14_hits.parquet",
+                        "contentUrl": "../exports/mapk14/mapk14_hits.parquet",
                         "encodingFormat": [
                             "application/vnd.apache.parquet",
                             "http://edamontology.org/format_2333"
@@ -42,7 +42,7 @@
                     {
                         "@type": "DataDownload",
                         "contentSize": "43160 B",
-                        "contentUrl": "../../exports/mapk14/mapk14_hits.tsv",
+                        "contentUrl": "../exports/mapk14/mapk14_hits.tsv",
                         "encodingFormat": [
                             "text/tab-separated-values",
                             "http://edamontology.org/format_3475"
@@ -221,7 +221,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-03T18:35:56.837066015",
+        "timestamp": "2026-11-03T22:05:30.762344065",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

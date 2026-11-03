@@ -3,20 +3,29 @@
         "content": [
             {
                 "title": "A &lt;tested&gt; report",
+                "panels": [
+                    "validation",
+                    "triage",
+                    "software"
+                ],
                 "datasets": [
                     "bca",
                     "mapk14"
                 ],
                 "figures": [
                     "fig-bca-cube",
+                    "fig-bca-ma",
+                    "fig-bca-replicates",
                     "fig-mapk14-cube",
+                    "fig-mapk14-ma",
+                    "fig-mapk14-replicates",
                     "fig-mapk14-validation"
                 ],
                 "offline": true,
                 "bytes_over_1mb": true
             }
         ],
-        "timestamp": "2026-11-03T18:37:02.275514094",
+        "timestamp": "2026-11-03T22:15:46.652343929",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

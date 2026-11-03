@@ -59,6 +59,7 @@ footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-
 <main>
   <nav class="toc" aria-label="Sections">
     <a href="#validation">Validation</a>
+    {% if triage %}<a href="#triage">Triage</a>{% endif %}
     {% for bundle in bundles %}<a href="#ds-{{ bundle.id }}">{{ bundle.id }}</a>{% endfor %}
     <a href="#software">Software</a>
   </nav>
@@ -81,6 +82,49 @@ footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-
     <p><span class="badge warn">none</span> No screen has held-out KD data.</p>
     {% endif %}
   </section>
+
+  {% if triage %}
+  <section class="panel" id="triage">
+    <h2>Hit triage</h2>
+    <p class="muted">The top compounds of every target screen, in tiers. Tier 1 has counts in at least
+      {{ triage.thresholds.min_replicates }} of 3 replicates <em>and</em> a disynthon whose other members are
+      enriched (lower bound &gt; {{ triage.thresholds.disynthon_lower }}); tier 2 has one of the two; tier 3 neither.
+      <em>Flagged</em> compounds are also enriched in a counter-screen (lower bound &gt; {{ triage.thresholds.counter_lower }})
+      or in the bead control over their synthesis load (&gt; {{ triage.thresholds.matrix_lower }}), whatever their support.
+      A compound that is a top hit of two targets is reported, not penalised.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Screen</th><th>Compounds</th><th>Tier 1</th><th>Tier 2</th><th>Tier 3</th><th>Flagged</th>
+        <th>Counter-screen binders</th><th>Bead binders</th><th>Shared with another target</th></tr>
+      {% for screen, summary in triage.screens.items() %}
+      <tr><td>{{ screen }}</td><td>{{ "{:,}".format(summary.n_compounds) }}</td>
+        {% for tier in ["1", "2", "3", "flagged"] %}<td>{{ "{:,}".format(summary.tiers[tier]) }}</td>{% endfor %}
+        <td>{{ summary.flags.counter_binder }}</td><td>{{ summary.flags.matrix_binder }}</td><td>{{ summary.flags.shared_target }}</td></tr>
+      {% endfor %}
+    </table></div>
+    {% if triage.by_score %}
+    <h3>What each score lets through</h3>
+    <p class="muted">The same triage applied to the top compounds of every score in turn (as many as each screen's
+      hit table). A score without the bead control ranks bead binders highly, and triage flags them.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Ranked by</th>{% for screen in triage.screens %}<th>{{ screen }}: tier 1</th><th>{{ screen }}: flagged</th>{% endfor %}</tr>
+      {% for score, by_screen in triage.by_score.items() %}<tr><td>{{ score_labels.get(score, score) }}</td>
+        {% for screen in triage.screens %}<td>{{ "{:,}".format(by_screen[screen]["1"]) }}</td><td>{{ "{:,}".format(by_screen[screen]["flagged"]) }}</td>{% endfor %}</tr>{% endfor %}
+    </table></div>
+    {% endif %}
+    {% for screen, summary in triage.screens.items() %}
+    <h3>{{ screen }}: best tier-1 hits</h3>
+    {% if summary.top_tier1 %}
+    <div class="table-wrap"><table>
+      <tr><th>Rank</th><th>Molecule</th><th>A</th><th>B</th><th>C</th><th>Target</th><th>Control</th><th>Poisson LB</th><th>Evidence</th></tr>
+      {% for row in summary.top_tier1 %}<tr><td>{{ row.rank }}</td><td><code>{{ row.molecule_hash[:12] }}</code></td><td>{{ row.bb_a }}</td><td>{{ row.bb_b }}</td><td>{{ row.bb_c }}</td>
+        <td>{{ row.target_sum }}</td><td>{{ row.control_sum }}</td><td>{{ row.poisson_lower }}</td><td>{{ row.reasons }}</td></tr>{% endfor %}
+    </table></div>
+    {% else %}
+    <p><span class="badge warn">none</span> No tier-1 hits.</p>
+    {% endif %}
+    {% endfor %}
+  </section>
+  {% endif %}
 
   {% for bundle in bundles %}
   {% set counts = bundle.counts_qc %}{% set scored = bundle.score_qc %}{% set meta = bundle.metadata %}
@@ -108,6 +152,15 @@ footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-
       {% for level, pairs in scored.replicate_correlation.items() %}<tr><td>{{ level }}</td>{% for value in pairs.values() %}<td>{{ value if value is not none else "–" }}</td>{% endfor %}</tr>{% endfor %}
     </table></div>
     <p>
+
+    <h3>Synthons</h3>
+    <p class="muted">Counts pooled per building block (mono) and pair (di), scored like compounds. "Enriched" means
+      a Poisson lower bound above 1; replicate r is the mean correlation of log counts between target replicates.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Level</th><th>Synthons</th><th>Enriched</th><th>Replicate r</th></tr>
+      {% for level, summary in bundle.synthon_qc.levels.items() %}<tr><td>{{ level }}</td><td>{{ "{:,}".format(summary.n_synthons) }}</td>
+        <td>{{ "{:,}".format(summary.n_enriched) }}</td><td>{{ summary.replicate_correlation if summary.replicate_correlation is not none else "–" }}</td></tr>{% endfor %}
+    </table></div>
 
     <h3>Top compounds</h3>
     <div class="table-wrap"><table>

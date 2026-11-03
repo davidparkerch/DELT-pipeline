@@ -1,0 +1,43 @@
+{
+    "two targets and a counter-screen": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "hits": "hits.parquet:md5,74e1a7a37eb9d63c4f50389aa7062ba7",
+                        "id": "triage",
+                        "triage_qc": "triage_qc.json:md5,8c77bef02b00d69427623dd788d01cee"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-03T22:38:23.163103289",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "hits": "hits.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "triage",
+                        "triage_qc": "triage_qc.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-03T22:03:20.064101579",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

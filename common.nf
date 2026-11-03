@@ -18,6 +18,15 @@ record Screen {
     keywords: String?
 }
 
+// Descriptive metadata of a published dataset (a screen's hit table or the triaged hits).
+record DatasetInfo {
+    id: String
+    description: String?
+    source: String?
+    license: String?
+    keywords: String?
+}
+
 // Analysis settings shared by every screen (built from params in main.nf).
 record Options {
     n_bb_a: Integer
@@ -46,8 +55,22 @@ record ScreenResult {
     scores: Path
     top: Path
     score_qc: Path
+    synthons: Path
+    synthon_qc: Path
     validation: Path
     figures: Path
+    exports: Set<Path>
+    sha256sums: Path
+    metadata: Path
+    datapackage: Path
+}
+
+// The triaged hits of all target screens, published as one more FAIR dataset.
+record TriageResult {
+    id: String
+    identifier: String
+    hits: Path
+    triage_qc: Path
     exports: Set<Path>
     sha256sums: Path
     metadata: Path

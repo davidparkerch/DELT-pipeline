@@ -14,7 +14,9 @@ hit tables. Nextflow **only orchestrates**. The real work is done by:
   validation; scipy), `visualise/` (plotly), `report/` (jinja2 HTML) and `fair/` (FAIR metadata).
 
 The science is explained in `docs/methods.md`. Steps: `SELECT_SUBLIBRARY` → `SUBSET_LIBRARY` → `SCORE` →
-`VALIDATE` → `VISUALISE`, then `EXPORT` / `CHECKSUM` / `DESCRIBE` of each screen's top compounds, and one `REPORT`.
+`AGGREGATE_SYNTHONS` and `VALIDATE` per screen → one `TRIAGE` over all screens (counter-screens flag the
+targets' artefacts) → `VISUALISE`, then `EXPORT` / `CHECKSUM` / `DESCRIBE` of each screen's top compounds and
+of the triaged hits (`triage/hits.parquet`), and one `REPORT`.
 
 Every process runs in the **runtime image** (Podman). The **dev image** is the same base plus
 Java, Nextflow, nf-test, just and dev dependencies, so inside the dev container processes run natively.

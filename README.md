@@ -34,19 +34,35 @@ What the table says:
 - With 30–49 compounds, a Spearman ρ has a standard error of about 0.15, so the ranking *among* the ratio-based scores
   is not significant. That is why the pipeline reports all of them rather than declaring a winner.
 
-<img src="docs/img/ddr1_cube.png" alt="3D scatter of the top 2,000 DDR1 compounds placed by building blocks A, B and C; enriched compounds form lines along one axis" width="720">
+<img src="docs/img/ddr1_cube.png" alt="3D scatter of the top 2,000 DDR1 compounds placed by building blocks A, B and C, coloured by triage tier; enriched compounds form lines along one axis, and a few whole lines are flagged" width="720">
 
-*The DEL "cube" (DDR1, top 2,000 compounds by Poisson lower bound). Each axis is one building-block position.
-A line is a **disynthon**: two building blocks that bind whatever the third one is. A line is far stronger
-evidence than one bright point.*
+*The DEL "cube" (DDR1, top 2,000 compounds by Poisson lower bound, coloured by triage tier). Each axis is one
+building-block position. A line is a **disynthon**: two building blocks that bind whatever the third one is.
+A line is far stronger evidence than one bright point. Orange families also bind the BCA counter-screen.*
+
+**Hit triage** puts each kinase's top 2,000 compounds into tiers ([`triage/hits.parquet`](docs/methods.md#7-hit-triage-analysetriagepy),
+with a `reasons` column per compound). Tier 1 needs replicate support *and* an enriched disynthon,
+scored **without the compound itself**, so one bright compound cannot vouch for its own family. Flagged
+compounds also bind the BCA counter-screen or the beads.
+
+| Top 2,000 ranked by | MAPK14 tier 1 | MAPK14 flagged | DDR1 tier 1 | DDR1 flagged |
+|---|---|---|---|---|
+| Poisson lower bound (the pipeline's ranking) | 1,755 | 170 | 1,833 | 167 |
+| Normalised z-score (target only, no control) | 250 | **1,744** | 1,499 | 501 |
+
+About 8 % of each kinase's best compounds also bind carbonic anhydrase. A score that ignores the bead
+control fills MAPK14's top 2,000 with 1,732 bead binders. Compounds that are top hits of *both* kinases
+(17) are reported but not penalised: a shared hinge binder is plausible chemistry, not promiscuity.
 
 Two more findings from the data (details in [methods](docs/methods.md)):
 
-- **Replicates agree on synthons, not on compounds.** Target replicates correlate at r ≈ 0.01–0.08 per compound
-  (MAPK14), but at r ≈ 0.85–0.87 once counts are summed per A–B disynthon.
+- **Replicates agree on synthons, not on compounds.** MAPK14 target replicates correlate at r ≈ 0.00–0.08 per
+  compound, but at r ≈ 0.86 once counts are summed per A–B disynthon.
 - **Naive enrichment ratios reward luck.** A test plants a compound with 6 counts in one replicate and none in
   the control. Naive ER ranks it above the best-supported member of a real binder family; the Poisson lower
   bound and EB shrinkage do not ([`test_planted_signal`](tests/python/test_score.py)).
+
+<img src="docs/img/mapk14_replicates.png" alt="Two scatter plots of MAPK14 target replicate 1 against replicate 2: per compound the points form an uncorrelated grid near zero (r = 0.003); per A-B disynthon they lie along the diagonal (r = 0.86)" width="720">
 
 ## Quick start
 
@@ -62,9 +78,11 @@ just run-kindel     # MAPK14, DDR1 and BCA: about 2 minutes on a 16-thread, 16 G
 ## How it works
 
 ```
-samplesheet ─► SELECT_SUBLIBRARY ─► SUBSET_LIBRARY (per screen) ─► SCORE ─┬─► VALIDATE ─► VISUALISE ─┐
- (KinDEL       held-out BB-As +      stream 68 M rows with polars,         │   vs measured KD          ├─► REPORT
-  layout)      random BB-As          whole-library depth, 11 M kept        └─► EXPORT ─► CHECKSUM ─► DESCRIBE (FAIR)
+samplesheet ─► SELECT_SUBLIBRARY ─► SUBSET_LIBRARY (per screen) ─► SCORE ─┬─► VALIDATE (vs measured KD) ─────────┐
+ (KinDEL       held-out BB-As +      stream 68 M rows with polars,         ├─► AGGREGATE_SYNTHONS ─┬─► VISUALISE ──┼─► REPORT
+  layout)      random BB-As          whole-library depth, 11 M kept        │                       │               │
+                                                                           └──── all screens ──► TRIAGE ───────────┘
+                                                       top tables and triaged hits ─► EXPORT ─► CHECKSUM ─► DESCRIBE (FAIR)
 ```
 
 - **Sub-library, unbiased where it matters.** The pipeline keeps every BB-A used by a validated compound, plus random
@@ -118,8 +136,9 @@ samplesheet ─► SELECT_SUBLIBRARY ─► SUBSET_LIBRARY (per screen) ─► S
 results/
 ├── report.html                 # standalone HTML report
 ├── sublibrary.json             # chosen BB-As (held-out and random)
-├── screens/<id>/               # counts_qc, scores (all compounds), top, score_qc, validation, figures, metadata.jsonld
-├── exports/<id>/               # <id>_hits.{parquet,tsv}, SHA256SUMS, datapackage.json
+├── screens/<id>/               # counts_qc, scores (all compounds), top, synthons, validation, figures, metadata.jsonld
+├── triage/                     # hits.parquet (tiers, flags, reasons), triage_qc.json, triage.metadata.jsonld
+├── exports/<id>/               # <id>_hits.{parquet,tsv}, SHA256SUMS, datapackage.json (also exports/triage/)
 └── pipeline_info/              # versions, trace, timeline, BioCompute Object, DAG
 ```
 </details>

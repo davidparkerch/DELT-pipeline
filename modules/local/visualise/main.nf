@@ -3,8 +3,9 @@ nextflow.enable.types = true
 include { shellQuote } from '../../../common.nf'
 
 /*
- * Interactive plotly figures as JSON: the building-block cube of the top compounds and the
- * validation of every score against measured KD.
+ * Interactive plotly figures as JSON: the building-block cube of the top compounds (coloured by
+ * triage tier), replicate agreement per compound and per disynthon, an MA plot and the validation
+ * of every score against measured KD.
  */
 process VISUALISE {
     tag id
@@ -14,9 +15,12 @@ process VISUALISE {
     record(
         id: String,
         target: String,
+        scores: Path,
         top: Path,
+        synthons: Path,
         validation: Path
     )
+    hits: Path
 
     output:
     record(id: id, figures: file("${id}.figures.json"))
@@ -28,7 +32,11 @@ process VISUALISE {
     script:
     """
     delt_pipeline visualise \\
+        --scores ${scores} \\
         --top ${top} \\
+        --synthons ${synthons} \\
+        --hits ${hits} \\
+        --id ${shellQuote(id)} \\
         --validation ${validation} \\
         --screen ${shellQuote(target)} \\
         --output ${id}.figures.json

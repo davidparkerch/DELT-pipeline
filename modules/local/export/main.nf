@@ -13,7 +13,8 @@ process EXPORT {
     input:
     record(
         id: String,
-        top: Path
+        top: Path,
+        id_column: String
     )
     options: Options
 
@@ -28,7 +29,7 @@ process EXPORT {
     """
     delt_pipeline export \\
         --input ${top} \\
-        --id-column molecule_hash \\
+        --id-column ${id_column} \\
         --formats '${options.export_formats}' \\
         --prefix ${id}_hits
     """

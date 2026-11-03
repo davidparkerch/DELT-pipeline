@@ -1,27 +1,4 @@
 {
-    "cube and validation": {
-        "content": [
-            {
-                "0": [
-                    {
-                        "figures": "mapk14.figures.json:md5,09be8eb117ce3936eb8d824fd1bb7aab",
-                        "id": "mapk14"
-                    }
-                ]
-            },
-            {
-                "<pipeline package>": "<pipeline version>",
-                "plotly": "7.1.0",
-                "polars": "2.1.0",
-                "scipy": "1.18.1"
-            }
-        ],
-        "timestamp": "2026-11-03T18:38:50.721480258",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.10.5"
-        }
-    },
     "stub": {
         "content": [
             {
@@ -33,7 +10,30 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-03T18:39:01.26446017",
+        "timestamp": "2026-11-03T22:03:51.429571618",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "cube by tier, replicates, MA plot and validation": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "figures": "mapk14.figures.json:md5,d08348fad6ef456052a571aad500d73b",
+                        "id": "mapk14"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "plotly": "7.1.0",
+                "polars": "2.1.0",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-03T22:03:38.524975701",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

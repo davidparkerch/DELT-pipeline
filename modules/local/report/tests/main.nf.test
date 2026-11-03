@@ -29,7 +29,8 @@ nextflow_process {
             process {
                 """
                 input[0] = DELT_SELECTION.out.results
-                    .flatMap { s -> [s.counts_qc, s.score_qc, s.validation, s.figures, s.metadata] }
+                    .flatMap { s -> [s.counts_qc, s.score_qc, s.synthon_qc, s.validation, s.figures, s.metadata] }
+                    .mix(DELT_SELECTION.out.triage.map { t -> t.triage_qc })
                     .collect()
                 input[1] = file("${projectDir}/tests/data/versions.yml")
                 input[2] = "A <tested> report"
@@ -42,6 +43,7 @@ nextflow_process {
             def summary = Fixtures.report(process.out[0][0])
             assert summary.title == 'A &lt;tested&gt; report'
             assert summary.offline
+            assert summary.panels == ['validation', 'triage', 'software']
             assert path(process.out[0][0]).text.contains('<td>coreutils</td><td>9.7</td>')
             // The HTML embeds plotly.js, so a structural summary is snapshotted instead of its md5.
             assert snapshot(summary).match()

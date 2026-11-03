@@ -5,7 +5,7 @@
  */
 nextflow.enable.types = true
 
-include { Screen ; ScreenResult } from './common.nf'
+include { Screen ; ScreenResult ; TriageResult } from './common.nf'
 include { DELT_SELECTION } from './workflows/delt_selection/main.nf'
 include { REPORT } from './modules/local/report/main.nf'
 include { WRITE_VERSIONS } from './modules/local/write_versions/main.nf'
@@ -61,12 +61,14 @@ workflow {
     results = selection.results
     versions = WRITE_VERSIONS(channel.topic('versions').collect())
     report_files = results
-        .flatMap { screen -> [screen.counts_qc, screen.score_qc, screen.validation, screen.figures, screen.metadata] }
+        .flatMap { screen -> [screen.counts_qc, screen.score_qc, screen.synthon_qc, screen.validation, screen.figures, screen.metadata] }
+        .mix(selection.triage.map { triage -> triage.triage_qc })
         .collect()
     report = REPORT(report_files, versions, params.report_title, run)
 
     publish:
     screens = results
+    triage = selection.triage
     sublibrary = selection.sublibrary
     report = report
     versions = versions
@@ -79,6 +81,8 @@ output {
             screen.scores >> "screens/${screen.id}/"
             screen.top >> "screens/${screen.id}/"
             screen.score_qc >> "screens/${screen.id}/"
+            screen.synthons >> "screens/${screen.id}/"
+            screen.synthon_qc >> "screens/${screen.id}/"
             screen.validation >> "screens/${screen.id}/"
             screen.figures >> "screens/${screen.id}/"
             screen.metadata >> "screens/${screen.id}/"
@@ -88,6 +92,16 @@ output {
         }
         index {
             path 'screens.json'
+        }
+    }
+    triage: Channel<TriageResult> {
+        path { triage ->
+            triage.hits >> 'triage/'
+            triage.triage_qc >> 'triage/'
+            triage.metadata >> 'triage/'
+            triage.exports >> "exports/${triage.id}/"
+            triage.sha256sums >> "exports/${triage.id}/"
+            triage.datapackage >> "exports/${triage.id}/"
         }
     }
     sublibrary: Path {

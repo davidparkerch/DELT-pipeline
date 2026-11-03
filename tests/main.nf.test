@@ -23,6 +23,12 @@ nextflow_pipeline {
             def index = path("$outputDir/screens.json").json
             assert index*.id.sort() == ['bca', 'ddr1', 'mapk14']
             assert index.every { screen -> screen.identifier.startsWith('urn:sha256:') }
+            def triage = path("$outputDir/triage/triage_qc.json").json
+            assert triage.screens.keySet() == ['ddr1', 'mapk14'] as Set
+            def triageMetadata = path("$outputDir/triage/triage.metadata.jsonld").json
+            assert triageMetadata.license == 'https://spdx.org/licenses/CC0-1.0'
+            assert triageMetadata.distribution*.name.sort() == ['hits.parquet', 'triage_hits.parquet', 'triage_hits.tsv']
+            assert report.panels == ['validation', 'triage', 'software']
             def sublibrary = path("$outputDir/sublibrary.json").json
             assert sublibrary.heldout.size() + sublibrary.random.size() == 8
 
@@ -38,6 +44,7 @@ nextflow_pipeline {
                     report,
                     Fixtures.json("$outputDir/screens/mapk14/mapk14.metadata.jsonld"),
                     Fixtures.json("$outputDir/screens/bca/bca.metadata.jsonld"),
+                    Fixtures.json("$outputDir/triage/triage.metadata.jsonld"),
                 ).match() }
             )
         }

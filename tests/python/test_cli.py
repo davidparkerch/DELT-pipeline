@@ -27,7 +27,13 @@ def test_pipeline_steps(pipeline_dir: Path) -> None:
     assert json.loads((pipeline_dir / "bca.validation.json").read_text()) == []
     validation = json.loads((pipeline_dir / "mapk14.validation.json").read_text())
     assert [result["condition"] for result in validation] == ["on", "off"]
-    assert set(json.loads((pipeline_dir / "mapk14.figures.json").read_text())) == {"cube", "validation"}
+    assert set(json.loads((pipeline_dir / "mapk14.figures.json").read_text())) == {
+        "cube",
+        "ma",
+        "replicates",
+        "validation",
+    }
+    assert set(json.loads((pipeline_dir / "bca.figures.json").read_text())) == {"cube", "ma", "replicates"}
     assert {path.name for path in (pipeline_dir / "exports/mapk14").iterdir()} == {
         "mapk14_hits.parquet",
         "mapk14_hits.tsv",
@@ -39,6 +45,23 @@ def test_pipeline_steps(pipeline_dir: Path) -> None:
     assert (pipeline_dir / "mapk14.identifier.txt").read_text().strip() == metadata["@id"]
     variables = {variable["name"]: variable for variable in metadata["variableMeasured"]}
     assert variables["poisson_lower"]["description"].startswith("Lower bound")
+
+
+def test_synthons_and_triage(pipeline_dir: Path) -> None:
+    synthons = pl.read_parquet(pipeline_dir / "mapk14.synthons.parquet")
+    assert synthons.get_column("level").unique().len() == 6
+    assert set(json.loads((pipeline_dir / "mapk14.synthon_qc.json").read_text())) == {"levels", "top"}
+    hits = pl.read_parquet(pipeline_dir / "hits.parquet")
+    assert hits.get_column("screen").unique().to_list() == ["mapk14"]
+    assert hits.height == 300
+    qc = json.loads((pipeline_dir / "triage_qc.json").read_text())
+    assert set(qc["screens"]) == {"mapk14"}
+    assert set(qc["by_score"]["z_faver"]) == {"mapk14"}
+
+
+def test_triage_rejects_unknown_role(pipeline_dir: Path, tmp_path: Path) -> None:
+    args = ["triage", "--screen", "mapk14", "decoy", "--input-dir", pipeline_dir]
+    assert run_cli(*args, "--output", tmp_path / "h.parquet", "--qc", tmp_path / "q.json") == 1
 
 
 def test_validate_without_heldout_skips_reading_scores(tmp_path: Path) -> None:
@@ -156,3 +179,10 @@ def test_module_entry_point(monkeypatch, capsys) -> None:
         runpy.run_module("delt_pipeline", run_name="__main__")
     assert exit_info.value.code == 0
     assert capsys.readouterr().out.strip() == __version__
+
+
+def test_dictionary_covers_published_tables(pipeline_dir: Path) -> None:
+    """Every column of the published hit tables (per screen and triaged) is described for FAIR metadata."""
+    dictionary = set(pl.read_csv(Path(__file__).parents[2] / "assets/hits_dictionary.csv").get_column("column"))
+    for table in ("mapk14.top.parquet", "hits.parquet"):
+        assert set(pl.read_parquet(pipeline_dir / table).columns) <= dictionary, table

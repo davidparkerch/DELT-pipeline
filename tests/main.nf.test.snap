@@ -15,6 +15,10 @@
                 "exports/mapk14/SHA256SUMS",
                 "exports/mapk14/datapackage.json",
                 "exports/mapk14/mapk14_hits.parquet",
+                "exports/triage",
+                "exports/triage/SHA256SUMS",
+                "exports/triage/datapackage.json",
+                "exports/triage/triage_hits.parquet",
                 "pipeline_info",
                 "pipeline_info/bco.json",
                 "pipeline_info/dag.html",
@@ -30,6 +34,8 @@
                 "screens/bca/bca.metadata.jsonld",
                 "screens/bca/bca.score_qc.json",
                 "screens/bca/bca.scores.parquet",
+                "screens/bca/bca.synthon_qc.json",
+                "screens/bca/bca.synthons.parquet",
                 "screens/bca/bca.top.parquet",
                 "screens/bca/bca.validation.json",
                 "screens/ddr1",
@@ -38,6 +44,8 @@
                 "screens/ddr1/ddr1.metadata.jsonld",
                 "screens/ddr1/ddr1.score_qc.json",
                 "screens/ddr1/ddr1.scores.parquet",
+                "screens/ddr1/ddr1.synthon_qc.json",
+                "screens/ddr1/ddr1.synthons.parquet",
                 "screens/ddr1/ddr1.top.parquet",
                 "screens/ddr1/ddr1.validation.json",
                 "screens/mapk14",
@@ -46,12 +54,18 @@
                 "screens/mapk14/mapk14.metadata.jsonld",
                 "screens/mapk14/mapk14.score_qc.json",
                 "screens/mapk14/mapk14.scores.parquet",
+                "screens/mapk14/mapk14.synthon_qc.json",
+                "screens/mapk14/mapk14.synthons.parquet",
                 "screens/mapk14/mapk14.top.parquet",
                 "screens/mapk14/mapk14.validation.json",
-                "sublibrary.json"
+                "sublibrary.json",
+                "triage",
+                "triage/hits.parquet",
+                "triage/triage.metadata.jsonld",
+                "triage/triage_qc.json"
             ]
         ],
-        "timestamp": "2026-11-03T18:39:52.753705302",
+        "timestamp": "2026-11-03T22:07:51.397093587",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -76,6 +90,11 @@
                 "exports/mapk14/datapackage.json",
                 "exports/mapk14/mapk14_hits.parquet",
                 "exports/mapk14/mapk14_hits.tsv",
+                "exports/triage",
+                "exports/triage/SHA256SUMS",
+                "exports/triage/datapackage.json",
+                "exports/triage/triage_hits.parquet",
+                "exports/triage/triage_hits.tsv",
                 "pipeline_info",
                 "pipeline_info/bco.json",
                 "pipeline_info/dag.html",
@@ -91,6 +110,8 @@
                 "screens/bca/bca.metadata.jsonld",
                 "screens/bca/bca.score_qc.json",
                 "screens/bca/bca.scores.parquet",
+                "screens/bca/bca.synthon_qc.json",
+                "screens/bca/bca.synthons.parquet",
                 "screens/bca/bca.top.parquet",
                 "screens/bca/bca.validation.json",
                 "screens/ddr1",
@@ -99,6 +120,8 @@
                 "screens/ddr1/ddr1.metadata.jsonld",
                 "screens/ddr1/ddr1.score_qc.json",
                 "screens/ddr1/ddr1.scores.parquet",
+                "screens/ddr1/ddr1.synthon_qc.json",
+                "screens/ddr1/ddr1.synthons.parquet",
                 "screens/ddr1/ddr1.top.parquet",
                 "screens/ddr1/ddr1.validation.json",
                 "screens/mapk14",
@@ -107,12 +130,18 @@
                 "screens/mapk14/mapk14.metadata.jsonld",
                 "screens/mapk14/mapk14.score_qc.json",
                 "screens/mapk14/mapk14.scores.parquet",
+                "screens/mapk14/mapk14.synthon_qc.json",
+                "screens/mapk14/mapk14.synthons.parquet",
                 "screens/mapk14/mapk14.top.parquet",
                 "screens/mapk14/mapk14.validation.json",
-                "sublibrary.json"
+                "sublibrary.json",
+                "triage",
+                "triage/hits.parquet",
+                "triage/triage.metadata.jsonld",
+                "triage/triage_qc.json"
             ],
             [
-                "hits_dictionary.csv:md5,adfc67749c92f7126fb153f2f928c469",
+                "hits_dictionary.csv:md5,37538291dbf1e8086b0e3bf424a1749f",
                 "SHA256SUMS:md5,193cd0290c2f8549469aca3d9f479ecb",
                 "bca_hits.parquet:md5,b99738961cdc0625ec6e478a64d40ecb",
                 "bca_hits.tsv:md5,f3571c038cea71a539e34159d1a3074f",
@@ -125,25 +154,37 @@
                 "datapackage.json:md5,1660b2a3dab53a63a450ffa16131cf7c",
                 "mapk14_hits.parquet:md5,789923eb4000296379f0f7cc32c6d838",
                 "mapk14_hits.tsv:md5,6a6d83469bca79d4a7adb3b3ec868f0f",
+                "SHA256SUMS:md5,524d31fe350d2a19dc2c7a3c31b91a56",
+                "datapackage.json:md5,87c4fce725e99be5e86c8575684a3991",
+                "triage_hits.parquet:md5,74e1a7a37eb9d63c4f50389aa7062ba7",
+                "triage_hits.tsv:md5,6830a7d1cbe692c0411985ede903d5b5",
                 "bca.counts_qc.json:md5,4e48fa35100febd5e5653e53be724bdf",
-                "bca.figures.json:md5,03df3a70eb7f7052b90655fd0148a7fd",
+                "bca.figures.json:md5,4e417357e31a2843e396d0801bb3deb2",
                 "bca.score_qc.json:md5,8be5d9baa5a01cf2497c3e71a1e20f2e",
                 "bca.scores.parquet:md5,9d93ab1dc96eb408bd464219e04cd35e",
+                "bca.synthon_qc.json:md5,4a19fcb9210c9e3cddd443493d76f298",
+                "bca.synthons.parquet:md5,8a8733ba522c65228ecaef75dc99a9cf",
                 "bca.top.parquet:md5,b99738961cdc0625ec6e478a64d40ecb",
                 "bca.validation.json:md5,58e0494c51d30eb3494f7c9198986bb9",
                 "ddr1.counts_qc.json:md5,da1ff6325ca925097580e25a26221143",
-                "ddr1.figures.json:md5,d2f7e02cdc32ecb35cef4818d53b908c",
+                "ddr1.figures.json:md5,267e66c78ffd94c3c058f1aca3c6d7a5",
                 "ddr1.score_qc.json:md5,2bdb2c8f97ed15c449860d5d61f77a75",
                 "ddr1.scores.parquet:md5,23b628072392d1d7ae9321309bda8d7e",
+                "ddr1.synthon_qc.json:md5,dab354b07c9161733105200dfc94452e",
+                "ddr1.synthons.parquet:md5,2159f10b65310cee24915aac41606641",
                 "ddr1.top.parquet:md5,fd3c803a13088e22d502b7f31f848e78",
                 "ddr1.validation.json:md5,559c3195ddcfe454f536ee20a53355bf",
                 "mapk14.counts_qc.json:md5,775651dcaae707455f38c5dc53bd14c2",
-                "mapk14.figures.json:md5,7b2367f0af63fe62afb085769992e9f4",
+                "mapk14.figures.json:md5,80fda5231635a74280711bafa2e21466",
                 "mapk14.score_qc.json:md5,6be30803c68dacd7983b4db4fdd0d42c",
                 "mapk14.scores.parquet:md5,2d57adcf20b01d8ab31d9449757ef9ab",
+                "mapk14.synthon_qc.json:md5,42ff202fd6b1c503f37af088fbf57207",
+                "mapk14.synthons.parquet:md5,2bbcc012295b39268d8d2a5d8888de43",
                 "mapk14.top.parquet:md5,789923eb4000296379f0f7cc32c6d838",
                 "mapk14.validation.json:md5,0f9b45784cd4669c16b0a4a54281f7e7",
-                "sublibrary.json:md5,69f7d8e51d8d00826420799bd497f3f4"
+                "sublibrary.json:md5,69f7d8e51d8d00826420799bd497f3f4",
+                "hits.parquet:md5,74e1a7a37eb9d63c4f50389aa7062ba7",
+                "triage_qc.json:md5,8c77bef02b00d69427623dd788d01cee"
             ],
             {
                 "<pipeline package>": "<pipeline version>",
@@ -155,6 +196,11 @@
             },
             {
                 "title": "Test report",
+                "panels": [
+                    "validation",
+                    "triage",
+                    "software"
+                ],
                 "datasets": [
                     "bca",
                     "ddr1",
@@ -162,9 +208,15 @@
                 ],
                 "figures": [
                     "fig-bca-cube",
+                    "fig-bca-ma",
+                    "fig-bca-replicates",
                     "fig-ddr1-cube",
+                    "fig-ddr1-ma",
+                    "fig-ddr1-replicates",
                     "fig-ddr1-validation",
                     "fig-mapk14-cube",
+                    "fig-mapk14-ma",
+                    "fig-mapk14-replicates",
                     "fig-mapk14-validation"
                 ],
                 "offline": true,
@@ -597,9 +649,303 @@
                         "name": "eb_log2_ratio"
                     }
                 ]
+            },
+            {
+                "@context": {
+                    "@vocab": "https://schema.org/",
+                    "prov": "http://www.w3.org/ns/prov#"
+                },
+                "@id": "urn:sha256:2631003245677c5c8758b0c0d046d62a5155783fad5ba20f64914d9da4861566",
+                "@type": "Dataset",
+                "creator": {
+                    "@type": "Person",
+                    "name": "Test Creator"
+                },
+                "description": "Triaged top compounds of the target screens ddr1, mapk14 (counter-screens: bca)",
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "58410 B",
+                        "contentUrl": "hits.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "hits.parquet",
+                        "sha256": "2631003245677c5c8758b0c0d046d62a5155783fad5ba20f64914d9da4861566",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "58410 B",
+                        "contentUrl": "../exports/triage/triage_hits.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "triage_hits.parquet",
+                        "sha256": "2631003245677c5c8758b0c0d046d62a5155783fad5ba20f64914d9da4861566",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "151787 B",
+                        "contentUrl": "../exports/triage/triage_hits.tsv",
+                        "encodingFormat": [
+                            "text/tab-separated-values",
+                            "http://edamontology.org/format_3475"
+                        ],
+                        "name": "triage_hits.tsv",
+                        "sha256": "328a63d89d2d3973f1c8603d2d0af64e9a5ab9b0c51a1b1fdeec45986e89c0c5",
+                        "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
+                    }
+                ],
+                "identifier": [
+                    "urn:sha256:2631003245677c5c8758b0c0d046d62a5155783fad5ba20f64914d9da4861566",
+                    {
+                        "@type": "PropertyValue",
+                        "propertyID": "dataset_id",
+                        "value": "triage"
+                    }
+                ],
+                "keywords": [
+                    "DNA-encoded library",
+                    "hit triage"
+                ],
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "name": "triage",
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Unique id of a triaged hit: <screen>:<molecule_hash> (a compound can be a hit of several screens)",
+                        "name": "hit_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Target screen the compound is a top hit of (one row per screen and compound)",
+                        "name": "screen"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Rank of the compound in its screen by Poisson lower bound (1 = best)",
+                        "name": "rank"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Triage tier: 1 = replicate and disynthon support, 2 = one of them, 3 = neither, flagged = counter-screen or bead binder",
+                        "name": "tier"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "SHA-256 hash of the compound SMILES (KinDEL identifier)",
+                        "name": "molecule_hash"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Compound structure (SMILES)",
+                        "name": "smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building block at position A (row of synthons/reacted_a.csv)",
+                        "name": "bb_a"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building block at position B (row of synthons/reacted_b.csv)",
+                        "name": "bb_b"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building block at position C (row of synthons/reacted_c.csv)",
+                        "name": "bb_c"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in target selection replicate 1 (distinct encodings)",
+                        "name": "target_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in target selection replicate 2 (distinct encodings)",
+                        "name": "target_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in target selection replicate 3 (distinct encodings)",
+                        "name": "target_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 1",
+                        "name": "matrix_1",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 2",
+                        "name": "matrix_2",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in no-protein (matrix) control replicate 3",
+                        "name": "matrix_3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Sequence count in the pre-selection library (synthesis abundance)",
+                        "name": "load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled target count (three replicates)",
+                        "name": "target_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled control count (three replicates)",
+                        "name": "control_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of target replicates with at least one count (0-3)",
+                        "name": "target_support",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Whether the compound's BB-A was drawn at random (unbiased; used to fit the prior)",
+                        "name": "random_bb_a"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Mean target count minus mean control count (KinDEL Counts baseline)",
+                        "name": "count_diff",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Depth-normalised enrichment ratio with pseudocount",
+                        "name": "er",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Maximum-likelihood rate ratio target/control (null when the control count is 0)",
+                        "name": "poisson_ratio",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the exact confidence interval of the rate ratio (ranking score)",
+                        "name": "poisson_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Upper bound of the exact confidence interval of the rate ratio (null when unbounded)",
+                        "name": "poisson_upper",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Normalised z-score of the target fraction against a uniform library (Faver et al. 2019)",
+                        "name": "z_faver"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Empirical-Bayes shrunken log2 rate ratio (Beta-Binomial prior)",
+                        "name": "eb_log2_ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the matrix (bead) control over pre-selection load rate ratio",
+                        "name": "matrix_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Other target screens in whose top table the compound also appears (semicolon-separated)",
+                        "name": "shared_with"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Best-supported disynthon of the compound (AB, AC or BC), scored without the compound itself",
+                        "name": "disynthon"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the rate ratio of that disynthon's other members",
+                        "name": "disynthon_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Highest lower bound of the rate ratio over all counter-screens (null if never observed)",
+                        "name": "counter_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Counts in at least two of three target replicates",
+                        "name": "replicate_support"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "The compound's best disynthon is enriched without the compound itself",
+                        "name": "disynthon_support"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Enriched in a counter-screen (an unrelated protein): likely an artefact",
+                        "name": "counter_binder"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Enriched in the bead (matrix) control over its synthesis load: likely an artefact",
+                        "name": "matrix_binder"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Also a top hit of another target screen (reported but not penalised)",
+                        "name": "shared_target"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Human-readable summary of the triage evidence",
+                        "name": "reasons"
+                    }
+                ]
             }
         ],
-        "timestamp": "2026-11-03T18:39:36.127976937",
+        "timestamp": "2026-11-03T22:39:04.878617173",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

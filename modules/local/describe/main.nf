@@ -3,8 +3,9 @@ nextflow.enable.types = true
 include { RunInfo ; shellQuote } from '../../../common.nf'
 
 /*
- * FAIR metadata for one screen's hit table: schema.org JSON-LD (identifier, license, provenance,
- * variables, distribution) and a Frictionless data package for the exports.
+ * FAIR metadata for one published hit table: schema.org JSON-LD (identifier, license, provenance,
+ * variables, distribution) and a Frictionless data package for the exports. `exports_base` is the
+ * relative URL from the published JSON-LD file to the exports folder.
  */
 process DESCRIBE {
     tag id
@@ -14,8 +15,10 @@ process DESCRIBE {
     record(
         id: String,
         top: Path,
+        id_column: String,
         exports: Set<Path>,
         sha256sums: Path,
+        exports_base: String,
         description: String?,
         source: String?,
         license: String?,
@@ -40,10 +43,10 @@ process DESCRIBE {
     """
     delt_pipeline describe \\
         --input ${top} \\
-        --id-column molecule_hash \\
+        --id-column ${id_column} \\
         --id ${id} \\
         --exports ${names} \\
-        --exports-base ../../exports/${id}/ \\
+        --exports-base ${shellQuote(exports_base)} \\
         --sha256sums ${sha256sums} \\
         --dictionary ${dictionary} \\
         --description ${shellQuote(description)} \\

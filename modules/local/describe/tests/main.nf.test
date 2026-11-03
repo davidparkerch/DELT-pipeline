@@ -42,7 +42,7 @@ nextflow_process {
             script "../../export/main.nf"
             process {
                 """
-                input[0] = SCORE.out
+                input[0] = SCORE.out.map { r -> r + record(id_column: 'molecule_hash') }
                 input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
@@ -65,6 +65,8 @@ nextflow_process {
                     .join(EXPORT.out, by: 'id')
                     .join(CHECKSUM.out, by: 'id')
                     .map { r -> r + record(
+                        id_column: 'molecule_hash',
+                        exports_base: '../../exports/mapk14/',
                         description: "MAPK14's synthetic screen",
                         source: 'doi:10.48550/arXiv.2410.08938',
                         license: 'https://github.com/insitro/kindel/blob/main/LICENSE.md',
@@ -96,7 +98,7 @@ nextflow_process {
                 input[0] = SCORE.out
                     .join(EXPORT.out, by: 'id')
                     .join(CHECKSUM.out, by: 'id')
-                    .map { r -> r + record(description: null, source: null, license: null, keywords: null) }
+                    .map { r -> r + record(id_column: 'molecule_hash', exports_base: '../exports/mapk14/', description: null, source: null, license: null, keywords: null) }
                 input[1] = file("${projectDir}/assets/hits_dictionary.csv")
                 input[2] = record(pipeline: 'test/pipeline', version: '0.0.0', homepage: 'https://example.org/pipeline', data_license: 'CC-BY-4.0', creator_name: "O'Test", creator_orcid: '0000-0002-1825-0097')
                 """
@@ -107,6 +109,7 @@ nextflow_process {
             def metadata = path(process.out[0][0].metadata).json
             assert metadata.license == 'https://spdx.org/licenses/CC-BY-4.0'
             assert !metadata.containsKey('isBasedOn')
+            assert metadata.distribution.findAll { d -> d.name.contains('_hits.') }.every { d -> d.contentUrl.startsWith('../exports/mapk14/') }
             assert snapshot(metadata).match()
         }
     }
@@ -118,7 +121,7 @@ nextflow_process {
                 """
                 def any = file("${projectDir}/assets/example/samplesheet.csv")
                 input[0] = channel.of(record(
-                    id: 'x', top: any, exports: [any].toSet(), sha256sums: any,
+                    id: 'x', top: any, exports: [any].toSet(), sha256sums: any, id_column: 'molecule_hash', exports_base: '../../exports/x/',
                     description: null, source: null, license: null, keywords: null
                 ))
                 input[1] = file("${projectDir}/assets/hits_dictionary.csv")

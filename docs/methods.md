@@ -101,7 +101,76 @@ Held-out compounds that are absent from a screen table had no counts in any samp
 of an all-zero compound instead of being dropped; dropping them would remove the true negatives and
 inflate every correlation.
 
-## 6. DESeq2 thinking: what transfers and what breaks
+## 6. Synthon aggregation (`analyse/synthons.py`)
+
+Counts are summed per **monosynthon** (one building block, any partners) and per **disynthon** (a pair
+of building blocks, any third), in all three orientations: AB, AC and BC. Each pooled group is scored with
+the same exposure-mapped Poisson rate ratio as single compounds. Each group has its compound count
+(`n_compounds`) and the number of members with target counts (`n_with_target`).
+
+Pooling helps because noise and signal average differently. A compound has a handful of counts, but
+an A–B disynthon in KinDEL pools up to 190 compounds. MAPK14's target replicates correlate at
+r ≈ 0.01–0.08 per compound, and at r ≈ 0.85 once counts are summed per A–B disynthon (the `replicates`
+figure in the report). The lines in the cube plot are these disynthons.
+
+Disynthon ratios are **overdispersed**. Synthesis yield and bead stickiness are shared by a whole family,
+so a disynthon's 95 % Poisson bound is above 1 for about a quarter of all MAPK14 A–B pairs. A Poisson
+interval does not cover family-level variation. This is why the triage thresholds below ask for more than
+"bound > 1".
+
+## 7. Hit triage (`analyse/triage.py`)
+
+The candidates are the `--top_n` compounds (default 2,000) of each **target** screen by Poisson lower bound.
+Each candidate gets five flags and a human-readable `reasons` string (`triage/hits.parquet`):
+
+| Flag | Rule | Why |
+|---|---|---|
+| `replicate_support` | Counts in ≥ 2 of 3 target replicates | One lucky replicate is the classic false positive |
+| `disynthon_support` | Best disynthon (AB, AC or BC), **leaving the compound out**, has a rate-ratio bound > 1.5 with ≥ 3 other members with counts | A family supports a compound only if the *other* members are enriched. Without leave-one-out, a single bright compound makes its own disynthons look enriched. |
+| `counter_binder` | Bound > 1 in any counter-screen (BCA) | Binds an unrelated protein: promiscuous or an aggregator |
+| `matrix_binder` | Bound of matrix-over-load rate ratio > 4 | Enriched on the beads relative to its synthesis yield. The threshold is high because matrix and load are two noisy measurements of the same yield. |
+| `shared_target` | Also in the top of another target screen | Two kinases sharing a hinge binder is plausible: **reported, not penalised** |
+
+**Tiers:**
+- **1:** replicate and disynthon support.
+- **2:** one of the two.
+- **3:** neither.
+- **flagged:** a counter or bead binder, whatever its support.
+
+Only counter-screen and bead enrichment mark artefacts. Treating "hit in more than one target" as
+promiscuity would throw away exactly the selective-within-family chemistry a kinase programme wants.
+
+The thresholds are module constants, not parameters, and are documented in the code. They were chosen on
+the KinDEL data, not tuned to the simulator. On real data the results barely depend on them: every DDR1
+top hit has disynthon support at bound > 1.5 and still at > 5.
+
+On KinDEL (top 2,000 per kinase, MAPK14 / DDR1):
+
+| | Tier 1 | Tier 2 | Tier 3 | Flagged | of which counter-screen (BCA) | of which bead | Shared target |
+|---|---|---|---|---|---|---|---|
+| MAPK14 | 1,755 | 75 | 0 | 170 | 168 | 2 | 17 |
+| DDR1 | 1,833 | 0 | 0 | 167 | 167 | 0 | 17 |
+
+Almost every top compound by Poisson lower bound already has replicate and family support, because the
+bound itself demands evidence. What triage adds is the **counter-screen**: about 8 % of each kinase's top
+hits also bind carbonic anhydrase. Of the 17 compounds that are top hits of both kinases, 16 are tier 1.
+
+**What each score lets through.** The same triage, applied to the top 2,000 of every score in turn
+(`by_score` in `triage_qc.json`, and a table in the report):
+
+| Ranked by | MAPK14 tier 1 | MAPK14 flagged | DDR1 tier 1 | DDR1 flagged |
+|---|---|---|---|---|
+| Counts | 1,771 | 150 | 1,811 | 189 |
+| Enrichment ratio | 1,672 | 194 | 1,856 | 144 |
+| Poisson lower bound | 1,755 | 170 | 1,833 | 167 |
+| Faver z (target only) | 250 | **1,744** | 1,499 | 501 |
+| EB shrunken ratio | 1,748 | 175 | 1,837 | 163 |
+
+The target-only z-score ranks by target counts alone. In MAPK14, 1,732 of its top 2,000 are **bead
+binders**: they are as enriched in the no-protein control as in the target. Any score that divides by the
+matrix control removes them before triage sees them.
+
+## 8. DESeq2 thinking: what transfers and what breaks
 
 DEL hit calling is count-based differential abundance: target vs control instead of treated vs untreated.
 
@@ -131,12 +200,17 @@ DEL hit calling is count-based differential abundance: target vs control instead
   an untreated state. Compounds enriched in the control, or in an unrelated protein like BCA, are
   artefacts, not "down-regulated".
 
-## 7. Limitations
+## 9. Limitations
 
 - **On-DNA vs off-DNA.** DEL counts measure binding while attached to DNA. Off-DNA KD correlates only loosely,
   as the KinDEL paper also reports.
 - **No competition arm.** KinDEL has no selection with a known inhibitor, so allosteric and orthosteric binders
   cannot be separated.
+- **Triage thresholds are heuristics.** They are lower bounds of Poisson intervals. Family-level
+  overdispersion is handled by asking for more than a bound of 1, not by modelling it. A negative-binomial
+  or hierarchical model of synthon effects would turn the thresholds into calibrated probabilities.
+- **One counter-screen.** BCA is a single unrelated protein. A compound that binds kinases and nothing
+  else on the panel can still be an aggregator.
 - **Sub-library.** Results cover about 16 % of BB-As. The pipeline runs on the full library with
   `--n_bb_a 377` given enough memory and time.
 - **GPU.** Not used. Every step is vectorised NumPy/SciPy on CPU, and outputs must be byte-stable for snapshot

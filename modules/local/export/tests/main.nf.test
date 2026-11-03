@@ -44,7 +44,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = SCORE.out
+                input[0] = SCORE.out.map { r -> r + record(id_column: 'molecule_hash') }
                 input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,arrow,csv,tsv,jsonl,npz')
                 """
             }
@@ -61,7 +61,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = SCORE.out
+                input[0] = SCORE.out.map { r -> r + record(id_column: 'molecule_hash') }
                 input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,xlsx')
                 """
             }
@@ -76,7 +76,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = channel.of(record(id: 'x', top: file("${projectDir}/assets/example/mapk14.parquet")))
+                input[0] = channel.of(record(id: 'x', top: file("${projectDir}/assets/example/mapk14.parquet"), id_column: 'molecule_hash'))
                 input[1] = record(n_bb_a: 8, alpha: 0.5, ci_level: 0.95, top_n: 200, seed: 42, export_formats: 'parquet,tsv')
                 """
             }
