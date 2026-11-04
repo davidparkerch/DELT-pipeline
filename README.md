@@ -209,15 +209,23 @@ samplesheet ─► SELECT_SUBLIBRARY ─► SUBSET_LIBRARY (per screen) ─► S
 | `--ci_level` | `0.95` | Confidence level of the Poisson interval |
 | `--top_n` | `2000` | Compounds in each published hit table |
 | `--export_formats` | `parquet,tsv` | Also `arrow`, `csv`, `jsonl`, `npz` |
-| `--seed` | `42` | Seed for the random BB-As |
+| `--n_picks` | `96` | Compounds on each target screen's resynthesis shortlist |
+| `--cluster_similarity` | `0.65` | Tanimoto similarity (Morgan fingerprints) at or above which two hits share a cluster |
+| `--max_per_cluster`, `--max_per_disynthon` | `2`, `3` | Picks per structural cluster and per disynthon at most |
+| `--seed` | `42` | Seed for the random BB-As and the model |
+| `--report_title`, `--explorer_title` | `DELT-pipeline report`, `DELT Explorer` | Titles of the two HTML pages |
 
 ```
 results/
-├── report.html                 # standalone HTML report
+├── report.html                 # standalone HTML report (validation, model, triage, figures)
+├── explorer.html               # the DELT Explorer: one static page
 ├── sublibrary.json             # chosen BB-As (held-out and random)
-├── screens/<id>/               # counts_qc, scores (all compounds), top, synthons, validation, figures, metadata.jsonld
+├── screens/<id>/               # counts_qc (with depth and saturation), scores (all compounds), top, synthons,
+│                               #   blockset (set enrichment per building block), validation, model, figures, metadata.jsonld
 ├── triage/                     # hits.parquet (tiers, flags, reasons), triage_qc.json, triage.metadata.jsonld
-├── exports/<id>/               # <id>_hits.{parquet,tsv}, SHA256SUMS, datapackage.json (also exports/triage/)
+├── shortlist/                  # picks.parquet (diverse resynthesis shortlist), picks_qc.json, metadata
+├── blocks/                     # blocks.parquet (RDKit-described building blocks), blocks_qc.json, metadata
+├── exports/<id>/               # <id>_hits.{parquet,tsv}, SHA256SUMS, datapackage.json (also triage, shortlist, building_blocks)
 └── pipeline_info/              # versions, trace, timeline, BioCompute Object, DAG
 ```
 </details>

@@ -37,6 +37,8 @@ params {
     seed: Integer = 42
     // Title of the HTML report
     report_title: String = 'DELT-pipeline report'
+    // Title of the DELT Explorer page
+    explorer_title: String = 'DELT Explorer'
     // License applied to datasets that do not declare one (SPDX id or URL)
     data_license: String = 'CC-BY-4.0'
     // Data creator recorded in the FAIR metadata
@@ -85,7 +87,7 @@ workflow {
         .mix(selection.blocks.map { blocks -> blocks.table })
         .mix(results.map { screen -> screen.blockset })
         .collect()
-    explorer = EXPLORER(explorer_files, "${params.report_title} (explorer)", run)
+    explorer = EXPLORER(explorer_files, params.explorer_title, run)
 
     publish:
     screens = results

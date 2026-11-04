@@ -300,7 +300,7 @@
                 "bytes_over_1mb": true
             },
             {
-                "title": "Test report (explorer)",
+                "title": "DELT Explorer",
                 "screens": [
                     "ddr1",
                     "mapk14"
@@ -1450,7 +1450,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-04T12:51:33.861798353",
+        "timestamp": "2026-11-04T13:17:44.037332857",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

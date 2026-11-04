@@ -242,6 +242,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("page", type=Path)
     parser.add_argument("--frames", type=Path, help="save screenshots here")
+    parser.add_argument("--height", type=int, default=1100, help="browser window height in pixels")
     parser.add_argument("--chromium", type=Path, help="Chromium executable (default: the one playwright installed)")
     args = parser.parse_args()
     if args.frames:
@@ -255,7 +256,7 @@ def main() -> None:
             executable_path=str(args.chromium) if args.chromium else None,
             args=WEBGL_FLAGS,  # headless browsers have no GPU: draw WebGL in software
         )
-        page = browser.new_page(viewport={"width": 1500, "height": 1100}, accept_downloads=True)
+        page = browser.new_page(viewport={"width": 1500, "height": args.height}, accept_downloads=True)
         page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(args.page.resolve().as_uri())
