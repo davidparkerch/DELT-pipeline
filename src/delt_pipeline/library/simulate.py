@@ -73,6 +73,20 @@ def synthon_smiles() -> dict[str, list[str]]:
     }
 
 
+def reacted_smiles() -> dict[str, list[str]]:
+    """The building blocks as they sit in a compound, with KinDEL's attachment markers ([Fr], [At]).
+
+    The last two C blocks share one fragment (like KinDEL blocks that differ only in a protecting group).
+    """
+    reacted = {
+        "a": [f"N([Fr])C{'C' * index}C(=O)O" for index in range(N_A)],
+        "b": [f"[At]C(=O)c1ccc({'C' * (index + 1)})cc1" for index in range(N_B)],
+        "c": [f"[At]NC{'C' * index}c1ccnc([Fr])c1" for index in range(N_C)],
+    }
+    reacted["c"][-1] = reacted["c"][-2]
+    return reacted
+
+
 def molecule_hash(smiles: str) -> str:
     """SHA-256 of the SMILES, the same kind of identifier as KinDEL's ``molecule_hash``."""
     return hashlib.sha256(smiles.encode()).hexdigest()
@@ -191,8 +205,9 @@ def simulate_library(seed: int = 7) -> SimulatedLibrary:
             sub_rng = np.random.default_rng(seed * 100 + noise_seed + (0 if screen == "mapk14" else 10))
             heldout[f"{screen}_{condition}"] = _heldout(grid, products, folds[screen], sub_rng)
 
+    reacted = reacted_smiles()
     building_blocks = {
-        position: pl.DataFrame({f"smiles_{position}": names, f"reacted_{position}": names})
+        position: pl.DataFrame({f"smiles_{position}": names, f"reacted_{position}": reacted[position]})
         for position, names in smiles.items()
     }
     return SimulatedLibrary(building_blocks, screens, heldout, planted)

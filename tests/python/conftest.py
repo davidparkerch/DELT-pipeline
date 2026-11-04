@@ -141,6 +141,8 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
         pooled, synthon_qc = out / f"{screen}.synthons.parquet", out / f"{screen}.synthon_qc.json"
         assert run_cli("synthons", "--scores", scores, "--counts-qc", qc, "--output", pooled,
                        "--qc", synthon_qc) == 0  # fmt: skip
+        assert run_cli("blockset", "--scores", scores, "--top", top, "--output", out / f"{screen}.blockset.parquet",
+                       "--qc", out / f"{screen}.blockset_qc.json") == 0  # fmt: skip
         validation = out / f"{screen}.validation.json"
         assays = []
         if screen == "mapk14":
@@ -165,6 +167,10 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
                        "--pipeline", "demo", "--pipeline-version", "1.0", "--homepage", "https://example.org/demo",
                        "--jsonld", out / f"{screen}.metadata.jsonld", "--datapackage", exports / "datapackage.json",
                        "--identifier", out / f"{screen}.identifier.txt") == 0  # fmt: skip
+    assert run_cli("blocks", "--synthons", synthons, "--sublibrary", sub,
+                   "--counts", out / "mapk14.counts.parquet", out / "bca.counts.parquet",
+                   "--output", out / "blocks.parquet",
+                   "--qc", out / "blocks_qc.json") == 0  # fmt: skip
     roles = ["--screen", "mapk14", "target", "--screen", "bca", "counter"]
     assert run_cli("triage", *roles, "--input-dir", out, "--compare-top-n", 50,
                    "--output", out / "hits.parquet", "--qc", out / "triage_qc.json") == 0  # fmt: skip

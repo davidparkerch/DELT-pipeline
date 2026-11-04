@@ -9,3 +9,4 @@ README.md
 pipeline_info/*
 screens/*/*.metadata.jsonld
 triage/*.metadata.jsonld
+blocks/*.metadata.jsonld

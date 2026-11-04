@@ -39,7 +39,13 @@ nextflow_workflow {
             // Screens disagree on the license (one has none), so the run's default applies.
             assert metadata.license == 'https://spdx.org/licenses/CC-BY-4.0'
             assert metadata.distribution.findAll { d -> d.name.contains('_hits.') }*.contentUrl == ['../exports/triage/triage_hits.parquet', '../exports/triage/triage_hits.tsv']
-            assert snapshot(Fixtures.canonical(results), Fixtures.canonical(triage), workflow.out.sublibrary, Fixtures.versions(topics.versions, projectDir)).match()
+            def blocks = workflow.out.blocks
+            assert blocks*.id == ['building_blocks']
+            assert blocks[0].identifier.startsWith('urn:sha256:')
+            assert path(blocks[0].blocks_qc).json.n_blocks == [a: 15, b: 25, c: 16]
+            assert path(blocks[0].metadata).json.distribution*.name.sort() == ['blocks.parquet', 'building_blocks.parquet', 'building_blocks.tsv']
+            assert results.every { r -> path(r.blockset_qc).json.n_tests == 15 - 7 + 25 + 16 }
+            assert snapshot(Fixtures.canonical(results), Fixtures.canonical(triage), Fixtures.canonical(blocks), workflow.out.sublibrary, Fixtures.versions(topics.versions, projectDir)).match()
         }
     }
 }

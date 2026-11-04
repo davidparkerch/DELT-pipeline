@@ -37,3 +37,30 @@ counter_binder,Enriched in a counter-screen (an unrelated protein): likely an ar
 matrix_binder,Enriched in the bead (matrix) control over its synthesis load: likely an artefact,,,
 shared_target,Also a top hit of another target screen (reported but not penalised),,,
 reasons,Human-readable summary of the triage evidence,,,
+block_id,Building-block id: position letter and zero-padded row number in reacted_<position>.csv (A0017),,,
+position,"Synthon position (cycle): a, b or c",,,
+bb_id,Building-block id within its position (0-based row number of reacted_<position>.csv),,,
+reagent,"Building block as the free reagent (position C lists a reagent pair), as given by KinDEL",,,http://semanticscience.org/resource/CHEMINF_000018
+fragment_smiles,Canonical SMILES of the building block as it sits in the compound; attachment points are *,,,http://semanticscience.org/resource/CHEMINF_000018
+canonical_smiles,Canonical SMILES of the fragment capped with hydrogens (RDKit),,,http://semanticscience.org/resource/CHEMINF_000018
+inchikey,InChIKey of the hydrogen-capped fragment,,,http://semanticscience.org/resource/CHEMINF_000059
+attachments,Number of attachment points (KinDEL pseudo-atoms Fr and At),count,http://purl.obolibrary.org/obo/UO_0000189,
+same_fragment_as,Lowest building-block id of the same position with an identical fragment (own id if unique),,,
+n_same_fragment,Number of building blocks of the position that encode the same fragment,count,http://purl.obolibrary.org/obo/UO_0000189,
+mw,Molecular weight of the capped fragment (RDKit),Da,http://purl.obolibrary.org/obo/UO_0000221,
+clogp,Crippen logP of the capped fragment (RDKit),,,
+tpsa,Topological polar surface area of the capped fragment (RDKit),A^2,,
+hbd,Hydrogen-bond donors of the capped fragment (RDKit Lipinski definition),count,http://purl.obolibrary.org/obo/UO_0000189,
+hba,Hydrogen-bond acceptors of the capped fragment (RDKit Lipinski definition),count,http://purl.obolibrary.org/obo/UO_0000189,
+rotatable_bonds,Rotatable bonds of the capped fragment,count,http://purl.obolibrary.org/obo/UO_0000189,
+heavy_atoms,Heavy atoms of the capped fragment,count,http://purl.obolibrary.org/obo/UO_0000189,
+fraction_csp3,Fraction of sp3 carbons in the capped fragment,ratio,http://purl.obolibrary.org/obo/UO_0000190,
+rings,Rings in the capped fragment,count,http://purl.obolibrary.org/obo/UO_0000189,
+murcko_scaffold,Murcko scaffold of the capped fragment (empty for acyclic fragments),,,http://semanticscience.org/resource/CHEMINF_000018
+sublibrary_source,"Why the block is in the analysed sub-library: heldout, random, all (positions B and C) or excluded",,,
+n_possible,Compounds of the sub-library that contain the block,count,http://purl.obolibrary.org/obo/UO_0000189,
+n_with_load,"Of those, compounds sequenced in the pre-selection library",count,http://purl.obolibrary.org/obo/UO_0000189,
+mean_load,Pre-selection sequence count per possible compound of the block: a synthesis-yield proxy,count,http://purl.obolibrary.org/obo/UO_0000189,
+fraction_with_load,Share of the block's possible compounds sequenced before selection,ratio,http://purl.obolibrary.org/obo/UO_0000190,
+load_ratio,Mean load relative to the median block of the same position,ratio,http://purl.obolibrary.org/obo/UO_0000190,
+low_load,"Mean load below half the position's median: a yield or truncation suspect, not a non-binder",,,

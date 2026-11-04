@@ -2,11 +2,19 @@
     "stub": {
         "content": [
             [
+                "blocks",
+                "blocks/blocks.parquet",
+                "blocks/blocks_qc.json",
+                "blocks/building_blocks.metadata.jsonld",
                 "exports",
                 "exports/bca",
                 "exports/bca/SHA256SUMS",
                 "exports/bca/bca_hits.parquet",
                 "exports/bca/datapackage.json",
+                "exports/building_blocks",
+                "exports/building_blocks/SHA256SUMS",
+                "exports/building_blocks/building_blocks.parquet",
+                "exports/building_blocks/datapackage.json",
                 "exports/ddr1",
                 "exports/ddr1/SHA256SUMS",
                 "exports/ddr1/datapackage.json",
@@ -29,6 +37,8 @@
                 "screens",
                 "screens.json",
                 "screens/bca",
+                "screens/bca/bca.blockset.parquet",
+                "screens/bca/bca.blockset_qc.json",
                 "screens/bca/bca.counts_qc.json",
                 "screens/bca/bca.figures.json",
                 "screens/bca/bca.metadata.jsonld",
@@ -39,6 +49,8 @@
                 "screens/bca/bca.top.parquet",
                 "screens/bca/bca.validation.json",
                 "screens/ddr1",
+                "screens/ddr1/ddr1.blockset.parquet",
+                "screens/ddr1/ddr1.blockset_qc.json",
                 "screens/ddr1/ddr1.counts_qc.json",
                 "screens/ddr1/ddr1.figures.json",
                 "screens/ddr1/ddr1.metadata.jsonld",
@@ -49,6 +61,8 @@
                 "screens/ddr1/ddr1.top.parquet",
                 "screens/ddr1/ddr1.validation.json",
                 "screens/mapk14",
+                "screens/mapk14/mapk14.blockset.parquet",
+                "screens/mapk14/mapk14.blockset_qc.json",
                 "screens/mapk14/mapk14.counts_qc.json",
                 "screens/mapk14/mapk14.figures.json",
                 "screens/mapk14/mapk14.metadata.jsonld",
@@ -65,7 +79,7 @@
                 "triage/triage_qc.json"
             ]
         ],
-        "timestamp": "2026-11-03T22:07:51.397093587",
+        "timestamp": "2026-11-04T10:55:50.994128291",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -74,12 +88,21 @@
     "synthetic library": {
         "content": [
             [
+                "blocks",
+                "blocks/blocks.parquet",
+                "blocks/blocks_qc.json",
+                "blocks/building_blocks.metadata.jsonld",
                 "exports",
                 "exports/bca",
                 "exports/bca/SHA256SUMS",
                 "exports/bca/bca_hits.parquet",
                 "exports/bca/bca_hits.tsv",
                 "exports/bca/datapackage.json",
+                "exports/building_blocks",
+                "exports/building_blocks/SHA256SUMS",
+                "exports/building_blocks/building_blocks.parquet",
+                "exports/building_blocks/building_blocks.tsv",
+                "exports/building_blocks/datapackage.json",
                 "exports/ddr1",
                 "exports/ddr1/SHA256SUMS",
                 "exports/ddr1/datapackage.json",
@@ -105,6 +128,8 @@
                 "screens",
                 "screens.json",
                 "screens/bca",
+                "screens/bca/bca.blockset.parquet",
+                "screens/bca/bca.blockset_qc.json",
                 "screens/bca/bca.counts_qc.json",
                 "screens/bca/bca.figures.json",
                 "screens/bca/bca.metadata.jsonld",
@@ -115,6 +140,8 @@
                 "screens/bca/bca.top.parquet",
                 "screens/bca/bca.validation.json",
                 "screens/ddr1",
+                "screens/ddr1/ddr1.blockset.parquet",
+                "screens/ddr1/ddr1.blockset_qc.json",
                 "screens/ddr1/ddr1.counts_qc.json",
                 "screens/ddr1/ddr1.figures.json",
                 "screens/ddr1/ddr1.metadata.jsonld",
@@ -125,6 +152,8 @@
                 "screens/ddr1/ddr1.top.parquet",
                 "screens/ddr1/ddr1.validation.json",
                 "screens/mapk14",
+                "screens/mapk14/mapk14.blockset.parquet",
+                "screens/mapk14/mapk14.blockset_qc.json",
                 "screens/mapk14/mapk14.counts_qc.json",
                 "screens/mapk14/mapk14.figures.json",
                 "screens/mapk14/mapk14.metadata.jsonld",
@@ -141,11 +170,17 @@
                 "triage/triage_qc.json"
             ],
             [
-                "hits_dictionary.csv:md5,37538291dbf1e8086b0e3bf424a1749f",
+                "hits_dictionary.csv:md5,bb7c8547d8c49af8e5a18d8e29da4ff3",
+                "blocks.parquet:md5,962ae89c0cc9220cb9ff0719893509ac",
+                "blocks_qc.json:md5,7de481d90ccb9c0e3c1433cd4164e489",
                 "SHA256SUMS:md5,193cd0290c2f8549469aca3d9f479ecb",
                 "bca_hits.parquet:md5,b99738961cdc0625ec6e478a64d40ecb",
                 "bca_hits.tsv:md5,f3571c038cea71a539e34159d1a3074f",
                 "datapackage.json:md5,0b33d9ddfb14513022f90fd560523810",
+                "SHA256SUMS:md5,da614198df68d442a9f9259b865c15bc",
+                "building_blocks.parquet:md5,962ae89c0cc9220cb9ff0719893509ac",
+                "building_blocks.tsv:md5,bc7183517f5b66abac8ed69a530a2748",
+                "datapackage.json:md5,20d0524f9e8644f936563281ceaa015d",
                 "SHA256SUMS:md5,71258a38b71150e04371fad254656eee",
                 "datapackage.json:md5,9c0252d84ecd86784b4a3e2bd6582d91",
                 "ddr1_hits.parquet:md5,fd3c803a13088e22d502b7f31f848e78",
@@ -158,6 +193,8 @@
                 "datapackage.json:md5,87c4fce725e99be5e86c8575684a3991",
                 "triage_hits.parquet:md5,74e1a7a37eb9d63c4f50389aa7062ba7",
                 "triage_hits.tsv:md5,6830a7d1cbe692c0411985ede903d5b5",
+                "bca.blockset.parquet:md5,6e4f8e1b46febaf5d18ddbee37fe3af5",
+                "bca.blockset_qc.json:md5,7c88bcbefece7ca36b0e969c73f1cdee",
                 "bca.counts_qc.json:md5,6877cedbfa98d48a14f30c58710e9846",
                 "bca.figures.json:md5,c6152df33076d45d6ff363f45de0b1d4",
                 "bca.score_qc.json:md5,8be5d9baa5a01cf2497c3e71a1e20f2e",
@@ -166,6 +203,8 @@
                 "bca.synthons.parquet:md5,8a8733ba522c65228ecaef75dc99a9cf",
                 "bca.top.parquet:md5,b99738961cdc0625ec6e478a64d40ecb",
                 "bca.validation.json:md5,58e0494c51d30eb3494f7c9198986bb9",
+                "ddr1.blockset.parquet:md5,c9f66bb7d7a1626c8f86161193bfbae3",
+                "ddr1.blockset_qc.json:md5,0215a8151185669d320488b0f3d9c846",
                 "ddr1.counts_qc.json:md5,76ea501e05c96061639a1527d2087f50",
                 "ddr1.figures.json:md5,faa17cf85f1836b71564b0d562522e55",
                 "ddr1.score_qc.json:md5,2bdb2c8f97ed15c449860d5d61f77a75",
@@ -174,6 +213,8 @@
                 "ddr1.synthons.parquet:md5,2159f10b65310cee24915aac41606641",
                 "ddr1.top.parquet:md5,fd3c803a13088e22d502b7f31f848e78",
                 "ddr1.validation.json:md5,559c3195ddcfe454f536ee20a53355bf",
+                "mapk14.blockset.parquet:md5,16b0afc0f9eca6bc79a07cf09a1f4292",
+                "mapk14.blockset_qc.json:md5,e5bb0c415aee287eddb3df58de9b1bf5",
                 "mapk14.counts_qc.json:md5,a228265f60de0c6a40a1bb8cea6e53bc",
                 "mapk14.figures.json:md5,df2943267d24f7b1c676a15364fd4ba8",
                 "mapk14.score_qc.json:md5,6be30803c68dacd7983b4db4fdd0d42c",
@@ -192,6 +233,7 @@
                 "numpy": "2.5.4",
                 "plotly": "7.1.0",
                 "polars": "2.1.0",
+                "rdkit": "2026.09.1",
                 "scipy": "1.18.1"
             },
             {
@@ -946,9 +988,247 @@
                         "name": "reasons"
                     }
                 ]
+            },
+            {
+                "@context": {
+                    "@vocab": "https://schema.org/",
+                    "prov": "http://www.w3.org/ns/prov#"
+                },
+                "@id": "urn:sha256:5260f2a8d83503bd32bc8b0ec73d7a30f81e10c327dc387674dd9baf19cd1042",
+                "@type": "Dataset",
+                "creator": {
+                    "@type": "Person",
+                    "name": "Test Creator"
+                },
+                "description": "Building blocks of the DNA-encoded library with RDKit descriptors, fragments shared between blocks and pre-selection load, from the screens bca, ddr1, mapk14",
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "13854 B",
+                        "contentUrl": "blocks.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "blocks.parquet",
+                        "sha256": "5260f2a8d83503bd32bc8b0ec73d7a30f81e10c327dc387674dd9baf19cd1042",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "13854 B",
+                        "contentUrl": "../exports/building_blocks/building_blocks.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "building_blocks.parquet",
+                        "sha256": "5260f2a8d83503bd32bc8b0ec73d7a30f81e10c327dc387674dd9baf19cd1042",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "11782 B",
+                        "contentUrl": "../exports/building_blocks/building_blocks.tsv",
+                        "encodingFormat": [
+                            "text/tab-separated-values",
+                            "http://edamontology.org/format_3475"
+                        ],
+                        "name": "building_blocks.tsv",
+                        "sha256": "7976643e38d267b595d9bd5c14a2e5ed09487be7f5c9d7968f50e197b26f95ba",
+                        "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
+                    }
+                ],
+                "identifier": [
+                    "urn:sha256:5260f2a8d83503bd32bc8b0ec73d7a30f81e10c327dc387674dd9baf19cd1042",
+                    {
+                        "@type": "PropertyValue",
+                        "propertyID": "dataset_id",
+                        "value": "building_blocks"
+                    }
+                ],
+                "keywords": [
+                    "DNA-encoded library",
+                    "building blocks",
+                    "cheminformatics",
+                    "RDKit"
+                ],
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "name": "building_blocks",
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building-block id: position letter and zero-padded row number in reacted_<position>.csv (A0017)",
+                        "name": "block_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Synthon position (cycle): a, b or c",
+                        "name": "position"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building-block id within its position (0-based row number of reacted_<position>.csv)",
+                        "name": "bb_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building block as the free reagent (position C lists a reagent pair), as given by KinDEL",
+                        "name": "reagent",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Canonical SMILES of the building block as it sits in the compound; attachment points are *",
+                        "name": "fragment_smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Canonical SMILES of the fragment capped with hydrogens (RDKit)",
+                        "name": "canonical_smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "InChIKey of the hydrogen-capped fragment",
+                        "name": "inchikey",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000059"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of attachment points (KinDEL pseudo-atoms Fr and At)",
+                        "name": "attachments",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lowest building-block id of the same position with an identical fragment (own id if unique)",
+                        "name": "same_fragment_as"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Number of building blocks of the position that encode the same fragment",
+                        "name": "n_same_fragment",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Molecular weight of the capped fragment (RDKit)",
+                        "name": "mw",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000221",
+                        "unitText": "Da"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Crippen logP of the capped fragment (RDKit)",
+                        "name": "clogp"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Topological polar surface area of the capped fragment (RDKit)",
+                        "name": "tpsa",
+                        "unitText": "A^2"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Hydrogen-bond donors of the capped fragment (RDKit Lipinski definition)",
+                        "name": "hbd",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Hydrogen-bond acceptors of the capped fragment (RDKit Lipinski definition)",
+                        "name": "hba",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Rotatable bonds of the capped fragment",
+                        "name": "rotatable_bonds",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Heavy atoms of the capped fragment",
+                        "name": "heavy_atoms",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Fraction of sp3 carbons in the capped fragment",
+                        "name": "fraction_csp3",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Rings in the capped fragment",
+                        "name": "rings",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Murcko scaffold of the capped fragment (empty for acyclic fragments)",
+                        "name": "murcko_scaffold",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Why the block is in the analysed sub-library: heldout, random, all (positions B and C) or excluded",
+                        "name": "sublibrary_source"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Compounds of the sub-library that contain the block",
+                        "name": "n_possible",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Of those, compounds sequenced in the pre-selection library",
+                        "name": "n_with_load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pre-selection sequence count per possible compound of the block: a synthesis-yield proxy",
+                        "name": "mean_load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Share of the block's possible compounds sequenced before selection",
+                        "name": "fraction_with_load",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Mean load relative to the median block of the same position",
+                        "name": "load_ratio",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Mean load below half the position's median: a yield or truncation suspect, not a non-binder",
+                        "name": "low_load"
+                    }
+                ]
             }
         ],
-        "timestamp": "2026-11-04T10:18:03.071880781",
+        "timestamp": "2026-11-04T10:55:26.144610993",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

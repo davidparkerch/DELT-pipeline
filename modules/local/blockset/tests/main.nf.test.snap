@@ -1,0 +1,43 @@
+{
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "blockset": "x.blockset.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "blockset_qc": "x.blockset_qc.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "id": "x"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-04T10:41:19.968814007",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "set enrichment finds the planted families' building blocks": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "blockset": "mapk14.blockset.parquet:md5,16b0afc0f9eca6bc79a07cf09a1f4292",
+                        "blockset_qc": "mapk14.blockset_qc.json:md5,e5bb0c415aee287eddb3df58de9b1bf5",
+                        "id": "mapk14"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-04T10:41:10.865837911",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

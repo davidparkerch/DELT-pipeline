@@ -3,6 +3,8 @@
         "content": [
             [
                 {
+                    "blockset": "bca.blockset.parquet:md5,5626602c39cb4bbb1f7cff026f3abd2d",
+                    "blockset_qc": "bca.blockset_qc.json:md5,2a893e9e1c3f1c77ad7d376c4085d0c9",
                     "counts_qc": "bca.counts_qc.json:md5,d72b9ba476c94c2bc37fe5f681a5ca1b",
                     "datapackage": "datapackage.json:md5,14ae05bd2c42d2da33767cdf4edfc515",
                     "exports": [
@@ -22,6 +24,8 @@
                     "validation": "bca.validation.json:md5,58e0494c51d30eb3494f7c9198986bb9"
                 },
                 {
+                    "blockset": "mapk14.blockset.parquet:md5,92a4ceb374b83745aa0e7e3ab527332f",
+                    "blockset_qc": "mapk14.blockset_qc.json:md5,37ee83a563a876391356690321ea0797",
                     "counts_qc": "mapk14.counts_qc.json:md5,a7cf7b314a10a392d76cdcd327da6434",
                     "datapackage": "datapackage.json:md5,531884f5b02b031313a33ab8f88dea06",
                     "exports": [
@@ -57,6 +61,21 @@
                 }
             ],
             [
+                {
+                    "blocks_qc": "blocks_qc.json:md5,7de481d90ccb9c0e3c1433cd4164e489",
+                    "datapackage": "datapackage.json:md5,79ca478353703c0cbe7fdd5d5e412309",
+                    "exports": [
+                        "building_blocks.parquet:md5,2e50c3dc3453f58aa7100b7791e5d753",
+                        "building_blocks.tsv:md5,74b2ac00970f3bc3d0389402b5949298"
+                    ],
+                    "id": "building_blocks",
+                    "identifier": "urn:sha256:d1b0807c0176f993361f92c010b8cf6a9590461b1dd21ddcdef04700d0dc20c5",
+                    "metadata": "building_blocks.metadata.jsonld:md5,7dd443e1bfae0985e8e30c61b69b282a",
+                    "sha256sums": "SHA256SUMS:md5,f0dd5c0cf8d4cfcdbf860b657db72e80",
+                    "table": "blocks.parquet:md5,2e50c3dc3453f58aa7100b7791e5d753"
+                }
+            ],
+            [
                 "sublibrary.json:md5,14ed3ff73ca82ef2ebc674df2c302182"
             ],
             {
@@ -65,10 +84,11 @@
                 "numpy": "2.5.4",
                 "plotly": "7.1.0",
                 "polars": "2.1.0",
+                "rdkit": "2026.09.1",
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-04T10:19:04.760561796",
+        "timestamp": "2026-11-04T10:56:33.495624279",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

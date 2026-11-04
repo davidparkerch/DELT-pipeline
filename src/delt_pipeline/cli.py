@@ -13,12 +13,14 @@ import polars as pl
 
 from . import __version__
 from .analyse import SCORES, absent_scores, read_heldout, score_table, validate_scores
+from .analyse.blockset import blockset_enrichment, blockset_qc
 from .analyse.score import exposure_from_qc
 from .analyse.synthons import aggregate_synthons, synthon_qc
 from .analyse.triage import ScreenInput, tiers_by_score, triage, triage_qc
 from .fair import DatasetInfo, Provenance, describe_dataset, parse_sha256sums, read_dictionary
 from .io import EXPORT_FORMATS, FeatureTable, export_table, normalise_name, parse_formats, read_table
 from .library import read_building_blocks, select_sublibrary, simulate_library, write_counts
+from .library.blocks import building_block_table, read_reacted
 from .library.schema import ID, TARGET
 from .report import discover_ids, load_bundle, parse_versions, render_report
 from .visualise import build_figures, figures_to_json, sample_rows
@@ -83,6 +85,21 @@ def cmd_score(args: argparse.Namespace) -> None:
     scores.write_parquet(args.output, statistics=True)
     scores.head(args.top_n).write_parquet(args.top)
     _write_json(args.qc, qc)
+
+
+def cmd_blocks(args: argparse.Namespace) -> None:
+    """Describe every building block (RDKit) and add its pre-selection load; write the searchable resource."""
+    table, qc = building_block_table(read_reacted(args.synthons), list(args.counts), _read_json(args.sublibrary))
+    table.write_parquet(args.output, statistics=True)
+    _write_json(args.qc, qc)
+
+
+def cmd_blockset(args: argparse.Namespace) -> None:
+    """Test every building block for enrichment among the ranked compounds of one screen."""
+    scores = pl.scan_parquet(args.scores)
+    table = blockset_enrichment(scores, pl.read_parquet(args.top))
+    table.write_parquet(args.output)
+    _write_json(args.qc, blockset_qc(table, int(scores.select(pl.len()).collect().item())))
 
 
 def cmd_synthons(args: argparse.Namespace) -> None:
@@ -242,6 +259,19 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915 - one block per 
     sub.add_argument("--sublibrary", type=Path, required=True, help="sub-library JSON")
     sub.add_argument("--output", type=Path, required=True, help="count table (Parquet)")
     sub.add_argument("--qc", type=Path, required=True, help="QC JSON (includes whole-library depth)")
+
+    sub = command("blocks", cmd_blocks)
+    sub.add_argument("--synthons", type=Path, required=True, help="folder with reacted_{a,b,c}.csv")
+    sub.add_argument("--sublibrary", type=Path, required=True, help="sublibrary JSON")
+    sub.add_argument("--counts", type=Path, nargs="+", required=True, help="count tables (one per screen)")
+    sub.add_argument("--output", type=Path, required=True, help="building-block table (Parquet)")
+    sub.add_argument("--qc", type=Path, required=True, help="QC JSON")
+
+    sub = command("blockset", cmd_blockset)
+    sub.add_argument("--scores", type=Path, required=True, help="scored compounds (Parquet)")
+    sub.add_argument("--top", type=Path, required=True, help="top compounds (Parquet)")
+    sub.add_argument("--output", type=Path, required=True, help="set-enrichment table (Parquet)")
+    sub.add_argument("--qc", type=Path, required=True, help="QC JSON")
 
     sub = command("score", cmd_score)
     sub.add_argument("--input", type=Path, required=True, help="count table (Parquet)")

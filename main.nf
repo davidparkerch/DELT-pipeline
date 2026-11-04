@@ -5,7 +5,7 @@
  */
 nextflow.enable.types = true
 
-include { Screen ; ScreenResult ; TriageResult } from './common.nf'
+include { BlockResult ; Screen ; ScreenResult ; TriageResult } from './common.nf'
 include { DELT_SELECTION } from './workflows/delt_selection/main.nf'
 include { REPORT } from './modules/local/report/main.nf'
 include { WRITE_VERSIONS } from './modules/local/write_versions/main.nf'
@@ -69,6 +69,7 @@ workflow {
     publish:
     screens = results
     triage = selection.triage
+    blocks = selection.blocks
     sublibrary = selection.sublibrary
     report = report
     versions = versions
@@ -83,6 +84,8 @@ output {
             screen.score_qc >> "screens/${screen.id}/"
             screen.synthons >> "screens/${screen.id}/"
             screen.synthon_qc >> "screens/${screen.id}/"
+            screen.blockset >> "screens/${screen.id}/"
+            screen.blockset_qc >> "screens/${screen.id}/"
             screen.validation >> "screens/${screen.id}/"
             screen.figures >> "screens/${screen.id}/"
             screen.metadata >> "screens/${screen.id}/"
@@ -102,6 +105,16 @@ output {
             triage.exports >> "exports/${triage.id}/"
             triage.sha256sums >> "exports/${triage.id}/"
             triage.datapackage >> "exports/${triage.id}/"
+        }
+    }
+    blocks: Channel<BlockResult> {
+        path { blocks ->
+            blocks.table >> 'blocks/'
+            blocks.blocks_qc >> 'blocks/'
+            blocks.metadata >> 'blocks/'
+            blocks.exports >> "exports/${blocks.id}/"
+            blocks.sha256sums >> "exports/${blocks.id}/"
+            blocks.datapackage >> "exports/${blocks.id}/"
         }
     }
     sublibrary: Path {

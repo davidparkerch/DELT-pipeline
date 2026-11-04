@@ -158,6 +158,58 @@ so a disynthon's 95 % Poisson bound is above 1 for about a quarter of all MAPK14
 interval does not cover family-level variation. This is why the triage thresholds below ask for more than
 "bound > 1".
 
+## 6a. Building blocks: a searchable resource (`library/blocks.py`)
+
+KinDEL lists every building block twice: as the free reagent (position C lists a reagent pair) and as the
+**reacted fragment**, where pseudo-atoms (francium, astatine) mark the attachment points. The pipeline
+publishes one row per block (`blocks/blocks.parquet`, with TSV and Parquet exports and FAIR metadata):
+
+- **Structure.** The canonical fragment with attachment points as `*` (for substructure search), the
+  fragment capped with hydrogens, its InChIKey and Murcko scaffold. Capping with H turns a carboxylic acid
+  attachment into an aldehyde and so on: descriptors are for comparing blocks, not absolute values.
+- **Descriptors** (RDKit): molecular weight, Crippen logP, TPSA, hydrogen-bond donors and acceptors, rotatable
+  bonds, heavy atoms, sp3 fraction, rings.
+- **Shared fragments.** Blocks whose capped fragment is identical (a methyl and a tert-butyl ester of the
+  same acid, or amidine salts) are the same compound part under different DNA codes. In KinDEL,
+  21 blocks share a fragment with another block. Their enrichments should agree, which is a free
+  consistency check for the data and a hint for library design.
+- **Synthesis-yield proxy.** The pre-selection load is one experiment shared by all screens (the pipeline
+  checks this). For each block, the mean load of its possible compounds and the share of them that were
+  sequenced at all show whether the block is made well. 292 of 1,377 blocks in the sub-library have a mean load
+  below half of their position's median (flag `low_load`). A silent block is a yield or truncation suspect,
+  not a proven non-binder.
+
+The tables list 377, 1,127 and 190 blocks at positions A, B and C (the paper reports 378, 1,128 and 191).
+Position A is limited to the 60 blocks of the sub-library (section 2); B and C are complete.
+
+## 6b. Building-block set enrichment (`analyse/blockset.py`)
+
+The gene-set-enrichment idea, applied to synthons. A building block is a "gene set": the compounds that
+contain it. After ranking all compounds of a screen by their Poisson lower bound, a block that drives binding
+has its compounds concentrated at the top. For every block the pipeline runs a one-sided Mann-Whitney U test of
+its compounds' ranks against all others, computed from rank sums so that 1,377 blocks over 11 M compounds need
+one ranking and one group-by. Ties (most compounds score 0) are handled with the standard correction, and the
+p-values are adjusted over all blocks (Benjamini-Hochberg). Per block the output holds the AUC (the probability
+that one of its compounds outranks a compound without it), the p- and q-values and the number of blocks in the
+screen's top 2,000. The test agrees with `scipy.stats.mannwhitneyu` in the unit tests.
+
+Read the AUC, not the q-value. With 11 M compounds nearly every block is "significant" (505 of 1,127 B blocks
+in MAPK14), so the q-value stops discriminating. The universe is the compounds seen in at least one column;
+compounds absent from all columns are mostly failed syntheses and would otherwise reward blocks that are
+made badly.
+
+**A check against known chemistry.** Carbonic anhydrase is inhibited by primary sulfonamides, which bind the
+active-site zinc. KinDEL contains exactly three primary-sulfonamide blocks, all at position B. Without being
+told, the BCA screen ranks the two para-sulfonamides **first and second** of 1,127 B blocks (AUC 0.996 and
+0.990; they are in 1,262 and 596 of the top 2,000 compounds) and the meta isomer 15th. The chance that all
+three land in the top 15 at random is about 2 in a million. In the kinase screens the same blocks rank 112th to
+799th (AUC 0.45 to 0.59), so the enrichment is specific to the carbonic anhydrase.
+
+The test has limits. Compound sets overlap (every compound is in three sets), so the tests are not independent
+and the q-values are indicative. A block-level test finds blocks that dominate a family (a plane of the cube),
+not a single disynthon (a line): a 16-compound family inside a 377-compound block does not register, which is
+what the disynthon table of section 6 is for.
+
 ## 7. Hit triage (`analyse/triage.py`)
 
 The candidates are the `--top_n` compounds (default 2,000) of each **target** screen by Poisson lower bound.

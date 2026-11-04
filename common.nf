@@ -57,8 +57,22 @@ record ScreenResult {
     score_qc: Path
     synthons: Path
     synthon_qc: Path
+    blockset: Path
+    blockset_qc: Path
     validation: Path
     figures: Path
+    exports: Set<Path>
+    sha256sums: Path
+    metadata: Path
+    datapackage: Path
+}
+
+// The building-block resource, published as a FAIR dataset of its own.
+record BlockResult {
+    id: String
+    identifier: String
+    table: Path
+    blocks_qc: Path
     exports: Set<Path>
     sha256sums: Path
     metadata: Path

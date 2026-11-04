@@ -29,6 +29,12 @@ nextflow_pipeline {
             assert triageMetadata.license == 'https://spdx.org/licenses/CC0-1.0'
             assert triageMetadata.distribution*.name.sort() == ['hits.parquet', 'triage_hits.parquet', 'triage_hits.tsv']
             assert report.panels == ['validation', 'triage', 'software']
+            def blocksMetadata = path("$outputDir/blocks/building_blocks.metadata.jsonld").json
+            assert blocksMetadata.license == 'https://spdx.org/licenses/CC0-1.0'
+            assert blocksMetadata.distribution*.name.sort() == ['blocks.parquet', 'building_blocks.parquet', 'building_blocks.tsv']
+            def blocksQc = path("$outputDir/blocks/blocks_qc.json").json
+            assert blocksQc.n_blocks.a == 15 && blocksQc.load_shared_across_screens
+            assert path("$outputDir/screens/mapk14/mapk14.blockset.parquet").exists()
             def sublibrary = path("$outputDir/sublibrary.json").json
             assert sublibrary.heldout.size() + sublibrary.random.size() == 8
 
@@ -45,6 +51,7 @@ nextflow_pipeline {
                     Fixtures.json("$outputDir/screens/mapk14/mapk14.metadata.jsonld"),
                     Fixtures.json("$outputDir/screens/bca/bca.metadata.jsonld"),
                     Fixtures.json("$outputDir/triage/triage.metadata.jsonld"),
+                    Fixtures.json("$outputDir/blocks/building_blocks.metadata.jsonld"),
                 ).match() }
             )
         }

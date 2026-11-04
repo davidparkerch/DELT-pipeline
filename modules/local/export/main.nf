@@ -3,7 +3,7 @@ nextflow.enable.types = true
 include { Options } from '../../../common.nf'
 
 /*
- * Export the top compounds (the published hit table) for downstream tools, in the formats
+ * Export a published table (hits, building blocks) for downstream tools, as <stem>.<format>, in the formats
  * chosen by options.export_formats (Parquet, Arrow, CSV, TSV, JSON Lines, NumPy, svmlight).
  */
 process EXPORT {
@@ -14,12 +14,13 @@ process EXPORT {
     record(
         id: String,
         top: Path,
-        id_column: String
+        id_column: String,
+        stem: String
     )
     options: Options
 
     output:
-    record(id: id, exports: files("${id}_hits.*"))
+    record(id: id, exports: files("${stem}.*"))
 
     topic:
     tuple('delt_pipeline', eval('delt_pipeline --version')) >> 'versions'
@@ -31,11 +32,11 @@ process EXPORT {
         --input ${top} \\
         --id-column ${id_column} \\
         --formats '${options.export_formats}' \\
-        --prefix ${id}_hits
+        --prefix ${stem}
     """
 
     stub:
     """
-    touch ${id}_hits.parquet
+    touch ${stem}.parquet
     """
 }
