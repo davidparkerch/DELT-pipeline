@@ -1,0 +1,44 @@
+{
+    "a diverse shortlist of the trusted hits": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "shortlist",
+                        "picks": "picks.parquet:md5,c993dd6e90a479aded8880647187ba4a",
+                        "picks_qc": "picks_qc.json:md5,80f5f81405e1aa618cb4bd2ed57e2ed9"
+                    }
+                ]
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "rdkit": "2026.09.1",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-04T11:16:18.461126501",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "shortlist",
+                        "picks": "picks.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "picks_qc": "picks_qc.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-04T11:16:31.522432155",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

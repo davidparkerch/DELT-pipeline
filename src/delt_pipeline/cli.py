@@ -15,6 +15,7 @@ from . import __version__
 from .analyse import SCORES, absent_scores, read_heldout, score_table, validate_scores
 from .analyse.blockset import blockset_enrichment, blockset_qc
 from .analyse.score import exposure_from_qc
+from .analyse.shortlist import MAX_PER_CLUSTER, MAX_PER_DISYNTHON, N_PICKS, SIMILARITY, shortlist
 from .analyse.synthons import aggregate_synthons, synthon_qc
 from .analyse.triage import ScreenInput, tiers_by_score, triage, triage_qc
 from .fair import DatasetInfo, Provenance, describe_dataset, parse_sha256sums, read_dictionary
@@ -133,6 +134,19 @@ def cmd_triage(args: argparse.Namespace) -> None:
     hits.write_parquet(args.output)
     by_score = tiers_by_score(screens, args.compare_top_n, level=args.level) if args.compare_top_n else None
     _write_json(args.qc, triage_qc(hits, level=args.level, by_score=by_score))
+
+
+def cmd_shortlist(args: argparse.Namespace) -> None:
+    """Pick a diverse resynthesis shortlist from the triaged hits."""
+    picks, qc = shortlist(
+        pl.read_parquet(args.hits),
+        n_picks=args.n_picks,
+        similarity=args.similarity,
+        max_per_cluster=args.max_per_cluster,
+        max_per_disynthon=args.max_per_disynthon,
+    )
+    picks.write_parquet(args.output)
+    _write_json(args.qc, qc)
 
 
 def cmd_validate(args: argparse.Namespace) -> None:
@@ -301,6 +315,15 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915 - one block per 
     sub.add_argument("--compare-top-n", type=int, default=0, help="also triage the top N by every score (0: skip)")
     sub.add_argument("--output", type=Path, required=True, help="hits table (Parquet)")
     sub.add_argument("--qc", type=Path, required=True, help="triage QC JSON")
+
+    sub = command("shortlist", cmd_shortlist)
+    sub.add_argument("--hits", type=Path, required=True, help="triaged hits (Parquet)")
+    sub.add_argument("--n-picks", type=int, default=N_PICKS, help="compounds per screen")
+    sub.add_argument("--similarity", type=float, default=SIMILARITY, help="Tanimoto similarity of one cluster")
+    sub.add_argument("--max-per-cluster", type=int, default=MAX_PER_CLUSTER)
+    sub.add_argument("--max-per-disynthon", type=int, default=MAX_PER_DISYNTHON)
+    sub.add_argument("--output", type=Path, required=True, help="shortlist (Parquet)")
+    sub.add_argument("--qc", type=Path, required=True, help="shortlist QC JSON")
 
     sub = command("validate", cmd_validate)
     sub.add_argument("--scores", type=Path, required=True)

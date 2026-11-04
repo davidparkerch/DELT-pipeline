@@ -76,6 +76,21 @@
                 }
             ],
             [
+                {
+                    "datapackage": "datapackage.json:md5,0a4b6127b218dade658885d4d95b523c",
+                    "exports": [
+                        "shortlist.parquet:md5,652d20ef33de480f46c80cee52b11e23",
+                        "shortlist.tsv:md5,3ed6ee738e0c02b55c50c024dd68b63d"
+                    ],
+                    "id": "shortlist",
+                    "identifier": "urn:sha256:8073979e70f4af7223e1a95ce70f7733a0fadaf2c1d13861fd81b9c39a478731",
+                    "metadata": "shortlist.metadata.jsonld:md5,f103e0ad5ec11479609bcda78d692471",
+                    "picks": "picks.parquet:md5,652d20ef33de480f46c80cee52b11e23",
+                    "picks_qc": "picks_qc.json:md5,fb73fd912cb5e8f3674c5a310ec25113",
+                    "sha256sums": "SHA256SUMS:md5,1b163c709d1fc2bcfbbbb8b2c3950884"
+                }
+            ],
+            [
                 "sublibrary.json:md5,14ed3ff73ca82ef2ebc674df2c302182"
             ],
             {
@@ -88,7 +103,7 @@
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-04T10:56:33.495624279",
+        "timestamp": "2026-11-04T11:20:27.108320617",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

@@ -35,6 +35,9 @@ nextflow_pipeline {
             def blocksQc = path("$outputDir/blocks/blocks_qc.json").json
             assert blocksQc.n_blocks.a == 15 && blocksQc.load_shared_across_screens
             assert path("$outputDir/screens/mapk14/mapk14.blockset.parquet").exists()
+            def picksMetadata = path("$outputDir/shortlist/shortlist.metadata.jsonld").json
+            assert picksMetadata.distribution*.name.sort() == ['picks.parquet', 'shortlist.parquet', 'shortlist.tsv']
+            assert path("$outputDir/shortlist/picks_qc.json").json.screens.keySet() == ['ddr1', 'mapk14'] as Set
             def sublibrary = path("$outputDir/sublibrary.json").json
             assert sublibrary.heldout.size() + sublibrary.random.size() == 8
 
@@ -52,6 +55,7 @@ nextflow_pipeline {
                     Fixtures.json("$outputDir/screens/bca/bca.metadata.jsonld"),
                     Fixtures.json("$outputDir/triage/triage.metadata.jsonld"),
                     Fixtures.json("$outputDir/blocks/building_blocks.metadata.jsonld"),
+                    Fixtures.json("$outputDir/shortlist/shortlist.metadata.jsonld"),
                 ).match() }
             )
         }

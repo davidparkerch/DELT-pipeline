@@ -262,6 +262,34 @@ The target-only z-score ranks by target counts alone. In MAPK14, 1,732 of its to
 binders**: they are as enriched in the no-protein control as in the target. Any score that divides by the
 matrix control removes them before triage sees them.
 
+## 7a. Resynthesis shortlist (`analyse/shortlist.py`)
+
+Hit validation (resynthesis, then a binding assay) is the expensive step of a DEL campaign, and 2,000 triaged
+hits are not a decision. Ranking alone also buys redundancy: an enriched disynthon carries all its members to
+the top together. The shortlist asks for a diverse plate instead.
+
+1. **Eligible hits**: tier 1 only (replicate and disynthon support, no counter-screen or bead binder).
+2. **Cluster** them by structure: Butina clustering on Morgan fingerprints (radius 2, 2048 bits), two hits
+   sharing a cluster at Tanimoto similarity of at least 0.65. This is the same family of method KinDEL used to
+   choose its validation compounds.
+3. **Pick across clusters, best first**: the best hit of every cluster (clusters ordered by their best rank),
+   then the second best of every cluster, up to 2 per cluster, and at most 3 per disynthon, until 96 compounds
+   (one plate) are chosen. Every number is a parameter.
+
+| 96 compounds | MAPK14 naive top | MAPK14 shortlist | DDR1 naive top | DDR1 shortlist |
+|---|---|---|---|---|
+| Structural clusters | 17 | **96** | 29 | **96** |
+| Disynthons | 5 | **62** | 21 | **58** |
+| Mean pairwise similarity | 0.43 | **0.25** | 0.44 | **0.34** |
+| Median rank among the top 2,000 | 50 | 441 | 51 | 358 |
+| Lowest Poisson lower bound | 11.0 | 2.7 | 35.9 | 14.7 |
+
+Ranking alone buys 96 compounds from 17 families (MAPK14); the shortlist buys 96. The price is stated: the
+picks sit deeper in the ranking, but every one of them is enriched by at least 2.7-fold with 95 % confidence,
+and the three enriched compounds of a family are each worth a resynthesis less than a new family. Whether a
+cluster is a real series or a coincidence of fingerprints is a chemist's judgement; the shortlist makes that
+judgement possible on 96 compounds instead of 2,000.
+
 ## 8. DESeq2 thinking: what transfers and what breaks
 
 DEL hit calling is count-based differential abundance: target vs control instead of treated vs untreated.

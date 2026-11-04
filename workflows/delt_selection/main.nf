@@ -1,6 +1,6 @@
 nextflow.enable.types = true
 
-include { BlockResult ; DatasetInfo ; Options ; RunInfo ; Screen ; ScreenResult ; TriageResult } from '../../common.nf'
+include { BlockResult ; DatasetInfo ; Options ; RunInfo ; Screen ; ScreenResult ; ShortlistOptions ; ShortlistResult ; TriageResult } from '../../common.nf'
 include { AGGREGATE_SYNTHONS } from '../../modules/local/aggregate_synthons/main.nf'
 include { BLOCKSET } from '../../modules/local/blockset/main.nf'
 include { BUILDING_BLOCKS } from '../../modules/local/building_blocks/main.nf'
@@ -9,6 +9,7 @@ include { DESCRIBE } from '../../modules/local/describe/main.nf'
 include { EXPORT } from '../../modules/local/export/main.nf'
 include { SCORE } from '../../modules/local/score/main.nf'
 include { SELECT_SUBLIBRARY } from '../../modules/local/select_sublibrary/main.nf'
+include { SHORTLIST } from '../../modules/local/shortlist/main.nf'
 include { SUBSET_LIBRARY } from '../../modules/local/subset_library/main.nf'
 include { TRIAGE } from '../../modules/local/triage/main.nf'
 include { VALIDATE } from '../../modules/local/validate/main.nf'
@@ -28,6 +29,7 @@ workflow DELT_SELECTION {
     dictionary: Path
     options: Options
     run: RunInfo
+    picking: ShortlistOptions
 
     main:
     heldout = screens
@@ -52,6 +54,7 @@ workflow DELT_SELECTION {
         .collect()
     roles = screens.map { screen -> "${screen.id}=${screen.role}" }.collect()
     triaged = TRIAGE(triage_files, roles, options)
+    shortlisted = SHORTLIST(triaged.map { r -> r.hits }, picking)
 
     figures = VISUALISE(
         scored.join(validated, by: 'id').join(aggregated, by: 'id').join(counts, by: 'id').join(screens, by: 'id'),
@@ -63,9 +66,10 @@ workflow DELT_SELECTION {
         .map { r -> record(id: r.id, top: r.top, id_column: 'molecule_hash', stem: "${r.id}_hits", exports_base: "../../exports/${r.id}/") }
         .mix(triaged.flatMap { r -> [record(id: r.id, top: r.hits, id_column: 'hit_id', stem: "${r.id}_hits", exports_base: "../exports/${r.id}/")] })
         .mix(blocks.flatMap { r -> [record(id: r.id, top: r.table, id_column: 'block_id', stem: r.id, exports_base: "../exports/${r.id}/")] })
+        .mix(shortlisted.flatMap { r -> [record(id: r.id, top: r.picks, id_column: 'hit_id', stem: r.id, exports_base: "../exports/${r.id}/")] })
     info = screens
         .map { s -> screenInfo(s) }
-        .mix(screens.collect().flatMap { all -> [triageInfo(all), blocksInfo(all)] })
+        .mix(screens.collect().flatMap { all -> [triageInfo(all), blocksInfo(all), shortlistInfo(all)] })
     exported = EXPORT(tables, options)
     checksums = CHECKSUM(exported)
     described = DESCRIBE(
@@ -88,6 +92,11 @@ workflow DELT_SELECTION {
         .join(exported, by: 'id')
         .join(checksums, by: 'id')
         .join(described, by: 'id')
+    shortlist = shortlisted
+        .flatMap { r -> [r] }
+        .join(exported, by: 'id')
+        .join(checksums, by: 'id')
+        .join(described, by: 'id')
     block_results = blocks
         .flatMap { r -> [r] }
         .join(exported, by: 'id')
@@ -98,6 +107,7 @@ workflow DELT_SELECTION {
     results: Channel<ScreenResult> = results
     triage: Channel<TriageResult> = triage
     blocks: Channel<BlockResult> = block_results
+    shortlist: Channel<ShortlistResult> = shortlist
     sublibrary: Value<Path> = sublibrary
 }
 
@@ -123,6 +133,13 @@ def triageInfo(screens: Bag<Screen>) -> DatasetInfo {
     def counters = screens.findAll { s -> s.role == 'counter' }.collect { s -> s.id }.toSorted().join(', ')
     def description = "Triaged top compounds of the target screens ${targets}" + (counters ? " (counter-screens: ${counters})" : '')
     return derivedInfo('triage', description, 'DNA-encoded library;hit triage', screens)
+}
+
+// The resynthesis shortlist, derived from the triaged hits of the target screens.
+def shortlistInfo(screens: Bag<Screen>) -> DatasetInfo {
+    def targets = screens.findAll { s -> s.role == 'target' }.collect { s -> s.id }.toSorted().join(', ')
+    def description = "Diverse resynthesis shortlist of the trusted hits of the target screens ${targets}: best hit of each structural cluster, capped per disynthon"
+    return derivedInfo('shortlist', description, 'DNA-encoded library;hit triage;resynthesis;diversity', screens)
 }
 
 // The building-block resource, derived from the library tables the screens share.

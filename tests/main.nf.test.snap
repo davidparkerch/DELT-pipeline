@@ -23,6 +23,10 @@
                 "exports/mapk14/SHA256SUMS",
                 "exports/mapk14/datapackage.json",
                 "exports/mapk14/mapk14_hits.parquet",
+                "exports/shortlist",
+                "exports/shortlist/SHA256SUMS",
+                "exports/shortlist/datapackage.json",
+                "exports/shortlist/shortlist.parquet",
                 "exports/triage",
                 "exports/triage/SHA256SUMS",
                 "exports/triage/datapackage.json",
@@ -72,6 +76,10 @@
                 "screens/mapk14/mapk14.synthons.parquet",
                 "screens/mapk14/mapk14.top.parquet",
                 "screens/mapk14/mapk14.validation.json",
+                "shortlist",
+                "shortlist/picks.parquet",
+                "shortlist/picks_qc.json",
+                "shortlist/shortlist.metadata.jsonld",
                 "sublibrary.json",
                 "triage",
                 "triage/hits.parquet",
@@ -79,7 +87,7 @@
                 "triage/triage_qc.json"
             ]
         ],
-        "timestamp": "2026-11-04T10:55:50.994128291",
+        "timestamp": "2026-11-04T11:19:41.906038095",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -113,6 +121,11 @@
                 "exports/mapk14/datapackage.json",
                 "exports/mapk14/mapk14_hits.parquet",
                 "exports/mapk14/mapk14_hits.tsv",
+                "exports/shortlist",
+                "exports/shortlist/SHA256SUMS",
+                "exports/shortlist/datapackage.json",
+                "exports/shortlist/shortlist.parquet",
+                "exports/shortlist/shortlist.tsv",
                 "exports/triage",
                 "exports/triage/SHA256SUMS",
                 "exports/triage/datapackage.json",
@@ -163,6 +176,10 @@
                 "screens/mapk14/mapk14.synthons.parquet",
                 "screens/mapk14/mapk14.top.parquet",
                 "screens/mapk14/mapk14.validation.json",
+                "shortlist",
+                "shortlist/picks.parquet",
+                "shortlist/picks_qc.json",
+                "shortlist/shortlist.metadata.jsonld",
                 "sublibrary.json",
                 "triage",
                 "triage/hits.parquet",
@@ -170,7 +187,7 @@
                 "triage/triage_qc.json"
             ],
             [
-                "hits_dictionary.csv:md5,bb7c8547d8c49af8e5a18d8e29da4ff3",
+                "hits_dictionary.csv:md5,e69f4806a64e5ad7fc48de02eab035a1",
                 "blocks.parquet:md5,962ae89c0cc9220cb9ff0719893509ac",
                 "blocks_qc.json:md5,7de481d90ccb9c0e3c1433cd4164e489",
                 "SHA256SUMS:md5,193cd0290c2f8549469aca3d9f479ecb",
@@ -189,6 +206,10 @@
                 "datapackage.json:md5,1660b2a3dab53a63a450ffa16131cf7c",
                 "mapk14_hits.parquet:md5,789923eb4000296379f0f7cc32c6d838",
                 "mapk14_hits.tsv:md5,6a6d83469bca79d4a7adb3b3ec868f0f",
+                "SHA256SUMS:md5,facccc4d42cf213479667fe614cff399",
+                "datapackage.json:md5,04ec4d8b9602bbf18f24054b369b819d",
+                "shortlist.parquet:md5,197464ceb89e91f8c8fb0cac8d4490b5",
+                "shortlist.tsv:md5,42415322370bb95f0cd784e65abe6f11",
                 "SHA256SUMS:md5,524d31fe350d2a19dc2c7a3c31b91a56",
                 "datapackage.json:md5,87c4fce725e99be5e86c8575684a3991",
                 "triage_hits.parquet:md5,74e1a7a37eb9d63c4f50389aa7062ba7",
@@ -223,6 +244,8 @@
                 "mapk14.synthons.parquet:md5,2bbcc012295b39268d8d2a5d8888de43",
                 "mapk14.top.parquet:md5,789923eb4000296379f0f7cc32c6d838",
                 "mapk14.validation.json:md5,0f9b45784cd4669c16b0a4a54281f7e7",
+                "picks.parquet:md5,197464ceb89e91f8c8fb0cac8d4490b5",
+                "picks_qc.json:md5,50f1549ad7b25c8cf1885de2bce682e1",
                 "sublibrary.json:md5,69f7d8e51d8d00826420799bd497f3f4",
                 "hits.parquet:md5,74e1a7a37eb9d63c4f50389aa7062ba7",
                 "triage_qc.json:md5,8c77bef02b00d69427623dd788d01cee"
@@ -1226,9 +1249,182 @@
                         "name": "low_load"
                     }
                 ]
+            },
+            {
+                "@context": {
+                    "@vocab": "https://schema.org/",
+                    "prov": "http://www.w3.org/ns/prov#"
+                },
+                "@id": "urn:sha256:1c63cb34be18586530184a2222a9207c6f890a4e6fab28fbc48885db91efdf7d",
+                "@type": "Dataset",
+                "creator": {
+                    "@type": "Person",
+                    "name": "Test Creator"
+                },
+                "description": "Diverse resynthesis shortlist of the trusted hits of the target screens ddr1, mapk14: best hit of each structural cluster, capped per disynthon",
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "8761 B",
+                        "contentUrl": "picks.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "picks.parquet",
+                        "sha256": "1c63cb34be18586530184a2222a9207c6f890a4e6fab28fbc48885db91efdf7d",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "8761 B",
+                        "contentUrl": "../exports/shortlist/shortlist.parquet",
+                        "encodingFormat": [
+                            "application/vnd.apache.parquet",
+                            "http://edamontology.org/format_2333"
+                        ],
+                        "name": "shortlist.parquet",
+                        "sha256": "1c63cb34be18586530184a2222a9207c6f890a4e6fab28fbc48885db91efdf7d",
+                        "usageInfo": "https://parquet.apache.org/docs/file-format/"
+                    },
+                    {
+                        "@type": "DataDownload",
+                        "contentSize": "1395 B",
+                        "contentUrl": "../exports/shortlist/shortlist.tsv",
+                        "encodingFormat": [
+                            "text/tab-separated-values",
+                            "http://edamontology.org/format_3475"
+                        ],
+                        "name": "shortlist.tsv",
+                        "sha256": "12011a3d2258f6179f04c0d8acad420d3a84767c159a471fac5beead860239cd",
+                        "usageInfo": "https://www.iana.org/assignments/media-types/text/tab-separated-values"
+                    }
+                ],
+                "identifier": [
+                    "urn:sha256:1c63cb34be18586530184a2222a9207c6f890a4e6fab28fbc48885db91efdf7d",
+                    {
+                        "@type": "PropertyValue",
+                        "propertyID": "dataset_id",
+                        "value": "shortlist"
+                    }
+                ],
+                "keywords": [
+                    "DNA-encoded library",
+                    "hit triage",
+                    "resynthesis",
+                    "diversity"
+                ],
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "name": "shortlist",
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Target screen the compound is a top hit of (one row per screen and compound)",
+                        "name": "screen"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Position on the shortlist of its screen (1 = pick first)",
+                        "name": "pick_rank"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Round of the pick: 1 = best hit of a structural cluster, 2 = second best, and so on",
+                        "name": "pick_round"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Structural cluster of the screen's trusted hits (Butina on Morgan fingerprints), numbered by best rank",
+                        "name": "cluster_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Trusted hits in the cluster",
+                        "name": "cluster_size",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Unique id of a triaged hit: <screen>:<molecule_hash> (a compound can be a hit of several screens)",
+                        "name": "hit_id"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Rank of the compound in its screen by Poisson lower bound (1 = best)",
+                        "name": "rank"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Triage tier: 1 = replicate and disynthon support, 2 = one of them, 3 = neither, flagged = counter-screen or bead binder",
+                        "name": "tier"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "SHA-256 hash of the compound SMILES (KinDEL identifier)",
+                        "name": "molecule_hash"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Compound structure (SMILES)",
+                        "name": "smiles",
+                        "propertyID": "http://semanticscience.org/resource/CHEMINF_000018"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building block at position A (row of synthons/reacted_a.csv)",
+                        "name": "bb_a"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building block at position B (row of synthons/reacted_b.csv)",
+                        "name": "bb_b"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Building block at position C (row of synthons/reacted_c.csv)",
+                        "name": "bb_c"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Best disynthon of the hit with its building-block ids, for example AB:12-7",
+                        "name": "disynthon_key"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled target count (three replicates)",
+                        "name": "target_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Pooled control count (three replicates)",
+                        "name": "control_sum",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000189",
+                        "unitText": "count"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Lower bound of the exact confidence interval of the rate ratio (ranking score)",
+                        "name": "poisson_lower",
+                        "unitCode": "http://purl.obolibrary.org/obo/UO_0000190",
+                        "unitText": "ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Empirical-Bayes shrunken log2 rate ratio (Beta-Binomial prior)",
+                        "name": "eb_log2_ratio"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "description": "Human-readable summary of the triage evidence",
+                        "name": "reasons"
+                    }
+                ]
             }
         ],
-        "timestamp": "2026-11-04T10:55:26.144610993",
+        "timestamp": "2026-11-04T11:19:13.70658377",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

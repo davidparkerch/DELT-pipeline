@@ -174,6 +174,8 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
     roles = ["--screen", "mapk14", "target", "--screen", "bca", "counter"]
     assert run_cli("triage", *roles, "--input-dir", out, "--compare-top-n", 50,
                    "--output", out / "hits.parquet", "--qc", out / "triage_qc.json") == 0  # fmt: skip
+    assert run_cli("shortlist", "--hits", out / "hits.parquet", "--n-picks", 6, "--similarity", 0.5,
+                   "--output", out / "picks.parquet", "--qc", out / "picks_qc.json") == 0  # fmt: skip
     for screen, target in (("mapk14", "MAPK14"), ("bca", "BCA")):
         assert run_cli("visualise", "--top", out / f"{screen}.top.parquet", "--validation",
                        out / f"{screen}.validation.json", "--screen", target,

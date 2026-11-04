@@ -37,6 +37,14 @@ record Options {
     export_formats: String
 }
 
+// Settings of the resynthesis shortlist (built from params in main.nf).
+record ShortlistOptions {
+    n_picks: Integer
+    similarity: Float
+    max_per_cluster: Integer
+    max_per_disynthon: Integer
+}
+
 // Who and what produced the outputs, recorded in the FAIR metadata.
 record RunInfo {
     pipeline: String
@@ -61,6 +69,18 @@ record ScreenResult {
     blockset_qc: Path
     validation: Path
     figures: Path
+    exports: Set<Path>
+    sha256sums: Path
+    metadata: Path
+    datapackage: Path
+}
+
+// The diverse resynthesis shortlist, published as a FAIR dataset of its own.
+record ShortlistResult {
+    id: String
+    identifier: String
+    picks: Path
+    picks_qc: Path
     exports: Set<Path>
     sha256sums: Path
     metadata: Path

@@ -188,7 +188,7 @@ def test_module_entry_point(monkeypatch, capsys) -> None:
 
 
 def test_dictionary_covers_published_tables(pipeline_dir: Path) -> None:
-    """Every column of the published tables (hits per screen and triaged, building blocks) is described."""
+    """Every column of the published tables (hits per screen and triaged, building blocks, shortlist) is described."""
     dictionary = set(pl.read_csv(Path(__file__).parents[2] / "assets/hits_dictionary.csv").get_column("column"))
-    for table in ("mapk14.top.parquet", "hits.parquet", "blocks.parquet"):
+    for table in ("mapk14.top.parquet", "hits.parquet", "blocks.parquet", "picks.parquet"):
         assert set(pl.read_parquet(pipeline_dir / table).columns) <= dictionary, table

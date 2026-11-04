@@ -10,3 +10,4 @@ pipeline_info/*
 screens/*/*.metadata.jsonld
 triage/*.metadata.jsonld
 blocks/*.metadata.jsonld
+shortlist/*.metadata.jsonld

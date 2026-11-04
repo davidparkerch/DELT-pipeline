@@ -64,3 +64,8 @@ mean_load,Pre-selection sequence count per possible compound of the block: a syn
 fraction_with_load,Share of the block's possible compounds sequenced before selection,ratio,http://purl.obolibrary.org/obo/UO_0000190,
 load_ratio,Mean load relative to the median block of the same position,ratio,http://purl.obolibrary.org/obo/UO_0000190,
 low_load,"Mean load below half the position's median: a yield or truncation suspect, not a non-binder",,,
+pick_rank,Position on the shortlist of its screen (1 = pick first),,,
+pick_round,"Round of the pick: 1 = best hit of a structural cluster, 2 = second best, and so on",,,
+cluster_id,"Structural cluster of the screen's trusted hits (Butina on Morgan fingerprints), numbered by best rank",,,
+cluster_size,Trusted hits in the cluster,count,http://purl.obolibrary.org/obo/UO_0000189,
+disynthon_key,"Best disynthon of the hit with its building-block ids, for example AB:12-7",,,

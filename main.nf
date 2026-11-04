@@ -5,7 +5,7 @@
  */
 nextflow.enable.types = true
 
-include { BlockResult ; Screen ; ScreenResult ; TriageResult } from './common.nf'
+include { BlockResult ; Screen ; ScreenResult ; ShortlistResult ; TriageResult } from './common.nf'
 include { DELT_SELECTION } from './workflows/delt_selection/main.nf'
 include { REPORT } from './modules/local/report/main.nf'
 include { WRITE_VERSIONS } from './modules/local/write_versions/main.nf'
@@ -25,6 +25,13 @@ params {
     top_n: Integer = 2000
     // Comma-separated export formats of the hit tables: parquet, arrow, csv, tsv, jsonl, npz, svmlight
     export_formats: String = 'parquet,tsv'
+    // Compounds on the resynthesis shortlist of each target screen
+    n_picks: Integer = 96
+    // Tanimoto similarity (Morgan fingerprints) at or above which two hits share a structural cluster
+    cluster_similarity: Float = 0.65
+    // Picks per structural cluster and per disynthon at most
+    max_per_cluster: Integer = 2
+    max_per_disynthon: Integer = 3
     // Random seed for every stochastic step
     seed: Integer = 42
     // Title of the HTML report
@@ -57,7 +64,13 @@ workflow {
         creator_orcid: params.creator_orcid,
     )
     dictionary = file("${projectDir}/assets/hits_dictionary.csv")
-    selection = DELT_SELECTION(params.input, params.synthons, dictionary, options, run)
+    picking = record(
+        n_picks: params.n_picks,
+        similarity: params.cluster_similarity,
+        max_per_cluster: params.max_per_cluster,
+        max_per_disynthon: params.max_per_disynthon,
+    )
+    selection = DELT_SELECTION(params.input, params.synthons, dictionary, options, run, picking)
     results = selection.results
     versions = WRITE_VERSIONS(channel.topic('versions').collect())
     report_files = results
@@ -70,6 +83,7 @@ workflow {
     screens = results
     triage = selection.triage
     blocks = selection.blocks
+    shortlist = selection.shortlist
     sublibrary = selection.sublibrary
     report = report
     versions = versions
@@ -115,6 +129,16 @@ output {
             blocks.exports >> "exports/${blocks.id}/"
             blocks.sha256sums >> "exports/${blocks.id}/"
             blocks.datapackage >> "exports/${blocks.id}/"
+        }
+    }
+    shortlist: Channel<ShortlistResult> {
+        path { shortlist ->
+            shortlist.picks >> 'shortlist/'
+            shortlist.picks_qc >> 'shortlist/'
+            shortlist.metadata >> 'shortlist/'
+            shortlist.exports >> "exports/${shortlist.id}/"
+            shortlist.sha256sums >> "exports/${shortlist.id}/"
+            shortlist.datapackage >> "exports/${shortlist.id}/"
         }
     }
     sublibrary: Path {
