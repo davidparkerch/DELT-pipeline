@@ -11,10 +11,11 @@
                         "bca_hits.parquet:md5,5232168913f18182e99d72b7a6f193a3",
                         "bca_hits.tsv:md5,bf2cc6b5159f18ad7590351f2d91b4d2"
                     ],
-                    "figures": "bca.figures.json:md5,d193cde8594fcc4f9756985432a2c213",
+                    "figures": "bca.figures.json:md5,bb628cc4e1b5800cd9b4fa00da01167a",
                     "id": "bca",
                     "identifier": "urn:sha256:453fa10e30785b843ebfbd55e1da77fce2a2674ae86ca808f7d238c69b8fd9c6",
                     "metadata": "bca.metadata.jsonld:md5,84adc33593c0573c8bad35975d7e48d8",
+                    "model": "bca.model.json:md5,142a5adec8b420281b899b43cca49661",
                     "score_qc": "bca.score_qc.json:md5,ff50fc0bbfceb7353427064f5bd5c564",
                     "scores": "bca.scores.parquet:md5,053ec6a8506409b0a247de5b29f82af8",
                     "sha256sums": "SHA256SUMS:md5,7219777713bfdb1d8c4d4cb1a0f85267",
@@ -32,10 +33,11 @@
                         "mapk14_hits.parquet:md5,cdcb2b282b15d480df68f9f8c90ca3eb",
                         "mapk14_hits.tsv:md5,317872b50f6e70ef8112d0382de0fbf0"
                     ],
-                    "figures": "mapk14.figures.json:md5,30fab9138420e1b384f540550508113f",
+                    "figures": "mapk14.figures.json:md5,b62eeb146f73af18ef62f3f98ea9b534",
                     "id": "mapk14",
                     "identifier": "urn:sha256:a9710fdc11bf5c178a894c6dd271995515bbf001085179e7b6d12f78d4991600",
                     "metadata": "mapk14.metadata.jsonld:md5,7a69f34388f5080450d70911025727b7",
+                    "model": "mapk14.model.json:md5,1d3496c9e41e69344574b0a757c983d7",
                     "score_qc": "mapk14.score_qc.json:md5,28297f12e7c76e3bae3669fee8672ac3",
                     "scores": "mapk14.scores.parquet:md5,d0b4f70de10c90a5b4e98f2602bcd6be",
                     "sha256sums": "SHA256SUMS:md5,1e0df5d51340b705f91455d7b69b7ee8",
@@ -100,10 +102,11 @@
                 "plotly": "7.1.0",
                 "polars": "2.1.0",
                 "rdkit": "2026.09.1",
+                "scikit-learn": "1.9.1",
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-04T11:20:27.108320617",
+        "timestamp": "2026-11-04T12:53:12.494037125",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

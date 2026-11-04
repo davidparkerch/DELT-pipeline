@@ -7,6 +7,7 @@ include { BUILDING_BLOCKS } from '../../modules/local/building_blocks/main.nf'
 include { CHECKSUM } from '../../modules/local/checksum/main.nf'
 include { DESCRIBE } from '../../modules/local/describe/main.nf'
 include { EXPORT } from '../../modules/local/export/main.nf'
+include { MODEL } from '../../modules/local/model/main.nf'
 include { SCORE } from '../../modules/local/score/main.nf'
 include { SELECT_SUBLIBRARY } from '../../modules/local/select_sublibrary/main.nf'
 include { SHORTLIST } from '../../modules/local/shortlist/main.nf'
@@ -18,6 +19,7 @@ include { VISUALISE } from '../../modules/local/visualise/main.nf'
 /*
  * Score DEL selection screens: choose one sub-library for all screens, stream each screen into a
  * count table, score, aggregate and validate every compound, test every building block for enrichment,
+ * train a fingerprint model against the same measured KD,
  * triage the top compounds of the target screens against the counter-screens, then publish the hit
  * tables and the building-block resource as FAIR datasets.
  * Records are re-assembled by joining on their 'id' field.
@@ -42,6 +44,7 @@ workflow DELT_SELECTION {
     aggregated = AGGREGATE_SYNTHONS(scored.join(counts, by: 'id'), options)
     validated = VALIDATE(scored.join(screens, by: 'id'))
     blocksets = BLOCKSET(scored)
+    modelled = MODEL(scored.join(screens, by: 'id'), synthons, options)
 
     // The building-block resource is built once; the pre-selection load is shared by all screens.
     blocks = BUILDING_BLOCKS(synthons, sublibrary, counts.map { r -> r.counts }.collect())
@@ -83,6 +86,7 @@ workflow DELT_SELECTION {
         .join(aggregated, by: 'id')
         .join(blocksets, by: 'id')
         .join(validated, by: 'id')
+        .join(modelled, by: 'id')
         .join(figures, by: 'id')
         .join(exported, by: 'id')
         .join(checksums, by: 'id')

@@ -14,6 +14,7 @@ import polars as pl
 from . import __version__
 from .analyse import SCORES, absent_scores, read_heldout, score_table, validate_scores
 from .analyse.blockset import blockset_enrichment, blockset_qc
+from .analyse.model import N_RANDOM, N_TOP, model_report
 from .analyse.score import exposure_from_qc
 from .analyse.shortlist import MAX_PER_CLUSTER, MAX_PER_DISYNTHON, N_PICKS, SIMILARITY, shortlist
 from .analyse.synthons import aggregate_synthons, synthon_qc
@@ -135,6 +136,25 @@ def cmd_triage(args: argparse.Namespace) -> None:
     hits.write_parquet(args.output)
     by_score = tiers_by_score(screens, args.compare_top_n, level=args.level) if args.compare_top_n else None
     _write_json(args.qc, triage_qc(hits, level=args.level, by_score=by_score))
+
+
+def cmd_model(args: argparse.Namespace) -> None:
+    """Train a fingerprint model on the counts and correlate its predictions with measured KD."""
+    heldout = {
+        condition: pl.read_csv(path, infer_schema_length=None)
+        for condition, path in (("on", args.ondna), ("off", args.offdna))
+        if path
+    }
+    report = model_report(
+        pl.scan_parquet(args.scores),
+        read_building_blocks(args.synthons),
+        heldout,
+        args.target,
+        n_top=args.n_top,
+        n_random=args.n_random,
+        seed=args.seed,
+    )
+    _write_json(args.output, report)
 
 
 def cmd_shortlist(args: argparse.Namespace) -> None:
@@ -338,6 +358,17 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915 - one block per 
     sub.add_argument("--compare-top-n", type=int, default=0, help="also triage the top N by every score (0: skip)")
     sub.add_argument("--output", type=Path, required=True, help="hits table (Parquet)")
     sub.add_argument("--qc", type=Path, required=True, help="triage QC JSON")
+
+    sub = command("model", cmd_model)
+    sub.add_argument("--scores", type=Path, required=True, help="scored compounds (Parquet)")
+    sub.add_argument("--synthons", type=Path, required=True, help="folder with reacted_{a,b,c}.csv")
+    sub.add_argument("--target", required=True, help="target name, e.g. mapk14")
+    sub.add_argument("--ondna", type=Path, help="held-out on-DNA KD table")
+    sub.add_argument("--offdna", type=Path, help="held-out off-DNA KD table")
+    sub.add_argument("--n-top", type=int, default=N_TOP, help="training compounds with the most target counts")
+    sub.add_argument("--n-random", type=int, default=N_RANDOM, help="random background training compounds (about)")
+    sub.add_argument("--seed", type=int, default=42)
+    sub.add_argument("--output", type=Path, required=True, help="model report (JSON)")
 
     sub = command("shortlist", cmd_shortlist)
     sub.add_argument("--hits", type=Path, required=True, help="triaged hits (Parquet)")

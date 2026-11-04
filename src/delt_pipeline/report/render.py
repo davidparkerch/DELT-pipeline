@@ -16,6 +16,7 @@ PARTS = {
     "score_qc": ".score_qc.json",
     "synthon_qc": ".synthon_qc.json",
     "validation": ".validation.json",
+    "model": ".model.json",
     "figures": ".figures.json",
     "metadata": METADATA_SUFFIX,
 }
@@ -30,8 +31,46 @@ class DatasetBundle:
     score_qc: dict[str, Any]
     synthon_qc: dict[str, Any]
     validation: list[dict[str, Any]]
+    model: dict[str, Any]
     figures: dict[str, Any]
     metadata: dict[str, Any]
+
+
+VARIANT_LABELS = {"counts": "Counts only", "control_weighted": "Weighted by the control"}
+SPLIT_LABELS = {"random": "Random", "disynthon": "Disynthon"}
+
+
+def model_rows(model: dict[str, Any]) -> list[dict[str, Any]]:
+    """The fingerprint-model results as table rows: one per variant and split, with KinDEL's ML range per split.
+
+    Each row holds the label, ``on`` and ``off`` (-Spearman vs KD) and, for the split, the lowest and highest
+    value among KinDEL's published machine-learning models (``None`` when the target has none).
+    """
+    published = model.get("published_ml", [])
+    rows = []
+    order = {key: index for index, key in enumerate([*VARIANT_LABELS, *SPLIT_LABELS])}
+    for variant, split in sorted(
+        {(r["variant"], r["split"]) for r in model.get("results", [])},
+        key=lambda pair: (order[pair[0]], order[pair[1]]),
+    ):
+        by_condition = {
+            r["condition"]: r["spearman"] for r in model["results"] if (r["variant"], r["split"]) == (variant, split)
+        }
+        same_split = [row for row in published if row["split"] == split]
+        rows.append(
+            {
+                "label": f"{VARIANT_LABELS[variant]}, {SPLIT_LABELS[split].lower()} split",
+                "on": by_condition.get("on"),
+                "off": by_condition.get("off"),
+                "published_on": (min(r["on_dna"] for r in same_split), max(r["on_dna"] for r in same_split))
+                if same_split
+                else None,
+                "published_off": (min(r["off_dna"] for r in same_split), max(r["off_dna"] for r in same_split))
+                if same_split
+                else None,
+            }
+        )
+    return rows
 
 
 def discover_ids(directory: Path) -> list[str]:
@@ -86,6 +125,7 @@ def render_report(
     template = environment.get_template("report.html.j2")
     return template.render(
         title=title,
+        model_rows=model_rows,
         bundles=bundles,
         versions=versions,
         pipeline=pipeline,

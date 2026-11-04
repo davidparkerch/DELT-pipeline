@@ -143,6 +143,10 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
                        "--qc", synthon_qc) == 0  # fmt: skip
         assert run_cli("blockset", "--scores", scores, "--top", top, "--output", out / f"{screen}.blockset.parquet",
                        "--qc", out / f"{screen}.blockset_qc.json") == 0  # fmt: skip
+        assert run_cli("model", "--scores", scores, "--synthons", synthons, "--target", screen,
+                       *(["--ondna", library_dir / "heldout/mapk14_ondna.csv",
+                          "--offdna", library_dir / "heldout/mapk14_offdna.csv"] if screen == "mapk14" else []),
+                       "--n-top", 200, "--n-random", 200, "--output", out / f"{screen}.model.json") == 0  # fmt: skip
         validation = out / f"{screen}.validation.json"
         assays = []
         if screen == "mapk14":

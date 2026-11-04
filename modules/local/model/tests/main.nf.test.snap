@@ -1,0 +1,35 @@
+{
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    {
+                        "id": "x",
+                        "model": "x.model.json:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    }
+                ]
+            }
+        ],
+        "timestamp": "2026-11-04T12:20:57.897173196",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "fingerprint model under a random and a disynthon split": {
+        "content": [
+            {
+                "<pipeline package>": "<pipeline version>",
+                "polars": "2.1.0",
+                "rdkit": "2026.09.1",
+                "scikit-learn": "1.9.1",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-04T12:20:33.61384735",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

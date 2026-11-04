@@ -131,6 +131,10 @@ publish-report dir="results":
 smoke-explorer page="results/explorer.html" *args:
     uv run --with playwright python scripts/smoke_explorer.py {{ page }} {{ args }}
 
+# Where do the primary-sulfonamide building blocks rank in each screen? (carbonic anhydrase: known chemistry)
+known-chemistry dir="results":
+    uv run python scripts/known_chemistry.py {{ dir }}
+
 # Open the HTML report from the last run
 report dir="results":
     uv run python -m webbrowser "file://$(realpath {{ dir }}/report.html)"

@@ -23,3 +23,6 @@ coverage.xml
 *.swp
 # KinDEL data (CC BY-NC-SA 4.0, non-commercial): download with `just fetch-kindel`, never commit
 data/
+
+# Private job-application documents (CV, motivation letter): never commit
+application/

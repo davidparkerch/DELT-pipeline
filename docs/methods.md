@@ -202,8 +202,8 @@ made badly.
 active-site zinc. KinDEL contains exactly three primary-sulfonamide blocks, all at position B. Without being
 told, the BCA screen ranks the two para-sulfonamides **first and second** of 1,127 B blocks (AUC 0.996 and
 0.990; they are in 1,262 and 596 of the top 2,000 compounds) and the meta isomer 15th. The chance that all
-three land in the top 15 at random is about 2 in a million. In the kinase screens the same blocks rank 112th to
-799th (AUC 0.45 to 0.59), so the enrichment is specific to the carbonic anhydrase.
+three land in the top 15 at random is about 2 in a million (`just known-chemistry` reproduces this). In the kinase screens the same blocks rank 112th to
+799th (AUC 0.44 to 0.59), so the enrichment is specific to the carbonic anhydrase.
 
 The test has limits. Compound sets overlap (every compound is in three sets), so the tests are not independent
 and the q-values are indicative. A block-level test finds blocks that dominate a family (a plane of the cube),
@@ -290,6 +290,57 @@ and the three enriched compounds of a family are each worth a resynthesis less t
 cluster is a real series or a coincidence of fingerprints is a chemist's judgement; the shortlist makes that
 judgement possible on 96 compounds instead of 2,000.
 
+## 7b. A fingerprint model against the same KD (`analyse/model.py`)
+
+Does a structure-based model beat a well-specified count statistic? KinDEL tested this with machine-learning
+models and found that Counts and Poisson enrichment rank the on-DNA validation compounds better than any model,
+and that models lose most of their skill when the test compounds share no disynthon with the training data. The
+pipeline repeats the experiment with the simplest reasonable model: a gradient-boosted Poisson regression
+(`HistGradientBoostingRegressor`, 150 trees) of the target counts on Morgan fingerprints (radius 2, 2048 bits),
+scored by the same -Spearman against KD as every other score.
+
+- **Two targets.** *Counts only* fits the pooled target counts and ignores the control. *Weighted by the control*
+  fits the target count per unit of the compound's own control count (a Poisson regression with the control as
+  exposure), so that synthesis abundance and bead binding are not mistaken for binding.
+- **Two splits.** *Random*: only the validated compounds are held out. *Disynthon*: no training compound shares
+  a disynthon (AB, AC or BC) with any validated compound, so the model has to generalise to pairs of building
+  blocks it has not seen. This is the harder test, and the one KinDEL found most revealing.
+- **Training set.** The sub-library has 11 M compounds, so the model learns from a sample of about 119,000: the 60,000
+  with the most target counts (the part with signal, like KinDEL's top-1M training set) and a deterministic random
+  background of about 60,000. The sample is biased on purpose, and a prediction is a ranking score, not a
+  calibrated count. That is one eighth of KinDEL's training scale.
+
+| -Spearman vs KD | MAPK14 on | MAPK14 off | DDR1 on | DDR1 off |
+|---|---|---|---|---|
+| Best statistical score (section 5) | 0.778 | 0.463 | 0.781 | 0.464 |
+| Model, counts only, random split | 0.568 | -0.126 | 0.477 | 0.151 |
+| Model, weighted by control, random split | 0.515 | **0.557** | 0.735 | **0.493** |
+| Model, counts only, disynthon split | 0.356 | -0.403 | 0.110 | -0.075 |
+| Model, weighted by control, disynthon split | 0.017 | 0.472 | 0.503 | 0.279 |
+| KinDEL machine learning, random split (range) | 0.42 to 0.69 | 0.35 to 0.76 | 0.55 to 0.73 | 0.25 to 0.51 |
+| KinDEL machine learning, disynthon split (range) | 0.09 to 0.40 | 0.27 to 0.75 | 0.41 to 0.66 | 0.07 to 0.46 |
+
+What the table says, with 30 to 49 validated compounds per column (standard error of a correlation about 0.15, so
+only large differences mean anything):
+
+- **On-DNA, the best count statistic is as good as the best model or better**, as in the paper (MAPK14: 0.78 against
+  0.57; DDR1: 0.78 against 0.74).
+- **Off-DNA, the model weighted by the control is as good as or slightly better than the statistics** (0.56 and 0.49
+  against 0.46), in the direction of the paper, where DEL-Compose, a structure-based model, also won off-DNA.
+  Structure can regularise noisy counts. The difference here is inside the noise.
+- **A model that ignores the control fails off-DNA** (-0.13 and 0.15). It learns what is abundant and what sticks to
+  the beads. This is the same reason the control exists in the experiment.
+- **The disynthon split costs skill**, most in MAPK14 on-DNA (0.52 to 0.02), where the validated compounds belong to
+  families the model has never seen. The pattern matches the paper's, where most models do worse on the disynthon
+  split than on the random one.
+- Against the ranges of KinDEL's eight models, the model weighted by the control is inside the range in six of the
+  eight cells, below it in MAPK14 on-DNA under the disynthon split (0.02 against 0.09) and just above it in DDR1
+  on-DNA under the random split (0.735 against 0.731). The model that ignores the control is below the range in six
+  of eight cells.
+
+So a fingerprint model does not beat a well-specified count statistic on-DNA, can match it off-DNA only when it is
+given the control, and the split decides what you conclude.
+
 ## 8. DESeq2 thinking: what transfers and what breaks
 
 DEL hit calling is count-based differential abundance: target vs control instead of treated vs untreated.
@@ -333,6 +384,22 @@ DEL hit calling is count-based differential abundance: target vs control instead
   else on the panel can still be an aggregator.
 - **Sub-library.** Results cover about 16 % of BB-As. The pipeline runs on the full library with
   `--n_bb_a 377` given enough memory and time.
+- **Sampling depth.** KinDEL's target selections are sampled at 0.6 to 0.8 counts per compound, about twelve times
+  below the recommended depth (section 3a). Compounds without counts say little about binding.
+- **Building-block sets overlap.** The set-enrichment tests (section 6b) are not independent, so q-values are
+  indicative, and with millions of compounds the AUC is the number to read. BB-A is limited to the sub-library.
+- **Truncated products and synthesis yield.** Partial products and unequal yields are not measurable in the counts
+  (KinDEL, Discussion). The `low_load` flag is a proxy, not a measurement.
+- **Capped fragments.** Building-block descriptors describe the fragment capped with hydrogens, not the compound
+  part as it sits in the molecule.
+- **Affinity floor.** Affinity selection recovers nanomolar binders reliably and micromolar ones poorly (Favalli
+  2018), so absence from the hit list is not absence of binding.
+- **Small validation sets.** With 30 to 49 resynthesised compounds per assay, differences between scores or
+  models of less than about 0.3 in Spearman correlation are not distinguishable.
+- **The shortlist is a heuristic.** Whether a structural cluster is a real series is a chemist's judgement, and
+  the picks trade rank for diversity (section 7a).
+- **The model is small.** It is one family of model on a biased 119,000-compound sample, not a tuned benchmark
+  entry, and its predictions are scores, not calibrated counts.
 - **GPU.** Not used. Every step is vectorised NumPy/SciPy on CPU, and outputs must be byte-stable for snapshot
   tests. A structure-based model (fingerprints → Poisson loss) is a natural next step and could use a GPU.
 
@@ -343,4 +410,7 @@ DEL hit calling is count-based differential abundance: target vs control instead
 - Faver J. C., et al. *Quantitative comparison of enrichment from DNA-encoded chemical library selections.* ACS Comb. Sci. 21, 75 (2019).
 - Love M. I., Huber W., Anders S. *Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2.* Genome Biol. 15, 550 (2014).
 - Decurtins W., et al. *Automated screening for small organic ligands using DNA-encoded chemical libraries.* Nat. Protoc. 11, 764 (2016).
+- Neri D., Lerner R. A. *DNA-encoded chemical libraries: a selection system based on endowing organic compounds with amplifiable information.* Annu. Rev. Biochem. 87, 479 (2018).
+- Butina D. *Unsupervised data base clustering based on Daylight's fingerprint and Tanimoto similarity.* J. Chem. Inf. Comput. Sci. 39, 747 (1999).
+- Benjamini Y., Hochberg Y. *Controlling the false discovery rate.* J. R. Stat. Soc. B 57, 289 (1995).
 - Favalli N., Bassi G., Scheuermann J., Neri D. *DNA-encoded chemical libraries – achievements and remaining challenges.* FEBS Lett. 592, 2168 (2018).

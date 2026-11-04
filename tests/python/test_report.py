@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from delt_pipeline.report import discover_ids, load_bundle, parse_versions, render_report
+from delt_pipeline.report.render import model_rows
 
 PIPELINE = {"name": "demo-pipeline", "version": "1.2.3", "homepage": "https://example.org/demo"}
 
@@ -66,3 +67,27 @@ def test_render_report_without_validation(pipeline_dir: Path) -> None:
     empty = {"screens": {"x": screen}, "thresholds": thresholds, "by_score": {}}
     pipeline = {"name": "p", "version": "0", "homepage": ""}
     assert "No tier-1 hits." in render_report("T", [bundle], [], pipeline, empty)
+
+
+def test_model_rows(pipeline_dir: Path) -> None:
+    rows = model_rows(load_bundle(pipeline_dir, "mapk14").model)
+    assert [row["label"] for row in rows] == [
+        "Counts only, random split",
+        "Counts only, disynthon split",
+        "Weighted by the control, random split",
+        "Weighted by the control, disynthon split",
+    ]
+    assert all(set(row) == {"label", "on", "off", "published_on", "published_off"} for row in rows)
+    # The published range of the split is the minimum and maximum over KinDEL's models (Table 1).
+    random_row = rows[0]
+    assert random_row["published_on"] == (0.42, 0.694)
+    assert random_row["published_off"] == (0.345, 0.76)
+    # A screen without held-out data, or a target without published results, has no rows or no range.
+    assert model_rows(load_bundle(pipeline_dir, "bca").model) == []
+    unpublished = {"results": [{"variant": "counts", "split": "random", "condition": "on", "spearman": 0.5}]}
+    assert model_rows(unpublished) == [
+        {"label": "Counts only, random split", "on": 0.5, "off": None, "published_on": None, "published_off": None}
+    ]
+    html = render_report("Demo", [load_bundle(pipeline_dir, "mapk14")], [("polars", "2.1")], PIPELINE)
+    assert "<h3>Fingerprint model</h3>" in html
+    assert "0.42 to 0.69" in html

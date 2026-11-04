@@ -29,6 +29,8 @@ nextflow_workflow {
             assert results*.id == ['bca', 'mapk14']
             assert results.every { r -> r.identifier.startsWith('urn:sha256:') }
             assert path(results[0].validation).json == []
+            assert path(results[0].model).json.results == []
+            assert path(results[1].model).json.results.size() == 8
             assert path(results[1].validation).json*.condition == ['on', 'off']
             def triage = workflow.out.triage
             assert triage*.id == ['triage']

@@ -167,6 +167,20 @@ footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-
         <td>{{ "{:,}".format(summary.n_enriched) }}</td><td>{{ summary.replicate_correlation if summary.replicate_correlation is not none else "–" }}</td></tr>{% endfor %}
     </table></div>
 
+    {% set model = model_rows(bundle.model) %}
+    {% if model %}
+    <h3>Fingerprint model</h3>
+    <p class="muted">A gradient-boosted Poisson regression of the target counts on Morgan fingerprints, scored by
+      -Spearman against measured KD. "Disynthon" split: no training compound shares a disynthon with a validated compound.
+      The last columns give the range of KinDEL's published machine-learning models for the same split.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Model</th><th>On-DNA</th><th>Off-DNA</th><th>KinDEL ML on-DNA</th><th>KinDEL ML off-DNA</th></tr>
+      {% for row in model %}<tr><td>{{ row.label }}</td><td>{{ row.on if row.on is not none else "–" }}</td><td>{{ row.off if row.off is not none else "–" }}</td>
+        <td>{% if row.published_on %}{{ "%.2f"|format(row.published_on[0]) }} to {{ "%.2f"|format(row.published_on[1]) }}{% else %}–{% endif %}</td>
+        <td>{% if row.published_off %}{{ "%.2f"|format(row.published_off[0]) }} to {{ "%.2f"|format(row.published_off[1]) }}{% else %}–{% endif %}</td></tr>{% endfor %}
+    </table></div>
+    {% endif %}
+
     <h3>Top compounds</h3>
     <div class="table-wrap"><table>
       <tr><th>Molecule</th><th>A</th><th>B</th><th>C</th><th>Target</th><th>Control</th><th>Load</th><th>Poisson LB</th><th>ER</th><th>EB log2</th><th>z (Faver)</th></tr>

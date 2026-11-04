@@ -10,13 +10,16 @@ hit tables. Nextflow **only orchestrates**. The real work is done by:
 
 - standard Linux tools (`sha256sum`, …), and
 - the Python package `src/delt_pipeline/` (CLI: `delt_pipeline`), with these subpackages:
-  `library/` (simulation, building blocks, streamed sub-library), `analyse/` (enrichment scores,
-  validation; scipy), `visualise/` (plotly), `report/` (jinja2 HTML) and `fair/` (FAIR metadata).
+  `library/` (simulation, building blocks and their RDKit descriptors, streamed sub-library, depth and saturation),
+  `analyse/` (enrichment scores, validation, building-block set enrichment, resynthesis shortlist, fingerprint model;
+  scipy, scikit-learn, RDKit), `visualise/` (plotly), `report/` (jinja2 HTML), `explore/` (the static DELT Explorer page)
+  and `fair/` (FAIR metadata).
 
-The science is explained in `docs/methods.md`. Steps: `SELECT_SUBLIBRARY` → `SUBSET_LIBRARY` → `SCORE` →
-`AGGREGATE_SYNTHONS` and `VALIDATE` per screen → one `TRIAGE` over all screens (counter-screens flag the
-targets' artefacts) → `VISUALISE`, then `EXPORT` / `CHECKSUM` / `DESCRIBE` of each screen's top compounds and
-of the triaged hits (`triage/hits.parquet`), and one `REPORT`.
+The science is explained in `docs/methods.md`. Steps: `SELECT_SUBLIBRARY` → `SUBSET_LIBRARY` (also whole-library depth
+and saturation) → `SCORE` → `AGGREGATE_SYNTHONS`, `VALIDATE`, `MODEL` and `BLOCKSET` per screen → one `BUILDING_BLOCKS`
+and one `TRIAGE` over all screens (counter-screens flag the targets' artefacts) → `SHORTLIST` → `VISUALISE`, then
+`EXPORT` / `CHECKSUM` / `DESCRIBE` of each screen's top compounds, the triaged hits, the shortlist and the building
+blocks, and one `REPORT` and one `EXPLORER`.
 
 Every process runs in the **runtime image** (Podman). The **dev image** is the same base plus
 Java, Nextflow, nf-test, just and dev dependencies, so inside the dev container processes run natively.
@@ -35,6 +38,9 @@ Java, Nextflow, nf-test, just and dev dependencies, so inside the dev container 
 | Run on the synthetic example library | `just run` |
 | Download KinDEL (~21 GB) / run on it | `just fetch-kindel` / `just run-kindel` |
 | Validate FAIR outputs and repository metadata | `just validate-fair` |
+| Rebuild README figures / publish report and explorer to `docs/site/` | `just readme-figures` / `just publish-report` |
+| Test the explorer page in a headless browser (needs network, not in CI) | `just smoke-explorer results/explorer.html [--chromium PATH]` |
+| Where do the sulfonamide blocks rank in each screen (after a KinDEL run) | `just known-chemistry` |
 
 **Before finishing any change, run `just fmt && just ci` and make sure it passes.**
 Outside the dev container, `just test-nf` and `just run` build the runtime image and use `-profile podman`.
@@ -57,6 +63,13 @@ Outside the dev container, `just test-nf` and `just run` build the runtime image
   workflow**. Pass them on as records (`Options`, `RunInfo`). `params.outdir` is config-only.
 - **Never use `publishDir`.** Publish through the entry workflow's `publish:` section and the `output {}` block.
 - Every process has a `stub:` block.
+- A process call takes **at most one channel argument** (the linter enforces it): collect the others into a `Bag<Path>`
+  and address the staged files by name in the script (see `TRIAGE`, `EXPLORER`).
+- **A published table's file name must differ from its export stem.** `EXPORT` writes `<stem>.<format>` into a work
+  directory that already holds the staged input; the same name clobbers the input (the table is `blocks.parquet`,
+  its exports are `building_blocks.*`).
+- In `*.nf.test` files, `${...}` inside a `process { """ ... """ }` block is interpolated by nf-test, not Nextflow:
+  use constants, or `\${...}`.
 - Containers: **Podman only** (`conf/podman.config`, `Containerfile`). Never add files, profiles or images for any other container engine.
 
 ## Data rules
@@ -65,6 +78,7 @@ Outside the dev container, `just test-nf` and `just run` build the runtime image
   the gitignored `data/kindel/`. Outputs derived from it carry that license (samplesheet `license` column).
 - Test fixtures in `assets/example/` are **synthetic** (`delt_pipeline simulate`, seeded). If you change the
   simulator, regenerate them and re-record snapshots.
+- `application/` holds the private CV and motivation letter and is gitignored. Never commit it.
 - Library-wide statistics (the depth used for normalisation) come from the **whole** screen, never from
   the sub-library. Priors are fitted on random-BB-A compounds only.
 
@@ -75,6 +89,14 @@ Outside the dev container, `just test-nf` and `just run` build the runtime image
   (`_numbers.significant`), sorted JSON keys, no timestamps, fixed zip dates.
 - Inside the package, import with relative imports (`from ..io import ...`), so the code never needs templating.
 - Ruff config is in `pyproject.toml` (line length 120, Google docstrings, type annotations).
+- **RDKit and scikit-learn outputs must stay byte-stable**: canonical SMILES only, descriptors rounded
+  (`round_sig_figs`), one fingerprint definition in `_chem.py` (Morgan radius 2, 2048 bits, the same as RDKit.js in the
+  explorer), seeded models. Model results are floats from a multi-threaded fit: they are listed in `tests/.nftignore`
+  and their fields are asserted explicitly instead of by md5.
+- **The explorer** (`src/delt_pipeline/explore/`) is one static HTML file. Python builds the payload and the page and is
+  covered 100 %. `static/app.js` is glue with no unit tests: after changing it, build a page and run
+  `just smoke-explorer`, which checks the page against RDKit and numpy in Python. Keep the page under 12 MB, and keep
+  `RDKIT_JS_VERSION` equal to the Python `rdkit` version so both compute the same fingerprints.
 - Dependencies are managed with uv: `uv add <pkg>` (runtime) or `uv add --dev <pkg>`, and commit `uv.lock`.
 
 ## Tests: 100% is the rule
@@ -86,6 +108,7 @@ Outside the dev container, `just test-nf` and `just run` build the runtime image
 - `tests/lib/Fixtures.groovy` holds shared helpers: linking `assets/` for samplesheets, masking the
   pipeline's own version, canonical ordering of `files()` outputs, and a report summary.
 - Files with run-specific content are listed in `tests/.nftignore`; assert their contents explicitly.
+- A multi-threaded or timing-dependent output is not md5-snapshotted: add it to `tests/.nftignore` and assert its content.
 - Snapshots are made in the runtime image. If you change outputs on purpose, run `just snapshot-update`
   and review every `.snap` diff.
 

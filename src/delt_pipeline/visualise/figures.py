@@ -267,24 +267,37 @@ def saturation(counts_qc: dict[str, Any], screen: str) -> go.Figure:
         row=1,
         col=1,
     )
-    figure.add_vline(
-        x=RECOMMENDED_OVERSAMPLING,
-        line={"color": "#9a9890", "dash": "dash"},
-        annotation_text="10x recommended",
-        annotation_position="top left",
-        row=1,
-        col=1,
+    figure.add_vline(x=RECOMMENDED_OVERSAMPLING, line={"color": "#9a9890", "dash": "dash"}, row=1, col=1)
+    figure.add_annotation(  # domain coordinates: annotations on log axes would need log10 units
+        xref="x domain",
+        yref="y domain",
+        x=0.95,
+        y=0.22,
+        xanchor="right",
+        text="10x oversampling<br>recommended",
+        showarrow=False,
+        font={"size": 11, "color": "#5c6577"},
     )
     histogram = columns["target"]["histogram"]
     labels = [str(k) for k in range(len(histogram) - 1)] + [f"{len(histogram) - 1}+"]
     figure.add_trace(
         go.Bar(x=labels, y=histogram, marker={"color": POINTS}, name="Compounds", showlegend=False), row=1, col=2
     )
-    figure.update_xaxes(type="log", title_text="Counts per library member", row=1, col=1)
+    # Log axes need an explicit range (in log10 units) and decade ticks, or plotly stretches them to fit the shapes.
+    figure.update_xaxes(
+        type="log",
+        range=[-3, float(np.log10(2 * RECOMMENDED_OVERSAMPLING))],
+        dtick=1,
+        title_text="Counts per library member",
+        row=1,
+        col=1,
+    )
     figure.update_yaxes(title_text="Fraction of library observed", row=1, col=1)
     figure.update_xaxes(title_text="Pooled target counts", row=1, col=2)
-    figure.update_yaxes(type="log", title_text="Compounds", row=1, col=2)
-    figure.update_layout(**_layout(f"{screen}: sequencing depth and library coverage", legend={"y": -0.25}))
+    figure.update_yaxes(type="log", dtick=1, title_text="Compounds", row=1, col=2)
+    figure.update_layout(
+        **_layout(f"{screen}: sequencing depth and library coverage", legend={"orientation": "h", "x": 0, "y": -0.3})
+    )
     return figure
 
 

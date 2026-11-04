@@ -30,7 +30,7 @@ nextflow_process {
             process {
                 """
                 input[0] = DELT_SELECTION.out.results
-                    .flatMap { s -> [s.counts_qc, s.score_qc, s.synthon_qc, s.validation, s.figures, s.metadata] }
+                    .flatMap { s -> [s.counts_qc, s.score_qc, s.synthon_qc, s.validation, s.model, s.figures, s.metadata] }
                     .mix(DELT_SELECTION.out.triage.map { t -> t.triage_qc })
                     .collect()
                 input[1] = file("${projectDir}/tests/data/versions.yml")

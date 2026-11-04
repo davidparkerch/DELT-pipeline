@@ -12,3 +12,4 @@ triage/*.metadata.jsonld
 blocks/*.metadata.jsonld
 shortlist/*.metadata.jsonld
 explorer.html
+screens/*/*.model.json

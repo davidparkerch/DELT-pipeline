@@ -41,6 +41,9 @@ nextflow_pipeline {
             def explorer = Fixtures.explorer("$outputDir/explorer.html")
             assert explorer.screens == ['ddr1', 'mapk14'] && explorer.blocksets == ['bca', 'ddr1', 'mapk14']
             assert explorer.plotly && explorer.hits == explorer.fingerprints
+            def model = path("$outputDir/screens/mapk14/mapk14.model.json").json
+            assert model.results.size() == 8 && model.published_ml.size() == 0
+            assert path("$outputDir/screens/bca/bca.model.json").json.results == []
             def sublibrary = path("$outputDir/sublibrary.json").json
             assert sublibrary.heldout.size() + sublibrary.random.size() == 8
 

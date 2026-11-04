@@ -35,7 +35,8 @@ def read_heldout(frame: pl.DataFrame) -> pl.DataFrame:
     return frame.select(pl.col(ID).cast(pl.String), pl.col("kd").cast(pl.Float64)).drop_nulls()
 
 
-def _negative_spearman(score: np.ndarray, kd: np.ndarray) -> float | None:
+def negative_spearman(score: np.ndarray, kd: np.ndarray) -> float | None:
+    """Negative Spearman correlation of a score with KD (higher is better), or ``None`` if undefined."""
     if score.size < MIN_COMPOUNDS or np.ptp(score) == 0 or np.ptp(kd) == 0:
         return None
     return significant(-stats.spearmanr(score, kd).statistic, 3)
@@ -71,7 +72,7 @@ def validate_scores(
             {
                 "score": name,
                 "label": SCORE_LABELS[name],
-                "spearman": _negative_spearman(score, joined.get_column("kd").to_numpy()),
+                "spearman": negative_spearman(score, joined.get_column("kd").to_numpy()),
                 "published": reference,
             }
         )

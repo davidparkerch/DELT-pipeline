@@ -75,7 +75,7 @@ workflow {
     results = selection.results
     versions = WRITE_VERSIONS(channel.topic('versions').collect())
     report_files = results
-        .flatMap { screen -> [screen.counts_qc, screen.score_qc, screen.synthon_qc, screen.validation, screen.figures, screen.metadata] }
+        .flatMap { screen -> [screen.counts_qc, screen.score_qc, screen.synthon_qc, screen.validation, screen.model, screen.figures, screen.metadata] }
         .mix(selection.triage.map { triage -> triage.triage_qc })
         .collect()
     report = REPORT(report_files, versions, params.report_title, run)
@@ -110,6 +110,7 @@ output {
             screen.blockset >> "screens/${screen.id}/"
             screen.blockset_qc >> "screens/${screen.id}/"
             screen.validation >> "screens/${screen.id}/"
+            screen.model >> "screens/${screen.id}/"
             screen.figures >> "screens/${screen.id}/"
             screen.metadata >> "screens/${screen.id}/"
             screen.exports >> "exports/${screen.id}/"

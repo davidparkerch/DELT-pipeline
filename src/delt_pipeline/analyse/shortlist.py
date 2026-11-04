@@ -14,13 +14,11 @@ from typing import Any
 
 import numpy as np
 import polars as pl
-from rdkit import DataStructs, RDLogger
-from rdkit.Chem import MolFromSmiles, rdFingerprintGenerator
+from rdkit import DataStructs
 from rdkit.ML.Cluster import Butina
 
+from .._chem import morgan_generator, parse_smiles
 from .._numbers import significant
-
-RDLogger.DisableLog("rdApp.*")
 
 N_PICKS = 96
 """Compounds on the shortlist: one 96-well plate."""
@@ -60,15 +58,8 @@ def fingerprints(smiles: list[str]) -> list[DataStructs.ExplicitBitVect]:
     Raises:
         ValueError: If a SMILES cannot be parsed.
     """
-    generator = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
-    result = []
-    for text in smiles:
-        molecule = MolFromSmiles(text)
-        if molecule is None:
-            msg = f"cannot parse SMILES {text!r}"
-            raise ValueError(msg)
-        result.append(generator.GetFingerprint(molecule))
-    return result
+    generator = morgan_generator()
+    return [generator.GetFingerprint(parse_smiles(text)) for text in smiles]
 
 
 def cluster(prints: list[DataStructs.ExplicitBitVect], similarity: float = SIMILARITY) -> list[int]:

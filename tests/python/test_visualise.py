@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import polars as pl
+import pytest
 
 from delt_pipeline.visualise import (
     build_figures,
@@ -97,4 +98,5 @@ def test_saturation(pipeline_dir: Path) -> None:
     ]
     assert "Uniform library (Poisson)" in names
     assert figure.data[-1].x[-1] == "10+"
+    assert tuple(figure.layout.xaxis.range) == (-3, pytest.approx(1.30103))  # the axis is not left to autorange
     assert "saturation" in build_figures(top, [], "MAPK14", counts_qc=counts_qc)

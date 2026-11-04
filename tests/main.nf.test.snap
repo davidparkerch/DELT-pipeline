@@ -47,6 +47,7 @@
                 "screens/bca/bca.counts_qc.json",
                 "screens/bca/bca.figures.json",
                 "screens/bca/bca.metadata.jsonld",
+                "screens/bca/bca.model.json",
                 "screens/bca/bca.score_qc.json",
                 "screens/bca/bca.scores.parquet",
                 "screens/bca/bca.synthon_qc.json",
@@ -59,6 +60,7 @@
                 "screens/ddr1/ddr1.counts_qc.json",
                 "screens/ddr1/ddr1.figures.json",
                 "screens/ddr1/ddr1.metadata.jsonld",
+                "screens/ddr1/ddr1.model.json",
                 "screens/ddr1/ddr1.score_qc.json",
                 "screens/ddr1/ddr1.scores.parquet",
                 "screens/ddr1/ddr1.synthon_qc.json",
@@ -71,6 +73,7 @@
                 "screens/mapk14/mapk14.counts_qc.json",
                 "screens/mapk14/mapk14.figures.json",
                 "screens/mapk14/mapk14.metadata.jsonld",
+                "screens/mapk14/mapk14.model.json",
                 "screens/mapk14/mapk14.score_qc.json",
                 "screens/mapk14/mapk14.scores.parquet",
                 "screens/mapk14/mapk14.synthon_qc.json",
@@ -88,7 +91,7 @@
                 "triage/triage_qc.json"
             ]
         ],
-        "timestamp": "2026-11-04T11:51:23.607299377",
+        "timestamp": "2026-11-04T12:27:01.916144577",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -148,6 +151,7 @@
                 "screens/bca/bca.counts_qc.json",
                 "screens/bca/bca.figures.json",
                 "screens/bca/bca.metadata.jsonld",
+                "screens/bca/bca.model.json",
                 "screens/bca/bca.score_qc.json",
                 "screens/bca/bca.scores.parquet",
                 "screens/bca/bca.synthon_qc.json",
@@ -160,6 +164,7 @@
                 "screens/ddr1/ddr1.counts_qc.json",
                 "screens/ddr1/ddr1.figures.json",
                 "screens/ddr1/ddr1.metadata.jsonld",
+                "screens/ddr1/ddr1.model.json",
                 "screens/ddr1/ddr1.score_qc.json",
                 "screens/ddr1/ddr1.scores.parquet",
                 "screens/ddr1/ddr1.synthon_qc.json",
@@ -172,6 +177,7 @@
                 "screens/mapk14/mapk14.counts_qc.json",
                 "screens/mapk14/mapk14.figures.json",
                 "screens/mapk14/mapk14.metadata.jsonld",
+                "screens/mapk14/mapk14.model.json",
                 "screens/mapk14/mapk14.score_qc.json",
                 "screens/mapk14/mapk14.scores.parquet",
                 "screens/mapk14/mapk14.synthon_qc.json",
@@ -219,7 +225,7 @@
                 "bca.blockset.parquet:md5,6e4f8e1b46febaf5d18ddbee37fe3af5",
                 "bca.blockset_qc.json:md5,7c88bcbefece7ca36b0e969c73f1cdee",
                 "bca.counts_qc.json:md5,6877cedbfa98d48a14f30c58710e9846",
-                "bca.figures.json:md5,c6152df33076d45d6ff363f45de0b1d4",
+                "bca.figures.json:md5,b49cd9c67ad74e2f822a3f61783204e1",
                 "bca.score_qc.json:md5,8be5d9baa5a01cf2497c3e71a1e20f2e",
                 "bca.scores.parquet:md5,9d93ab1dc96eb408bd464219e04cd35e",
                 "bca.synthon_qc.json:md5,4a19fcb9210c9e3cddd443493d76f298",
@@ -229,7 +235,7 @@
                 "ddr1.blockset.parquet:md5,c9f66bb7d7a1626c8f86161193bfbae3",
                 "ddr1.blockset_qc.json:md5,0215a8151185669d320488b0f3d9c846",
                 "ddr1.counts_qc.json:md5,76ea501e05c96061639a1527d2087f50",
-                "ddr1.figures.json:md5,faa17cf85f1836b71564b0d562522e55",
+                "ddr1.figures.json:md5,64d66bec163ee055d2d38feb20ca1a87",
                 "ddr1.score_qc.json:md5,2bdb2c8f97ed15c449860d5d61f77a75",
                 "ddr1.scores.parquet:md5,23b628072392d1d7ae9321309bda8d7e",
                 "ddr1.synthon_qc.json:md5,dab354b07c9161733105200dfc94452e",
@@ -239,7 +245,7 @@
                 "mapk14.blockset.parquet:md5,16b0afc0f9eca6bc79a07cf09a1f4292",
                 "mapk14.blockset_qc.json:md5,e5bb0c415aee287eddb3df58de9b1bf5",
                 "mapk14.counts_qc.json:md5,a228265f60de0c6a40a1bb8cea6e53bc",
-                "mapk14.figures.json:md5,df2943267d24f7b1c676a15364fd4ba8",
+                "mapk14.figures.json:md5,0d707e024e813bd9df3a3d448c88cca0",
                 "mapk14.score_qc.json:md5,6be30803c68dacd7983b4db4fdd0d42c",
                 "mapk14.scores.parquet:md5,2d57adcf20b01d8ab31d9449757ef9ab",
                 "mapk14.synthon_qc.json:md5,42ff202fd6b1c503f37af088fbf57207",
@@ -259,6 +265,7 @@
                 "plotly": "7.1.0",
                 "polars": "2.1.0",
                 "rdkit": "2026.09.1",
+                "scikit-learn": "1.9.1",
                 "scipy": "1.18.1"
             },
             {
@@ -1443,7 +1450,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-04T11:50:54.031870257",
+        "timestamp": "2026-11-04T12:51:33.861798353",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

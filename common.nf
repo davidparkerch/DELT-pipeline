@@ -68,6 +68,7 @@ record ScreenResult {
     blockset: Path
     blockset_qc: Path
     validation: Path
+    model: Path
     figures: Path
     exports: Set<Path>
     sha256sums: Path

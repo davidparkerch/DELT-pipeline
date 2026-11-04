@@ -11,16 +11,12 @@ from typing import Any
 
 import numpy as np
 import polars as pl
-from rdkit import RDLogger
-from rdkit.Chem import MolFromSmiles, rdFingerprintGenerator
 
+from .._chem import FP_BITS, morgan_generator, parse_smiles
 from .._numbers import significant
-
-RDLogger.DisableLog("rdApp.*")
 
 DIGITS = 4
 """Significant digits of the numbers in the page."""
-FP_BITS = 2048
 HIT_COLUMNS = (
     "hit_id",
     "screen",
@@ -82,6 +78,7 @@ BLOCK_COLUMNS = (
     "low_load",
 )
 """Columns of a building-block row, in order."""
+AUC_DECIMALS = 3
 BLOCKSET_COLUMNS = ("auc", "q_value", "n_top")
 """What the page knows about a block in a screen."""
 
@@ -94,15 +91,11 @@ def fingerprint_bytes(smiles: list[str]) -> list[bytes]:
     Raises:
         ValueError: If a SMILES cannot be parsed.
     """
-    generator = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=FP_BITS)
+    generator = morgan_generator()
     packed = []
     for text in smiles:
-        molecule = MolFromSmiles(text)
-        if molecule is None:
-            msg = f"cannot parse SMILES {text!r}"
-            raise ValueError(msg)
         bits = np.zeros(FP_BITS, dtype=np.uint8)
-        bits[list(generator.GetFingerprint(molecule).GetOnBits())] = 1
+        bits[list(generator.GetFingerprint(parse_smiles(text)).GetOnBits())] = 1
         packed.append(np.packbits(bits).tobytes())
     return packed
 
@@ -146,7 +139,8 @@ def blockset_map(blocksets: dict[str, pl.DataFrame]) -> dict[str, dict[str, list
             block_id=pl.col("position").str.to_uppercase() + pl.col("bb_id").cast(pl.String).str.zfill(4)
         )
         result[screen] = {
-            row["block_id"]: [_clean(row[name]) for name in BLOCKSET_COLUMNS]
+            # The AUC is rounded once, to the 3 decimals the page shows, so Python and the page agree.
+            row["block_id"]: [round(row["auc"], AUC_DECIMALS), _clean(row["q_value"]), _clean(row["n_top"])]
             for row in keyed.sort("block_id").iter_rows(named=True)
         }
     return result

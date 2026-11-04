@@ -21,7 +21,7 @@
             {
                 "0": [
                     {
-                        "figures": "mapk14.figures.json:md5,ffbaca626a0c27ee7b0cb4d6bd0767c1",
+                        "figures": "mapk14.figures.json:md5,d1a88559e9377bc946bd5caa475ddd58",
                         "id": "mapk14"
                     }
                 ]
@@ -33,7 +33,7 @@
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-04T10:17:08.865408522",
+        "timestamp": "2026-11-04T12:50:03.01128322",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
