@@ -10,6 +10,7 @@ import polars as pl
 from plotly.subplots import make_subplots
 
 from .._numbers import significant
+from ..library.depth import RECOMMENDED_OVERSAMPLING
 from ..library.schema import BB_COLUMNS, ID, TARGET
 
 TEMPLATE = "plotly_white"
@@ -221,6 +222,72 @@ def validation_bars(validations: list[dict[str, Any]], screen: str) -> go.Figure
     return figure
 
 
+SATURATION_COLUMNS = (
+    ("target", "Target (pooled)", POINTS),
+    ("matrix", "Matrix control (pooled)", PUBLISHED),
+    ("load", "Pre-selection load", HIGHLIGHT),
+)
+"""Count columns drawn in the saturation plot: key in the QC file, label and colour."""
+
+
+def saturation(counts_qc: dict[str, Any], screen: str) -> go.Figure:
+    """How much of the library the counts sampled: rarefaction curves and the target count histogram.
+
+    Left, the fraction of the library observed against counts per library member, for the data as
+    sequenced (each curve ends at the real depth), a perfectly uniform library, and the tenfold
+    oversampling the protocol literature recommends. Right, how many compounds have 0, 1, 2, ... counts.
+    """
+    columns = counts_qc["library"]["saturation"]
+    figure = make_subplots(
+        rows=1, cols=2, subplot_titles=("Library coverage vs. depth", "Counts per compound (target)")
+    )
+    for key, label, colour in SATURATION_COLUMNS:
+        column = columns[key]
+        depth = column["oversampling"]
+        figure.add_trace(
+            go.Scatter(
+                x=[significant(f * depth) for f in column["rarefaction"]["fraction"]],
+                y=column["rarefaction"]["observed"],
+                mode="lines+markers",
+                name=f"{label}: {depth:.2g} counts/compound",
+                line={"color": colour},
+            ),
+            row=1,
+            col=1,
+        )
+    grid = np.logspace(-3, np.log10(2 * RECOMMENDED_OVERSAMPLING), 60)
+    figure.add_trace(
+        go.Scatter(
+            x=[significant(x) for x in grid],
+            y=[significant(1 - np.exp(-x)) for x in grid],
+            mode="lines",
+            name="Uniform library (Poisson)",
+            line={"color": "#9a9890", "dash": "dot"},
+        ),
+        row=1,
+        col=1,
+    )
+    figure.add_vline(
+        x=RECOMMENDED_OVERSAMPLING,
+        line={"color": "#9a9890", "dash": "dash"},
+        annotation_text="10x recommended",
+        annotation_position="top left",
+        row=1,
+        col=1,
+    )
+    histogram = columns["target"]["histogram"]
+    labels = [str(k) for k in range(len(histogram) - 1)] + [f"{len(histogram) - 1}+"]
+    figure.add_trace(
+        go.Bar(x=labels, y=histogram, marker={"color": POINTS}, name="Compounds", showlegend=False), row=1, col=2
+    )
+    figure.update_xaxes(type="log", title_text="Counts per library member", row=1, col=1)
+    figure.update_yaxes(title_text="Fraction of library observed", row=1, col=1)
+    figure.update_xaxes(title_text="Pooled target counts", row=1, col=2)
+    figure.update_yaxes(type="log", title_text="Compounds", row=1, col=2)
+    figure.update_layout(**_layout(f"{screen}: sequencing depth and library coverage", legend={"y": -0.25}))
+    return figure
+
+
 def build_figures(
     top: pl.DataFrame,
     validations: list[dict[str, Any]],
@@ -229,6 +296,7 @@ def build_figures(
     compounds: pl.DataFrame | None = None,
     synthons: pl.DataFrame | None = None,
     tiers: pl.DataFrame | None = None,
+    counts_qc: dict[str, Any] | None = None,
 ) -> dict[str, go.Figure]:
     """Every figure the data supports, keyed by a stable name.
 
@@ -239,6 +307,7 @@ def build_figures(
         compounds: A sample of compounds with counts (replicate and MA plots).
         synthons: The screen's synthon table (disynthon replicate agreement).
         tiers: ``molecule_hash`` and ``tier`` of the screen's triaged hits (cube colours).
+        counts_qc: The screen's count QC (saturation plot).
     """
     figures = {"cube": cube(top, screen, tiers)}
     if compounds is not None:
@@ -246,6 +315,8 @@ def build_figures(
         if synthons is not None:
             disynthons = sample_rows(synthons.filter(pl.col("level") == "di_ab"))
             figures["replicates"] = replicate_agreement(compounds, disynthons, screen)
+    if counts_qc is not None:
+        figures["saturation"] = saturation(counts_qc, screen)
     if validations:
         figures["validation"] = validation_bars(validations, screen)
     return figures

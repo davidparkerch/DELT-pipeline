@@ -173,6 +173,7 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
                        out / f"{screen}.validation.json", "--screen", target,
                        "--scores", out / f"{screen}.scores.parquet", "--synthons", out / f"{screen}.synthons.parquet",
                        "--hits", out / "hits.parquet", "--id", screen,
+                       "--counts-qc", out / f"{screen}.counts_qc.json",
                        "--output", out / f"{screen}.figures.json") == 0  # fmt: skip
     return out
 

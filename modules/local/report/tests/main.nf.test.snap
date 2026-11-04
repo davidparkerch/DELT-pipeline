@@ -16,16 +16,18 @@
                     "fig-bca-cube",
                     "fig-bca-ma",
                     "fig-bca-replicates",
+                    "fig-bca-saturation",
                     "fig-mapk14-cube",
                     "fig-mapk14-ma",
                     "fig-mapk14-replicates",
+                    "fig-mapk14-saturation",
                     "fig-mapk14-validation"
                 ],
                 "offline": true,
                 "bytes_over_1mb": true
             }
         ],
-        "timestamp": "2026-11-03T22:15:46.652343929",
+        "timestamp": "2026-11-04T10:14:45.943183776",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

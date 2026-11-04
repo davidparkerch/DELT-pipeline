@@ -138,6 +138,10 @@ footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-
       <div class="card"><div class="label">Target depth</div><div class="value">{{ "{:,.0f}".format(scored.exposure.target) }}</div></div>
       <div class="card"><div class="label">Control depth</div><div class="value">{{ "{:,.0f}".format(scored.exposure.control) }}</div></div>
       <div class="card"><div class="label">With target counts</div><div class="value">{{ "%.1f%%" | format(100 * scored.fraction_with_target_counts) }}</div></div>
+      {% if counts.library.saturation %}
+      <div class="card"><div class="label">Target counts per library member</div><div class="value">{{ counts.library.saturation.target.oversampling }}</div></div>
+      <div class="card"><div class="label">Library observed in target</div><div class="value">{{ "%.1f%%" | format(100 * counts.library.saturation.target.fraction_observed) }}</div></div>
+      {% endif %}
     </div>
 
     <h3>Noise model</h3>

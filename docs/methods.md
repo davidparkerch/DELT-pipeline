@@ -55,6 +55,46 @@ drawn at random** (`random_bb_a` column).
   Dividing by it adds noise to exactly the low-count compounds that are already noisy. Target and control are
   compared for the same compound, so load cancels out of the target-vs-control ratio.
 
+## 3a. Sampling depth and saturation (`library/depth.py`)
+
+A selection can only say something about a compound that was sampled. The protocol literature asks for
+sequence counts that **exceed the library size, ideally tenfold** (Decurtins et al., *Nat. Protoc.* 2016).
+The same scan that totals the whole-library depth also builds, for every count column and for the pooled
+target and matrix counts, a histogram of compounds per exact count. From it the pipeline reports (in
+`<id>.counts_qc.json`, key `library.saturation`) the counts per library member, the fraction of the library
+observed, the share of observed compounds seen exactly once, and a **rarefaction curve**.
+
+The rarefaction curve is the DEL version of an RNA-seq library-complexity curve. Keeping each count with
+probability *f* leaves a compound with *k* counts unobserved with probability (1 − *f*)^*k*, so the expected
+number of observed compounds is Σ *n*_k (1 − (1 − *f*)^*k*). That is exact under binomial thinning and needs no
+resampling. It cannot extrapolate beyond the real depth, so a dotted line shows what a perfectly uniform
+library would do at higher depth.
+
+| MAPK14 | Counts | Counts per library member | Library observed | Uniform library would show |
+|---|---|---|---|---|
+| Target, pooled | 65.8 M | **0.82** | 35.9 % | 55.7 % |
+| Matrix control, pooled | 72.4 M | 0.90 | 35.7 % | 59.2 % |
+| Pre-selection load | 563 M | 7.0 | 81.9 % | 99.9 % |
+
+What this means:
+
+- **The total of 65,767,904 target counts equals the 65.8 M sequence counts the KinDEL paper reports**
+  (its Appendix A.2), spread over 80.7 M possible compounds. The target selection is sampled at 0.82 counts
+  per compound, about twelve times below the recommended depth.
+- **Half of the observed compounds were seen exactly once** (pooled target: 49.9 %). A single count carries almost
+  no information about enrichment, which is why the pipeline ranks by a *lower confidence bound* and asks for
+  disynthon support instead of ranking by counts. It also predicts the near-zero per-compound replicate
+  correlation in section 4: each replicate is sampled at 0.1 to 0.4 counts per compound.
+- **The library is not uniform.** Even the deeply sequenced pre-selection load, at 7 counts per member, sees only
+  81.9 % of the library where a uniform library would show 99.9 %. Roughly one compound in five is missing or
+  rare before any selection, because of synthesis yield, truncation or loss. A compound without counts in
+  the target is therefore **not evidence of non-binding**.
+- The matrix and load columns are identical in the three released screens (the same control experiment),
+  so their rows repeat across screens.
+
+The reads behind these sequence counts are not in the released tables, so the PCR duplication rate (reads per
+distinct encoding, 6 to 8.5 in the paper) is not computed here.
+
 ## 4. Enrichment scores (`analyse/enrichment.py`)
 
 With pooled counts c_t (target) and c_c (control) per compound:
@@ -222,4 +262,5 @@ DEL hit calling is count-based differential abundance: target vs control instead
 - Gerry C. J., Wawer M. J., Clemons P. A., Schreiber S. L. *DNA barcoding a complete matrix of stereoisomeric small molecules.* JACS 141, 10225 (2019).
 - Faver J. C., et al. *Quantitative comparison of enrichment from DNA-encoded chemical library selections.* ACS Comb. Sci. 21, 75 (2019).
 - Love M. I., Huber W., Anders S. *Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2.* Genome Biol. 15, 550 (2014).
+- Decurtins W., et al. *Automated screening for small organic ligands using DNA-encoded chemical libraries.* Nat. Protoc. 11, 764 (2016).
 - Favalli N., Bassi G., Scheuermann J., Neri D. *DNA-encoded chemical libraries – achievements and remaining challenges.* FEBS Lett. 592, 2168 (2018).

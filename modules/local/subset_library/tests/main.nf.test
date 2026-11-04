@@ -36,6 +36,9 @@ nextflow_process {
             assert qc.sublibrary.n_bb_a == 8
             assert qc.sublibrary.n_unmapped == 0
             assert qc.sublibrary.depth.target_1 < qc.library.depth.target_1
+            assert qc.library.diversity == 15 * 25 * 16
+            assert qc.library.saturation.target.oversampling > 0
+            assert qc.library.saturation.target.histogram.sum() == qc.library.diversity
             assert snapshot(process.out, Fixtures.versions(topics.versions, projectDir)).match()
         }
     }

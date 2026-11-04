@@ -74,7 +74,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = SCORE.out.join(VALIDATE.out, by: 'id').join(AGGREGATE_SYNTHONS.out, by: 'id')
+                input[0] = SCORE.out.join(VALIDATE.out, by: 'id').join(AGGREGATE_SYNTHONS.out, by: 'id').join(SUBSET_LIBRARY.out, by: 'id')
                     .map { r -> r + record(target: "MAPK14 'sim'") }
                 input[1] = TRIAGE.out.map { r -> r.hits }
                 """
@@ -83,8 +83,10 @@ nextflow_process {
         then {
             assert process.success
             def figures = path(process.out[0][0].figures).json
-            assert figures.keySet() == ['cube', 'ma', 'replicates', 'validation'] as Set
+            assert figures.keySet() == ['cube', 'ma', 'replicates', 'saturation', 'validation'] as Set
             assert figures.cube.layout.title.text.startsWith("MAPK14 'sim'")
+            def curves = figures.saturation.data*.name
+            assert curves[3] == 'Uniform library (Poisson)'
             assert figures.cube.data*.name == ['Tier 1', 'Tier 2', 'Tier 3', 'Flagged (counter or bead)']
             assert snapshot(process.out, Fixtures.versions(topics.versions, projectDir)).match()
         }
@@ -96,7 +98,7 @@ nextflow_process {
             process {
                 """
                 def any = file("${projectDir}/assets/example/samplesheet.csv")
-                input[0] = channel.of(record(id: 'x', target: 'X', scores: any, top: any, synthons: any, validation: any))
+                input[0] = channel.of(record(id: 'x', target: 'X', scores: any, top: any, synthons: any, validation: any, counts_qc: any))
                 input[1] = any
                 """
             }

@@ -4,8 +4,8 @@ include { shellQuote } from '../../../common.nf'
 
 /*
  * Interactive plotly figures as JSON: the building-block cube of the top compounds (coloured by
- * triage tier), replicate agreement per compound and per disynthon, an MA plot and the validation
- * of every score against measured KD.
+ * triage tier), replicate agreement per compound and per disynthon, an MA plot, sequencing depth and
+ * library coverage, and the validation of every score against measured KD.
  */
 process VISUALISE {
     tag id
@@ -18,7 +18,8 @@ process VISUALISE {
         scores: Path,
         top: Path,
         synthons: Path,
-        validation: Path
+        validation: Path,
+        counts_qc: Path
     )
     hits: Path
 
@@ -36,6 +37,7 @@ process VISUALISE {
         --top ${top} \\
         --synthons ${synthons} \\
         --hits ${hits} \\
+        --counts-qc ${counts_qc} \\
         --id ${shellQuote(id)} \\
         --validation ${validation} \\
         --screen ${shellQuote(target)} \\

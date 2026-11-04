@@ -5,7 +5,7 @@
                 "0": [
                     {
                         "counts": "mapk14.counts.parquet:md5,bdddb795938a4baa4083384da9871803",
-                        "counts_qc": "mapk14.counts_qc.json:md5,775651dcaae707455f38c5dc53bd14c2",
+                        "counts_qc": "mapk14.counts_qc.json:md5,a228265f60de0c6a40a1bb8cea6e53bc",
                         "id": "mapk14"
                     }
                 ]
@@ -15,7 +15,7 @@
                 "polars": "2.1.0"
             }
         ],
-        "timestamp": "2026-11-03T18:37:54.430500113",
+        "timestamp": "2026-11-04T10:15:42.855716345",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

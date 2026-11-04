@@ -10,6 +10,7 @@ from delt_pipeline.visualise import (
     ma_plot,
     replicate_agreement,
     sample_rows,
+    saturation,
     validation_bars,
 )
 
@@ -82,3 +83,18 @@ def test_optional_inputs(pipeline_dir: Path, tmp_path: Path) -> None:
     ]
     assert run_cli(*args, "--screen", "MAPK14", "--output", output) == 0
     assert list(json.loads(output.read_text())) == ["cube"]
+
+
+def test_saturation(pipeline_dir: Path) -> None:
+    top = pl.read_parquet(pipeline_dir / "mapk14.top.parquet")
+    counts_qc = json.loads((pipeline_dir / "mapk14.counts_qc.json").read_text())
+    figure = saturation(counts_qc, "MAPK14")
+    names = [trace.name for trace in figure.data]
+    assert names[:3] == [
+        f"Target (pooled): {counts_qc['library']['saturation']['target']['oversampling']:.2g} counts/compound",
+        f"Matrix control (pooled): {counts_qc['library']['saturation']['matrix']['oversampling']:.2g} counts/compound",
+        f"Pre-selection load: {counts_qc['library']['saturation']['load']['oversampling']:.2g} counts/compound",
+    ]
+    assert "Uniform library (Poisson)" in names
+    assert figure.data[-1].x[-1] == "10+"
+    assert "saturation" in build_figures(top, [], "MAPK14", counts_qc=counts_qc)

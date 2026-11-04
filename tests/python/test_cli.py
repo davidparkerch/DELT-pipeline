@@ -31,9 +31,15 @@ def test_pipeline_steps(pipeline_dir: Path) -> None:
         "cube",
         "ma",
         "replicates",
+        "saturation",
         "validation",
     }
-    assert set(json.loads((pipeline_dir / "bca.figures.json").read_text())) == {"cube", "ma", "replicates"}
+    assert set(json.loads((pipeline_dir / "bca.figures.json").read_text())) == {
+        "cube",
+        "ma",
+        "replicates",
+        "saturation",
+    }
     assert {path.name for path in (pipeline_dir / "exports/mapk14").iterdir()} == {
         "mapk14_hits.parquet",
         "mapk14_hits.tsv",

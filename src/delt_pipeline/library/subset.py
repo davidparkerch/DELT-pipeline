@@ -11,7 +11,8 @@ from typing import Any
 import numpy as np
 import polars as pl
 
-from .schema import BB_COLUMNS, COUNTS, ID, KINDEL_COUNTS, POSITIONS, RENAME
+from .depth import depth_qc
+from .schema import BB_COLUMNS, COUNTS, ID, KINDEL_CONTROL, KINDEL_COUNTS, KINDEL_TARGET, POSITIONS, RENAME
 
 
 def read_building_blocks(directory: Path) -> dict[str, pl.DataFrame]:
@@ -108,6 +109,32 @@ def library_depth(table: Path) -> dict[str, Any]:
     }
 
 
+def count_histograms(table: Path) -> dict[str, dict[int, int]]:
+    """Number of compounds with exactly ``k >= 1`` counts, for every count column (streamed).
+
+    The pooled target and matrix counts (``target``, ``matrix``) are included because the scores use
+    them. Each column is scanned on its own, so only that column is read from the Parquet file and the
+    group-by holds one entry per distinct count.
+    """
+    columns = {RENAME[name]: pl.col(name) for name in KINDEL_COUNTS}
+    columns["target"] = pl.sum_horizontal(KINDEL_TARGET)
+    columns["matrix"] = pl.sum_horizontal(KINDEL_CONTROL)
+    histograms = {}
+    for name, expression in columns.items():
+        frame = (
+            pl.scan_parquet(table)
+            .select(expression.alias("count"))
+            .filter(pl.col("count") > 0)
+            .group_by("count")
+            .len()
+            .collect(engine="streaming")
+        )
+        histograms[name] = dict(
+            zip(frame.get_column("count").to_list(), frame.get_column("len").to_list(), strict=True)
+        )
+    return histograms
+
+
 def _bb_id(building_blocks: dict[str, pl.DataFrame], position: str) -> pl.Expr:
     """Map a synthon SMILES column to its building-block id (null when unknown), element by element."""
     table = building_blocks[position]
@@ -151,7 +178,8 @@ def write_counts(
         output: Parquet file to write.
 
     Returns:
-        QC: whole-library depth (used for normalisation), sub-library size, depth and sparsity.
+        QC: whole-library depth (used for normalisation) and saturation (counts per library member,
+        fraction of the library observed, rarefaction), sub-library size, depth and sparsity.
     """
     bb_a = sorted(sublibrary["heldout"] + sublibrary["random"])
     selected = subset_library(table, building_blocks, bb_a)
@@ -167,8 +195,14 @@ def write_counts(
         .collect(engine="streaming")
         .row(0, named=True)
     )
+    diversity = int(sublibrary["diversity"])
+    library = library_depth(table)
+    library["diversity"] = diversity
+    library["saturation"] = {
+        name: depth_qc(histogram, diversity) for name, histogram in count_histograms(table).items()
+    }
     return {
-        "library": library_depth(table),
+        "library": library,
         "sublibrary": {
             "n_bb_a": len(bb_a),
             "n_compounds": int(subset["n_compounds"]),

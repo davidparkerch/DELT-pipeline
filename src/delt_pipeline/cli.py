@@ -149,6 +149,7 @@ def cmd_visualise(args: argparse.Namespace) -> None:
         compounds=compounds,
         synthons=synthons,
         tiers=tiers,
+        counts_qc=_read_json(args.counts_qc) if args.counts_qc else None,
     )
     args.output.write_text(figures_to_json(figures))
 
@@ -286,6 +287,7 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915 - one block per 
     sub.add_argument("--scores", type=Path, help="all scored compounds: replicate and MA plots from a sample")
     sub.add_argument("--synthons", type=Path, help="synthon table: disynthon replicate agreement")
     sub.add_argument("--hits", type=Path, help="triaged hits: colour the cube by tier")
+    sub.add_argument("--counts-qc", type=Path, help="count QC JSON: sequencing depth and library coverage plot")
     sub.add_argument("--id", default="", help="screen id in the hits table")
     sub.add_argument("--output", type=Path, required=True, help="figures JSON")
 

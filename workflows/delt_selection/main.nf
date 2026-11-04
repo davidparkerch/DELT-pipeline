@@ -47,7 +47,7 @@ workflow DELT_SELECTION {
     triaged = TRIAGE(triage_files, roles, options)
 
     figures = VISUALISE(
-        scored.join(validated, by: 'id').join(aggregated, by: 'id').join(screens, by: 'id'),
+        scored.join(validated, by: 'id').join(aggregated, by: 'id').join(counts, by: 'id').join(screens, by: 'id'),
         triaged.map { r -> r.hits },
     )
 

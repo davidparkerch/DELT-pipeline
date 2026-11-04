@@ -3,13 +3,13 @@
         "content": [
             [
                 {
-                    "counts_qc": "bca.counts_qc.json:md5,bef96c6f2606ef64c2366e4c85683d69",
+                    "counts_qc": "bca.counts_qc.json:md5,d72b9ba476c94c2bc37fe5f681a5ca1b",
                     "datapackage": "datapackage.json:md5,14ae05bd2c42d2da33767cdf4edfc515",
                     "exports": [
                         "bca_hits.parquet:md5,5232168913f18182e99d72b7a6f193a3",
                         "bca_hits.tsv:md5,bf2cc6b5159f18ad7590351f2d91b4d2"
                     ],
-                    "figures": "bca.figures.json:md5,d184614939f2a2d8689b14ebc7c2ac4b",
+                    "figures": "bca.figures.json:md5,d193cde8594fcc4f9756985432a2c213",
                     "id": "bca",
                     "identifier": "urn:sha256:453fa10e30785b843ebfbd55e1da77fce2a2674ae86ca808f7d238c69b8fd9c6",
                     "metadata": "bca.metadata.jsonld:md5,84adc33593c0573c8bad35975d7e48d8",
@@ -22,13 +22,13 @@
                     "validation": "bca.validation.json:md5,58e0494c51d30eb3494f7c9198986bb9"
                 },
                 {
-                    "counts_qc": "mapk14.counts_qc.json:md5,285541e6dd10d7db4b352b681741799a",
+                    "counts_qc": "mapk14.counts_qc.json:md5,a7cf7b314a10a392d76cdcd327da6434",
                     "datapackage": "datapackage.json:md5,531884f5b02b031313a33ab8f88dea06",
                     "exports": [
                         "mapk14_hits.parquet:md5,cdcb2b282b15d480df68f9f8c90ca3eb",
                         "mapk14_hits.tsv:md5,317872b50f6e70ef8112d0382de0fbf0"
                     ],
-                    "figures": "mapk14.figures.json:md5,2f0f2563defeadb85ce0a535e7755c25",
+                    "figures": "mapk14.figures.json:md5,30fab9138420e1b384f540550508113f",
                     "id": "mapk14",
                     "identifier": "urn:sha256:a9710fdc11bf5c178a894c6dd271995515bbf001085179e7b6d12f78d4991600",
                     "metadata": "mapk14.metadata.jsonld:md5,7a69f34388f5080450d70911025727b7",
@@ -68,7 +68,7 @@
                 "scipy": "1.18.1"
             }
         ],
-        "timestamp": "2026-11-03T22:40:13.562294265",
+        "timestamp": "2026-11-04T10:19:04.760561796",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

@@ -9,7 +9,7 @@ def test_discover_and_load(pipeline_dir: Path) -> None:
     assert discover_ids(pipeline_dir) == ["bca", "mapk14"]
     bundle = load_bundle(pipeline_dir, "mapk14")
     assert bundle.id == "mapk14"
-    assert set(bundle.figures) == {"cube", "ma", "replicates", "validation"}
+    assert set(bundle.figures) == {"cube", "ma", "replicates", "saturation", "validation"}
     assert [result["condition"] for result in bundle.validation] == ["on", "off"]
     assert load_bundle(pipeline_dir, "bca").validation == []
 

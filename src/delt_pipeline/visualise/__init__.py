@@ -7,6 +7,7 @@ from .figures import (
     ma_plot,
     replicate_agreement,
     sample_rows,
+    saturation,
     validation_bars,
 )
 
@@ -17,5 +18,6 @@ __all__ = [
     "ma_plot",
     "replicate_agreement",
     "sample_rows",
+    "saturation",
     "validation_bars",
 ]

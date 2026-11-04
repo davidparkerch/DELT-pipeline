@@ -6,6 +6,7 @@ import pytest
 
 from delt_pipeline.library import (
     SimulatedLibrary,
+    count_histograms,
     heldout_bb_a,
     library_depth,
     library_diversity,
@@ -88,7 +89,29 @@ def test_depth_comes_from_the_whole_library(library_dir: Path, mapk14_counts: tu
     assert qc["library"]["depth"]["target_1"] == full.get_column("seq_target_1").sum()
     # The sub-library is smaller, and its own totals must not be used for normalisation.
     assert qc["sublibrary"]["depth"]["target_1"] < qc["library"]["depth"]["target_1"]
-    assert library_depth(library_dir / "mapk14.parquet") == qc["library"]
+    depth = library_depth(library_dir / "mapk14.parquet")
+    assert {key: qc["library"][key] for key in depth} == depth
+
+
+def test_saturation_comes_from_the_whole_library(library_dir: Path, mapk14_counts: tuple[Path, dict]) -> None:
+    _path, qc = mapk14_counts
+    full = pl.read_parquet(library_dir / "mapk14.parquet")
+    histograms = count_histograms(library_dir / "mapk14.parquet")
+    assert set(histograms) == {*COUNTS, "target", "matrix"}
+    assert histograms["target_1"] == dict(
+        full.filter(pl.col("seq_target_1") > 0).get_column("seq_target_1").value_counts().iter_rows()
+    )
+    pooled = full.select(pl.sum_horizontal("seq_target_1", "seq_target_2", "seq_target_3").alias("t"))
+    assert histograms["target"] == dict(pooled.filter(pl.col("t") > 0).get_column("t").value_counts().iter_rows())
+    saturation = qc["library"]["saturation"]
+    assert qc["library"]["diversity"] == N_A * N_B * N_C
+    for name, histogram in histograms.items():
+        assert saturation[name]["observed"] == sum(histogram.values())
+        assert sum(saturation[name]["histogram"]) == N_A * N_B * N_C
+    total = sum(qc["library"]["depth"][name] for name in ("target_1", "target_2", "target_3"))
+    assert saturation["target"]["total"] == total
+    assert np.isclose(saturation["target"]["oversampling"], total / (N_A * N_B * N_C), rtol=1e-5)
+    assert saturation["target"]["rarefaction"]["observed"][-1] == saturation["target"]["fraction_observed"]
 
 
 def test_count_table(mapk14_counts: tuple[Path, dict], sublibrary: dict) -> None:
