@@ -1,8 +1,8 @@
 # Five-minute walkthrough
 
 A script for showing this project live, and the notes behind each step. Every number comes from `just run-kindel`
-on KinDEL and can be reproduced; the commands are in the README. Open the [explorer](https://davidparkerch.github.io/delt-pipeline/explorer.html)
-and the [report](https://davidparkerch.github.io/delt-pipeline/) in two tabs first.
+on KinDEL and can be reproduced; the commands are in the README. Open the [explorer](https://davidparkerch.github.io/DELT-pipeline/explorer.html)
+and the [report](https://davidparkerch.github.io/DELT-pipeline/) in two tabs first.
 
 ## 1. The problem (30 seconds)
 

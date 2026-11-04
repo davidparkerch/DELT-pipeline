@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 /*
  * DELT-pipeline: Score DNA-encoded library (DEL) selections, validate the scores against measured affinities and publish FAIR hit tables.
- * https://github.com/davidparkerch/delt-pipeline
+ * https://github.com/davidparkerch/DELT-pipeline
  */
 nextflow.enable.types = true
 

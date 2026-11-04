@@ -18,8 +18,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/davidparkerch/delt-pipeline"
-Repository = "https://github.com/davidparkerch/delt-pipeline"
+Homepage = "https://github.com/davidparkerch/DELT-pipeline"
+Repository = "https://github.com/davidparkerch/DELT-pipeline"
 
 [project.scripts]
 delt_pipeline = "delt_pipeline.cli:main"

@@ -9,8 +9,8 @@ on [KinDEL](https://github.com/insitro/kindel), a public 81 M-compound library s
 (MAPK14, DDR1) and a counter-target (BCA). It validates every score against KD values measured on
 resynthesised compounds, tests every building block, and picks a diverse 96-compound resynthesis shortlist.
 
-🔎 **[DELT Explorer](https://davidparkerch.github.io/delt-pipeline/explorer.html)** (filters, linked plots, structure search; runs in your browser) ·
-📊 **[Interactive report](https://davidparkerch.github.io/delt-pipeline/)** ·
+🔎 **[DELT Explorer](https://davidparkerch.github.io/DELT-pipeline/explorer.html)** (filters, linked plots, structure search; runs in your browser) ·
+📊 **[Interactive report](https://davidparkerch.github.io/DELT-pipeline/)** ·
 📐 **[Methods](docs/methods.md)**, including how DESeq2 thinking transfers to DEL data, and where it breaks ·
 🎤 **[Five-minute walkthrough](docs/demo.md)**
 
@@ -132,7 +132,7 @@ A model that ignores the control learns what is abundant and what sticks to the 
 
 <img src="docs/img/explorer.gif" alt="Animation of the DELT Explorer: a substructure search for sulfonamides lists the matching building blocks with their set-enrichment AUC in each screen, a lasso in the scatter plot marks hits that get a ring in the cube and a check mark in the table, and a click on a row shows the compound and its building blocks" width="900">
 
-**[Open the explorer](https://davidparkerch.github.io/delt-pipeline/explorer.html).** One static page, no server. Filter by
+**[Open the explorer](https://davidparkerch.github.io/DELT-pipeline/explorer.html).** One static page, no server. Filter by
 screen, tier, flag, score and count; mark hits with a lasso in the scatter plot, a click in the cube or a checkbox, and
 the three views stay in sync; search the building blocks by substructure (SMARTS) or the hits by similarity; open a
 compound with its counts, scores and building blocks; export the marked hits as CSV. Built by `just run` into

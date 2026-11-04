@@ -5,8 +5,8 @@ title: "DELT-pipeline"
 abstract: "Score DNA-encoded library (DEL) selections, validate the scores against measured affinities and publish FAIR hit tables."
 version: 0.1.0
 license: Apache-2.0
-repository-code: "https://github.com/davidparkerch/delt-pipeline"
-url: "https://github.com/davidparkerch/delt-pipeline"
+repository-code: "https://github.com/davidparkerch/DELT-pipeline"
+url: "https://github.com/davidparkerch/DELT-pipeline"
 keywords:
   - nextflow
   - dna-encoded-library

@@ -15,7 +15,7 @@
       "description": "Score DNA-encoded library (DEL) selections, validate the scores against measured affinities and publish FAIR hit tables.",
       "version": "0.1.0",
       "datePublished": "2026-11-03",
-      "url": "https://github.com/davidparkerch/delt-pipeline",
+      "url": "https://github.com/davidparkerch/DELT-pipeline",
       "keywords": ["nextflow", "dna-encoded-library", "cheminformatics", "hit-identification", "fair"],
       "license": {"@id": "https://spdx.org/licenses/Apache-2.0"},
       "author": [{"@id": "https://orcid.org/0009-0009-2897-5030"}],
@@ -37,7 +37,7 @@
       "programmingLanguage": {"@id": "#nextflow"},
       "creator": [{"@id": "https://orcid.org/0009-0009-2897-5030"}],
       "license": {"@id": "https://spdx.org/licenses/Apache-2.0"},
-      "url": "https://github.com/davidparkerch/delt-pipeline/blob/main/main.nf"
+      "url": "https://github.com/davidparkerch/DELT-pipeline/blob/main/main.nf"
     },
     {
       "@id": "#nextflow",
