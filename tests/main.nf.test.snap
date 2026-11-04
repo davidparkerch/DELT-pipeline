@@ -6,6 +6,7 @@
                 "blocks/blocks.parquet",
                 "blocks/blocks_qc.json",
                 "blocks/building_blocks.metadata.jsonld",
+                "explorer.html",
                 "exports",
                 "exports/bca",
                 "exports/bca/SHA256SUMS",
@@ -87,7 +88,7 @@
                 "triage/triage_qc.json"
             ]
         ],
-        "timestamp": "2026-11-04T11:19:41.906038095",
+        "timestamp": "2026-11-04T11:51:23.607299377",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"
@@ -100,6 +101,7 @@
                 "blocks/blocks.parquet",
                 "blocks/blocks_qc.json",
                 "blocks/building_blocks.metadata.jsonld",
+                "explorer.html",
                 "exports",
                 "exports/bca",
                 "exports/bca/SHA256SUMS",
@@ -289,6 +291,23 @@
                 ],
                 "offline": true,
                 "bytes_over_1mb": true
+            },
+            {
+                "title": "Test report (explorer)",
+                "screens": [
+                    "ddr1",
+                    "mapk14"
+                ],
+                "blocksets": [
+                    "bca",
+                    "ddr1",
+                    "mapk14"
+                ],
+                "hits": 400,
+                "fingerprints": 400,
+                "blocks": 56,
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "plotly": true
             },
             {
                 "@context": {
@@ -1424,7 +1443,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-11-04T11:19:13.70658377",
+        "timestamp": "2026-11-04T11:50:54.031870257",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.5"

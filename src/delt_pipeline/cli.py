@@ -18,6 +18,7 @@ from .analyse.score import exposure_from_qc
 from .analyse.shortlist import MAX_PER_CLUSTER, MAX_PER_DISYNTHON, N_PICKS, SIMILARITY, shortlist
 from .analyse.synthons import aggregate_synthons, synthon_qc
 from .analyse.triage import ScreenInput, tiers_by_score, triage, triage_qc
+from .explore import build_payload, render_explorer
 from .fair import DatasetInfo, Provenance, describe_dataset, parse_sha256sums, read_dictionary
 from .io import EXPORT_FORMATS, FeatureTable, export_table, normalise_name, parse_formats, read_table
 from .library import read_building_blocks, select_sublibrary, simulate_library, write_counts
@@ -147,6 +148,28 @@ def cmd_shortlist(args: argparse.Namespace) -> None:
     )
     picks.write_parquet(args.output)
     _write_json(args.qc, qc)
+
+
+def cmd_explore(args: argparse.Namespace) -> None:
+    """Build the DELT Explorer: one static HTML page to browse hits, building blocks and the shortlist."""
+    license_url = _read_json(args.metadata)["license"]
+    meta = {
+        "title": args.title,
+        "license": license_url,
+        "license_url": license_url,
+        "report_url": args.report_url or None,
+        "pipeline": args.pipeline,
+        "version": args.pipeline_version,
+        "pipeline_url": args.homepage or None,
+    }
+    payload = build_payload(
+        pl.read_parquet(args.hits),
+        pl.read_parquet(args.picks),
+        pl.read_parquet(args.blocks),
+        {screen: pl.read_parquet(path) for screen, path in args.blockset},
+        meta,
+    )
+    args.output.write_text(render_explorer(payload), encoding="utf-8")
 
 
 def cmd_validate(args: argparse.Namespace) -> None:
@@ -324,6 +347,22 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915 - one block per 
     sub.add_argument("--max-per-disynthon", type=int, default=MAX_PER_DISYNTHON)
     sub.add_argument("--output", type=Path, required=True, help="shortlist (Parquet)")
     sub.add_argument("--qc", type=Path, required=True, help="shortlist QC JSON")
+
+    sub = command("explore", cmd_explore)
+    sub.add_argument("--hits", type=Path, required=True, help="triaged hits (Parquet)")
+    sub.add_argument("--picks", type=Path, required=True, help="resynthesis shortlist (Parquet)")
+    sub.add_argument("--blocks", type=Path, required=True, help="building-block resource (Parquet)")
+    sub.add_argument("--blockset", nargs=2, action="append", default=[], metavar=("SCREEN", "PARQUET"),
+                     help="set-enrichment table of a screen (repeatable)")  # fmt: skip
+    sub.add_argument(
+        "--metadata", type=Path, required=True, help="JSON-LD of the hits (the data license is read from it)"
+    )
+    sub.add_argument("--title", required=True, help="page title")
+    sub.add_argument("--report-url", default="", help="relative link to the full report")
+    sub.add_argument("--pipeline", default="", help="pipeline name")
+    sub.add_argument("--pipeline-version", default="")
+    sub.add_argument("--homepage", default="")
+    sub.add_argument("--output", type=Path, required=True, help="explorer page (HTML)")
 
     sub = command("validate", cmd_validate)
     sub.add_argument("--scores", type=Path, required=True)

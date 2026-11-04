@@ -11,3 +11,4 @@ screens/*/*.metadata.jsonld
 triage/*.metadata.jsonld
 blocks/*.metadata.jsonld
 shortlist/*.metadata.jsonld
+explorer.html

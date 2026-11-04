@@ -1,0 +1,49 @@
+{
+    "one page with the hits, blocks and shortlist": {
+        "content": [
+            {
+                "title": "An &lt;tested&gt; explorer",
+                "screens": [
+                    "mapk14"
+                ],
+                "blocksets": [
+                    "bca",
+                    "mapk14"
+                ],
+                "hits": 200,
+                "fingerprints": 200,
+                "blocks": 56,
+                "license": "https://spdx.org/licenses/CC0-1.0",
+                "plotly": true
+            },
+            {
+                "<pipeline package>": "<pipeline version>",
+                "coreutils": "9.7",
+                "numpy": "2.5.4",
+                "plotly": "7.1.0",
+                "polars": "2.1.0",
+                "rdkit": "2026.09.1",
+                "scipy": "1.18.1"
+            }
+        ],
+        "timestamp": "2026-11-04T11:45:18.292379608",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    "explorer.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            }
+        ],
+        "timestamp": "2026-11-04T11:45:42.879941735",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.5"
+        }
+    }
+}

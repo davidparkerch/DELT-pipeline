@@ -85,6 +85,25 @@ class Fixtures {
         ]
     }
 
+    /**
+     * Compact, stable summary of the explorer page: title, screens, how many hits, fingerprints and
+     * building blocks its data holds, and the license it shows (the page embeds plotly.js).
+     */
+    static Map explorer(Object path) {
+        def html = Path.of(path.toString()).text
+        def data = new JsonSlurper().parseText((html =~ /(?s)<script id="payload" type="application\/json">(.*?)<\/script>/)[0][1]) as Map
+        return [
+            title: (html =~ /<title>(.*?)<\/title>/)[0][1],
+            screens: data.screens,
+            blocksets: data.blocksets.keySet().toList().sort(),
+            hits: data.hits.size(),
+            fingerprints: data.fingerprints.size(),
+            blocks: data.blocks.size(),
+            license: data.meta.license,
+            plotly: html.contains('plotly.js v'),
+        ]
+    }
+
     /** Parse a JSON file, dropping top-level keys that change with every release. */
     static Map json(Object path, List<String> drop = ['prov:wasGeneratedBy']) {
         def data = new JsonSlurper().parse(Path.of(path.toString()).toFile()) as Map

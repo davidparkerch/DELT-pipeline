@@ -120,10 +120,16 @@ fetch-kindel:
 readme-figures dir="results":
     uvx --with kaleido==1.5.0 --with plotly=={{ plotly_version }} python -I scripts/render_figures.py {{ dir }} docs/img
 
-# Copy a KinDEL run's report to docs/site/ for GitHub Pages (derived data: CC BY-NC-SA 4.0)
+# Copy a KinDEL run's report and explorer to docs/site/ for GitHub Pages (derived data: CC BY-NC-SA 4.0)
 publish-report dir="results":
     mkdir -p docs/site
     cp {{ dir }}/report.html docs/site/index.html
+    cp {{ dir }}/explorer.html docs/site/explorer.html
+
+# Drive the explorer page in a headless browser and check it against Python (needs network for RDKit.js).
+# Pass --chromium PATH if playwright's own browser is not installed.
+smoke-explorer page="results/explorer.html" *args:
+    uv run --with playwright python scripts/smoke_explorer.py {{ page }} {{ args }}
 
 # Open the HTML report from the last run
 report dir="results":

@@ -176,6 +176,12 @@ def pipeline_dir(tmp_path_factory: pytest.TempPathFactory, library_dir: Path) ->
                    "--output", out / "hits.parquet", "--qc", out / "triage_qc.json") == 0  # fmt: skip
     assert run_cli("shortlist", "--hits", out / "hits.parquet", "--n-picks", 6, "--similarity", 0.5,
                    "--output", out / "picks.parquet", "--qc", out / "picks_qc.json") == 0  # fmt: skip
+    assert run_cli("explore", "--hits", out / "hits.parquet", "--picks", out / "picks.parquet",
+                   "--blocks", out / "blocks.parquet", "--blockset", "mapk14", out / "mapk14.blockset.parquet",
+                   "--blockset", "bca", out / "bca.blockset.parquet", "--metadata", out / "mapk14.metadata.jsonld",
+                   "--title", "Test explorer", "--report-url", "index.html", "--pipeline", "demo",
+                   "--pipeline-version", "1.0", "--homepage", "https://example.org/demo",
+                   "--output", out / "explorer.html") == 0  # fmt: skip
     for screen, target in (("mapk14", "MAPK14"), ("bca", "BCA")):
         assert run_cli("visualise", "--top", out / f"{screen}.top.parquet", "--validation",
                        out / f"{screen}.validation.json", "--screen", target,

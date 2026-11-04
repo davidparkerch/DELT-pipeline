@@ -7,6 +7,7 @@ nextflow.enable.types = true
 
 include { BlockResult ; Screen ; ScreenResult ; ShortlistResult ; TriageResult } from './common.nf'
 include { DELT_SELECTION } from './workflows/delt_selection/main.nf'
+include { EXPLORER } from './modules/local/explorer/main.nf'
 include { REPORT } from './modules/local/report/main.nf'
 include { WRITE_VERSIONS } from './modules/local/write_versions/main.nf'
 
@@ -78,6 +79,13 @@ workflow {
         .mix(selection.triage.map { triage -> triage.triage_qc })
         .collect()
     report = REPORT(report_files, versions, params.report_title, run)
+    explorer_files = selection.triage
+        .flatMap { triage -> [triage.hits, triage.metadata] }
+        .mix(selection.shortlist.map { picks -> picks.picks })
+        .mix(selection.blocks.map { blocks -> blocks.table })
+        .mix(results.map { screen -> screen.blockset })
+        .collect()
+    explorer = EXPLORER(explorer_files, "${params.report_title} (explorer)", run)
 
     publish:
     screens = results
@@ -86,6 +94,7 @@ workflow {
     shortlist = selection.shortlist
     sublibrary = selection.sublibrary
     report = report
+    explorer = explorer
     versions = versions
 }
 
@@ -145,6 +154,9 @@ output {
         path '.'
     }
     report: Path {
+        path '.'
+    }
+    explorer: Path {
         path '.'
     }
     versions: Path {

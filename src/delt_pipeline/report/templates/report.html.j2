@@ -52,6 +52,7 @@ footer { color: var(--muted); text-align: center; padding: 24px 16px 40px; font-
   <p>{{ bundles | length }} DEL selection{{ "" if bundles | length == 1 else "s" }} scored by
     {% if pipeline.homepage %}<a href="{{ pipeline.homepage }}">{{ pipeline.name }}</a>{% else %}{{ pipeline.name }}{% endif %}
     v{{ pipeline.version }}</p>
+  <p><a href="explorer.html">Open the DELT Explorer</a>: filter, search and mark the hits and building blocks interactively.</p>
   <p>Data license{{ "s" if bundles | map(attribute="metadata.license") | unique | list | length > 1 }}:
     {% for license in bundles | map(attribute="metadata.license") | unique | sort %}<a href="{{ license }}">{{ license }}</a>{{ ", " if not loop.last }}{% endfor %}.
     Results derived from a dataset carry its license.</p>
